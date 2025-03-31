@@ -2,21 +2,18 @@ import express, { Request, Response } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 
-dotenv.config(); // wczytuje zmienne z pliku .env (jeśli istnieje)
+dotenv.config(); // Wczytuje zmienne z .env (jeśli istnieje)
 
 const app = express();
-
 app.use(cors());
 app.use(express.json());
 
-// Prosty endpoint testowy
+// Testowy endpoint
 app.get('/api/healthcheck', (req: Request, res: Response) => {
-    res.json({ status: 'OK', message: 'Backend is running!' });
+    res.json({ status: 'OK', message: 'Backend powered by Vite now!' });
 });
 
-// Pobranie portu z .env, a jeśli brak – 3000
 const PORT = process.env.PORT || 3000;
-
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
