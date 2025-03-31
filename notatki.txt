@@ -1,0 +1,11 @@
+DWA TERMINALE ŻEBY URUCHOMIĆ
+
+
+cd pomoc-sasiedzka/backend
+npm run dev
+pod linkiem : http://localhost:3000/api/healthcheck
+
+
+cd pomoc-sasiedzka/frontend
+npm run dev
+pod linkiem : http://localhost:5173
