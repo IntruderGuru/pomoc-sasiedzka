@@ -1,17 +1,10 @@
 import { randomUUID } from 'crypto';
-import { Database } from '../db';
+import { Database } from '../connection';
 import { Kysely } from 'kysely';
-
-export class User {
-    constructor(
-        public id: string,
-        public email: string,
-        public password: string
-    ) {}
-}
+import { User } from '../../models/User';
 
 export class UserRepository {
-    constructor(private db: Kysely<Database>) {}
+    constructor(private db: Kysely<Database>) { }
 
     async addUser(email: string, password: string): Promise<User> {
         const result = await this.db
