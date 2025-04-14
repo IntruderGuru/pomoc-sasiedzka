@@ -2,7 +2,7 @@ import express, { Request, Response } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { AuthController } from './controllers/AuthController';
-import { checkAuth, AuthRequest } from './middlewares/authMiddleware'; // Zwróć uwagę na import AuthRequest, jeżeli chcesz rzutować typ
+import { checkAuth, AuthRequest } from './middlewares/authMiddleware';
 
 dotenv.config();
 
@@ -19,13 +19,12 @@ app.get('/api/healthcheck', (req: Request, res: Response) => {
 app.post('/api/auth/register', AuthController.register);
 app.post('/api/auth/login', AuthController.login);
 
-// PRZYKŁADOWY ENDPOINT ZABEZPIECZONY MIDDLEWAREM:
+
 app.get('/api/profile', checkAuth, (req: Request, res: Response) => {
-    // W TS, by dostać się do req.user, możesz zrobić rzutowanie:
     const authReq = req as AuthRequest;
     res.json({
         message: 'Dane użytkownika',
-        userDecoded: authReq.user // np. { userId, role, iat, exp }
+        userDecoded: authReq.user
     });
 });
 

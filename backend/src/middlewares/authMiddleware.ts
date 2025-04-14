@@ -22,7 +22,7 @@ export function checkAuth(req: AuthRequest, res: Response, next: NextFunction) {
         }
 
         const decoded = jwt.verify(token, JWT_SECRET);
-        req.user = decoded; // np. { userId, role, iat, exp }
+        req.user = decoded;
         next();
     } catch (error) {
         return res.status(401).json({ message: 'Unauthorized' });
