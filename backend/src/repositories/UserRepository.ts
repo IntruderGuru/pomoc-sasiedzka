@@ -1,6 +1,3 @@
-// src/repositories/UserRepository.ts
-
-// Prosty interfejs użytkownika
 export interface User {
     id?: string | number;
     email: string;
