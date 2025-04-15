@@ -6,7 +6,7 @@ dotenv.config();
 
 export interface Database {
     users: UsersTable;
-    announcement: AnnouncementTable;
+    announcements: AnnouncementTable;
 }
 
 export interface UsersTable {

@@ -8,7 +8,7 @@ export class AnnouncementRepository {
 
     async create(data: Omit<Announcement, 'id' | 'createdAt'>): Promise<Announcement> {
         const result = await this.db
-            .insertInto('announcement')
+            .insertInto('announcements')
             .values({
                 id: randomUUID(),
                 ...data,
@@ -21,12 +21,12 @@ export class AnnouncementRepository {
     }
 
     async getAll(): Promise<Announcement[]> {
-        return await this.db.selectFrom('announcement').selectAll().execute();
+        return await this.db.selectFrom('announcements').selectAll().execute();
     }
 
     async getById(id: string): Promise<Announcement | undefined> {
         return await this.db
-            .selectFrom('announcement')
+            .selectFrom('announcements')
             .selectAll()
             .where('id', '=', id)
             .executeTakeFirst();
@@ -34,7 +34,7 @@ export class AnnouncementRepository {
 
     async update(id: string, data: Partial<Announcement>): Promise<Announcement | null> {
         const result = await this.db
-            .updateTable('announcement')
+            .updateTable('announcements')
             .set(data)
             .where('id', '=', id)
             .returningAll()
@@ -45,7 +45,7 @@ export class AnnouncementRepository {
 
     async delete(id: string): Promise<void> {
         await this.db
-            .deleteFrom('announcement')
+            .deleteFrom('announcements')
             .where('id', '=', id)
             .execute();
     }
