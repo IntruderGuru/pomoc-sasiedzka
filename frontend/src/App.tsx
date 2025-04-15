@@ -1,11 +1,9 @@
-import LoginPage from './pages/LoginPage';
-import RegisterPage from './pages/RegisterPage';
+import OptionSwitcher from "./components/OptionSwitcher.tsx";
 
 function App() {
   return (
     <div>
-      <RegisterPage />
-      <LoginPage />
+      <OptionSwitcher />
     </div>
   );
 }
