@@ -21,7 +21,6 @@ app.get('/api/healthcheck', (req: Request, res: Response) => {
 app.post('/api/auth/register', AuthController.register);
 app.post('/api/auth/login', AuthController.login);
 
-
 app.get('/api/profile', checkAuth, (req: Request, res: Response) => {
     const authReq = req as AuthRequest;
     res.json({
