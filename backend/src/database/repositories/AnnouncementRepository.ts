@@ -6,12 +6,37 @@ import { randomUUID } from 'crypto';
 export class AnnouncementRepository {
     constructor(private db: Kysely<Database>) { }
 
-    async create(data: Omit<Announcement, 'id' | 'createdAt'>): Promise<Announcement> {
+    async getAllAnnoucements(): Promise<Announcement[]> {
         const result = await this.db
-            .insertInto('announcements')
+            .selectFrom('announcement')
+            .selectAll()
+            .execute();
+
+        return result;
+    }
+
+    async getAnnoucementsByUserId(userId: string): Promise<Announcement[]> {
+        const result = await this.db
+            .selectFrom('announcement')
+            .selectAll()
+            .where('userId', '=', userId)
+            .execute();
+
+        return result;
+    }
+
+    async addAnnoucement(
+        userId: string,
+        title: string,
+        content: string
+    ): Promise<Announcement> {
+        const result = await this.db
+            .insertInto('announcement')
             .values({
                 id: randomUUID(),
-                ...data,
+                userId: userId,
+                title: title,
+                content: content,
                 createdAt: new Date()
             })
             .returningAll()
@@ -20,33 +45,28 @@ export class AnnouncementRepository {
         return result!;
     }
 
-    async getAll(): Promise<Announcement[]> {
-        return await this.db.selectFrom('announcements').selectAll().execute();
-    }
-
-    async getById(id: string): Promise<Announcement | undefined> {
-        return await this.db
-            .selectFrom('announcements')
-            .selectAll()
-            .where('id', '=', id)
-            .executeTakeFirst();
-    }
-
-    async update(id: string, data: Partial<Announcement>): Promise<Announcement | null> {
+    async updateAnnoucement(
+        id: string,
+        title: string,
+        content: string
+    ): Promise<Announcement> {
         const result = await this.db
-            .updateTable('announcements')
-            .set(data)
+            .updateTable('announcement')
+            .set({ title: title, content: content })
             .where('id', '=', id)
             .returningAll()
             .executeTakeFirst();
 
-        return result ?? null;
+        return result!;
     }
 
-    async delete(id: string): Promise<void> {
-        await this.db
-            .deleteFrom('announcements')
+    async deleteAnnoucement(id: string): Promise<Announcement> {
+        const result = await this.db
+            .deleteFrom('announcement')
             .where('id', '=', id)
-            .execute();
+            .returningAll()
+            .executeTakeFirst();
+
+        return result!;
     }
 }
