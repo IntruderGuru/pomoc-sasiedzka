@@ -4,14 +4,23 @@ import { useNavigate } from 'react-router-dom';
 import Spinner from '../components/Spinner';
 
 export default function AnnouncementsPage() {
-    const [announcements, setAnnouncements] = useState([]);
+    interface Announcement {
+        id: string;
+        title: string;
+        content: string;
+        category: string;
+        userId: string;
+        createdAt: string;
+    }
+
+    const [announcements, setAnnouncements] = useState<Announcement[]>([]);
     const [loading, setLoading] = useState(true);
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
     const loggedUserId = localStorage.getItem('userId');
 
     const getData = async () => {
-        const res = await fetchAll();
-        setAnnouncements(res.data);
+        const announcements = await fetchAll();
+        setAnnouncements(announcements.data as Announcement[]);
         setLoading(false);
     };
 
@@ -30,17 +39,19 @@ export default function AnnouncementsPage() {
     return (
         <div>
             <h1>Ogłoszenia</h1>
-            <button onClick={() => navigate('/announcements/create')}>Dodaj ogłoszenie</button>
+            {/* <button onClick={() => navigate('/announcements/create')}>Dodaj ogłoszenie</button> */}
             <ul>
                 {announcements.map((a) => (
                     <li key={a.id}>
                         <h3>{a.title}</h3>
                         <p>{a.content}</p>
-                        <p><i>{a.category}</i> — {a.author} ({a.date})</p>
+                        <p>
+                            {/* <i>{a.category}</i> —  */}
+                            {a.userId} ({a.createdAt})</p>
 
                         {a.userId === loggedUserId && (
                             <>
-                                <button onClick={() => navigate(`/announcements/${a.id}`)}>Edytuj</button>
+                                {/* <button onClick={() => navigate(`/announcements/${a.id}`)}>Edytuj</button> */}
                                 <button onClick={() => handleDelete(a.id)}>Usuń</button>
                             </>
                         )}

@@ -5,7 +5,7 @@ import Spinner from '../components/Spinner';
 
 export default function AnnouncementForm() {
     const { id } = useParams();
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
 
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
@@ -19,9 +19,10 @@ export default function AnnouncementForm() {
     useEffect(() => {
         if (id) {
             fetchById(id).then((res) => {
-                setTitle(res.data.title);
-                setContent(res.data.content);
-                setCategory(res.data.category || '');
+                const data = res.data as { title: string; content: string; category?: string };
+                setTitle(data.title);
+                setContent(data.content);
+                setCategory(data.category || '');
                 setLoading(false);
             });
         }
@@ -41,7 +42,7 @@ export default function AnnouncementForm() {
             alert('Ogłoszenie dodane');
         }
 
-        navigate('/announcements');
+        // navigate('/announcements');
     };
 
     if (loading) return <Spinner />;
