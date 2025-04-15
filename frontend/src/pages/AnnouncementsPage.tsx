@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { fetchAll, remove } from '../services/AnnouncementService';
-import { useNavigate } from 'react-router-dom';
 import Spinner from '../components/Spinner';
 
 export default function AnnouncementsPage() {

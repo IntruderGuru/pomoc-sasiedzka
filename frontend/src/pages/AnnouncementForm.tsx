@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { create, fetchById, update } from '../services/AnnouncementService';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import Spinner from '../components/Spinner';
 
 export default function AnnouncementForm() {
@@ -9,20 +9,17 @@ export default function AnnouncementForm() {
 
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
-    const [category, setCategory] = useState('');
     const [loading, setLoading] = useState(!!id);
-
-    const loggedUserId = localStorage.getItem('userId');
 
     const isValid = title.trim() && content.trim();
 
     useEffect(() => {
         if (id) {
             fetchById(id).then((res) => {
-                const data = res.data as { title: string; content: string; category?: string };
+                const data = res.data as { title: string; content: string };
                 setTitle(data.title);
                 setContent(data.content);
-                setCategory(data.category || '');
+                // setCategory(data.category || '');
                 setLoading(false);
             });
         }
@@ -32,7 +29,7 @@ export default function AnnouncementForm() {
         e.preventDefault();
         if (!isValid) return alert('Wszystkie pola muszą być wypełnione');
 
-        const data = { title, content, category, userId: loggedUserId };
+        const data = { title, content };
 
         if (id) {
             await update(id, data);
@@ -52,7 +49,7 @@ export default function AnnouncementForm() {
             <h2>{id ? 'Edytuj' : 'Dodaj'} ogłoszenie</h2>
             <input placeholder="Tytuł" value={title} onChange={e => setTitle(e.target.value)} required />
             <textarea placeholder="Treść" value={content} onChange={e => setContent(e.target.value)} required />
-            <input placeholder="Kategoria (opcjonalnie)" value={category} onChange={e => setCategory(e.target.value)} />
+            {/* <input placeholder="Kategoria (opcjonalnie)" value={category} onChange={e => setCategory(e.target.value)} /> */}
             <button type="submit">{id ? 'Zapisz zmiany' : 'Dodaj ogłoszenie'}</button>
         </form>
     );
