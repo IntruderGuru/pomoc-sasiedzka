@@ -6,13 +6,14 @@ dotenv.config();
 
 export interface Database {
     users: UsersTable;
-    announcement: AnnouncementTable;
+    announcements: AnnouncementTable;
 }
 
 export interface UsersTable {
     id: string;
     email: string;
     password: string;
+    role: 'user' | 'admin';
 }
 
 export interface AnnouncementTable {

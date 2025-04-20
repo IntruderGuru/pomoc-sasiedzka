@@ -24,12 +24,12 @@ export class AuthService {
         const hashedPassword = await bcrypt.hash(plainPassword, saltRounds);
 
         // 3. Tworzenie usera w bazie
-        const newUser = await userRepo.addUser(email, hashedPassword);
+        const newUser = await userRepo.addUser(email, hashedPassword, 'user');
 
         // 4. Zwróć dane usera (bez hasła) – ewentualnie same metadane
         return {
             id: newUser.id,
-            email: newUser.email
+            email: newUser.getEmail()
         };
     }
 
@@ -42,7 +42,7 @@ export class AuthService {
         }
 
         // 2. Porównaj hasło
-        const isMatch = await bcrypt.compare(plainPassword, user.password);
+        const isMatch = await bcrypt.compare(plainPassword, user.getPassword());
         if (!isMatch) {
             throw new Error('Invalid credentials');
         }
@@ -62,7 +62,7 @@ export class AuthService {
             token,
             user: {
                 id: user.id,
-                email: user.email
+                email: user.getEmail()
             }
         };
     }

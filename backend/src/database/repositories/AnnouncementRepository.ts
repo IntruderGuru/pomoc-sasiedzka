@@ -4,11 +4,11 @@ import { Announcement } from '../../models/Announcement';
 import { randomUUID } from 'crypto';
 
 export class AnnouncementRepository {
-    constructor(private db: Kysely<Database>) { }
+    constructor(private db: Kysely<Database>) {}
 
     async getAllAnnoucements(): Promise<Announcement[]> {
         const result = await this.db
-            .selectFrom('announcement')
+            .selectFrom('announcements')
             .selectAll()
             .execute();
 
@@ -17,7 +17,7 @@ export class AnnouncementRepository {
 
     async getAnnoucementsByUserId(userId: string): Promise<Announcement[]> {
         const result = await this.db
-            .selectFrom('announcement')
+            .selectFrom('announcements')
             .selectAll()
             .where('userId', '=', userId)
             .execute();
@@ -31,7 +31,7 @@ export class AnnouncementRepository {
         content: string
     ): Promise<Announcement> {
         const result = await this.db
-            .insertInto('announcement')
+            .insertInto('announcements')
             .values({
                 id: randomUUID(),
                 userId: userId,
@@ -51,7 +51,7 @@ export class AnnouncementRepository {
         content: string
     ): Promise<Announcement> {
         const result = await this.db
-            .updateTable('announcement')
+            .updateTable('announcements')
             .set({ title: title, content: content })
             .where('id', '=', id)
             .returningAll()
@@ -62,7 +62,7 @@ export class AnnouncementRepository {
 
     async deleteAnnoucement(id: string): Promise<Announcement> {
         const result = await this.db
-            .deleteFrom('announcement')
+            .deleteFrom('announcements')
             .where('id', '=', id)
             .returningAll()
             .executeTakeFirst();
