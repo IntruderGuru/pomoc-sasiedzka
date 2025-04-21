@@ -10,7 +10,7 @@ npm run postgres:setup
 npm run postgres:migrate up
 ```
 ```
-# reverts database shcema:
+# reverts database schema:
 npm run postgres:migrate down
 ```
 ```
