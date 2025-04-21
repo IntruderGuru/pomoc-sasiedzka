@@ -21,6 +21,8 @@ export interface AnnouncementTable {
     userId: string;
     title: string;
     content: string;
+    category: string;
+    type: string;
     createdAt: Date;
 }
 

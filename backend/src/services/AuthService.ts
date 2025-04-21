@@ -14,7 +14,6 @@ export class AuthService {
     static async registerUser(email: string, plainPassword: string) {
         // 1. Sprawdzenie czy user o takim email już istnieje
         const existingUser = await userRepo.getUserByEmail(email);
-        console.log(existingUser);
         if (existingUser) {
             throw new Error('User already exists');
         }

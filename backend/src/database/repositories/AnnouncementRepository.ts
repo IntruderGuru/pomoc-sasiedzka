@@ -1,7 +1,7 @@
 import { Kysely } from 'kysely';
 import { Database } from '../connection';
 import { Announcement } from '../../models/Announcement';
-import { randomUUID } from 'crypto';
+import { randomUUID, UUID } from 'crypto';
 
 export class AnnouncementRepository {
     constructor(private db: Kysely<Database>) {}
@@ -12,61 +12,106 @@ export class AnnouncementRepository {
             .selectAll()
             .execute();
 
-        return result;
+        const announcements: Announcement[] = [];
+        result.forEach(r => {
+            const announcement = new Announcement(
+                r.id as UUID,
+                r.userId as UUID,
+                r.title,
+                r.content,
+                r.category,
+                r.type,
+                r.createdAt
+            );
+
+            announcements.push(announcement);
+        });
+
+        return announcements;
     }
 
-    async getAnnoucementsByUserId(userId: string): Promise<Announcement[]> {
+    async getAnnoucementsByUserId(userId: UUID): Promise<Announcement[]> {
         const result = await this.db
             .selectFrom('announcements')
             .selectAll()
             .where('userId', '=', userId)
             .execute();
 
-        return result;
+        const announcements: Announcement[] = [];
+        result.forEach(r => {
+            const announcement = new Announcement(
+                r.id as UUID,
+                r.userId as UUID,
+                r.title,
+                r.content,
+                r.category,
+                r.type,
+                r.createdAt
+            );
+
+            announcements.push(announcement);
+        });
+
+        return announcements;
     }
 
     async addAnnoucement(
-        userId: string,
+        userId: UUID,
         title: string,
-        content: string
+        content: string,
+        category: string,
+        type: string
     ): Promise<Announcement> {
-        const result = await this.db
+        const newAnnouncement = new Announcement(
+            randomUUID(),
+            userId,
+            title,
+            content,
+            category,
+            type,
+            new Date()
+        );
+
+        console.log(newAnnouncement);
+        await this.db
             .insertInto('announcements')
             .values({
-                id: randomUUID(),
-                userId: userId,
-                title: title,
-                content: content,
-                createdAt: new Date()
+                id: newAnnouncement.id,
+                userId: newAnnouncement.userId,
+                title: newAnnouncement.getTitle(),
+                content: newAnnouncement.getContent(),
+                category: newAnnouncement.getCategory(),
+                type: newAnnouncement.getType(),
+                createdAt: newAnnouncement.createdAt
             })
-            .returningAll()
-            .executeTakeFirst();
+            .execute();
 
-        return result!;
+        return newAnnouncement;
     }
 
     async updateAnnoucement(
-        id: string,
+        id: UUID,
         title: string,
-        content: string
-    ): Promise<Announcement> {
-        const result = await this.db
+        content: string,
+        category: string,
+        type: string
+    ): Promise<void> {
+        await this.db
             .updateTable('announcements')
-            .set({ title: title, content: content })
+            .set({
+                title: title,
+                content: content,
+                category: category,
+                type: type
+            })
             .where('id', '=', id)
-            .returningAll()
-            .executeTakeFirst();
-
-        return result!;
+            .execute();
     }
 
-    async deleteAnnoucement(id: string): Promise<Announcement> {
-        const result = await this.db
+    async deleteAnnoucement(id: UUID): Promise<void> {
+        await this.db
             .deleteFrom('announcements')
             .where('id', '=', id)
-            .returningAll()
-            .executeTakeFirst();
-
-        return result!;
+            .execute();
     }
 }

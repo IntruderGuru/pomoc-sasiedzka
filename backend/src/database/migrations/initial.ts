@@ -35,6 +35,8 @@ export async function up(db: Kysely<Database>): Promise<void> {
         )
         .addColumn('title', 'varchar(256)', column => column.notNull())
         .addColumn('content', 'varchar(256)', column => column.notNull())
+        .addColumn('category', 'varchar(256)', column => column.notNull())
+        .addColumn('type', 'varchar(256)', column => column.notNull())
         .addColumn('createdAt', 'timestamptz', column => column.notNull())
         .execute();
 }

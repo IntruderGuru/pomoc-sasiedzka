@@ -21,7 +21,7 @@ export class UserRepository {
                 password: newUser.getPassword(),
                 role: newUser.getRole()
             })
-            .executeTakeFirst();
+            .execute();
 
         return newUser;
     }

@@ -1,38 +1,38 @@
-import { Announcement } from '../models/Announcement';
 import { AnnouncementRepository } from '../database/repositories/AnnouncementRepository';
+import { UUID } from 'crypto';
 
 export class AnnouncementService {
-    constructor(private repo: AnnouncementRepository) { }
+    constructor(private repo: AnnouncementRepository) {}
 
-    create(data: Omit<Announcement, 'id' | 'createdAt'>) {
-        return this.repo.addAnnoucement(data.userId, data.title, data.content);
+    create(
+        userId: UUID,
+        title: string,
+        content: string,
+        category: string,
+        type: string
+    ) {
+        return this.repo.addAnnoucement(userId, title, content, category, type);
     }
 
     getAll() {
         return this.repo.getAllAnnoucements();
     }
 
-    getById(id: string) {
+    getById(id: UUID) {
         return this.repo.getAnnoucementsByUserId(id);
     }
 
-    update(id: string, userId: string, role: string, updatedData: Partial<Announcement>) {
-        return this.repo.getAnnoucementsByUserId(id).then(announcement => {
-            if (!announcement) throw new Error('Not found');
-            // if (announcement.userId !== userId && role !== 'admin') {
-            //     throw new Error('Forbidden');
-            // }
-            return //this.repo.updateAnnoucement(id, updatedData);
-        });
+    update(
+        id: UUID,
+        title: string,
+        content: string,
+        category: string,
+        type: string
+    ) {
+        return this.repo.updateAnnoucement(id, title, content, category, type);
     }
 
-    delete(id: string, userId: string, role: string) {
-        return this.repo.getAnnoucementsByUserId(id).then(announcement => {
-            if (!announcement) throw new Error('Not found');
-            // if (announcement.userId !== userId && role !== 'admin') {
-            //     throw new Error('Forbidden');
-            // }
-            return this.repo.deleteAnnoucement(id);
-        });
+    delete(id: UUID) {
+        return this.repo.deleteAnnoucement(id);
     }
 }
