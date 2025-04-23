@@ -27,7 +27,11 @@ export class UserRepository {
     }
 
     async getUserByEmail(email: string): Promise<User | null> {
-        const result = await this.db.selectFrom('users').selectAll().where('email', '=', email).execute();
+        const result = await this.db
+            .selectFrom('users')
+            .selectAll()
+            .where('email', '=', email)
+            .execute();
 
         if (result.length <= 0) {
             return null;
