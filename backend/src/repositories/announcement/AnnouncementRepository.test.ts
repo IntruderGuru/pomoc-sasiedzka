@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { AnnouncementRepository } from './AnnouncementRepository';
+import { AnnouncementRepository } from '../announcement/AnnouncementRepository';
 import { Announcement } from '../../models/Announcement';
 import { UUID } from 'crypto';
 

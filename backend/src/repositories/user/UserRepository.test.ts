@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { User } from '../../models/User';
-import { UserRepository } from './UserRepository';
+import { UserRepository } from '../user/UserRepository';
 
 describe('UserRepository', () => {
     const mockDb: any = {

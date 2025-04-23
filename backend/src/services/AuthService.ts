@@ -1,4 +1,4 @@
-import { UserRepository } from '../database/repositories/UserRepository';
+import { UserRepository } from '../repositories/user/UserRepository';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';

@@ -1,4 +1,4 @@
-import { AnnouncementRepository } from '../database/repositories/AnnouncementRepository';
+import { AnnouncementRepository } from '../repositories/announcement/AnnouncementRepository';
 import { UUID } from 'crypto';
 
 export class AnnouncementService {

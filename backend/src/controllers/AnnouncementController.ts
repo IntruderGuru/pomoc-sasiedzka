@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { db } from '../database/connection';
-import { AnnouncementRepository } from '../database/repositories/AnnouncementRepository';
+import { AnnouncementRepository } from '../repositories/announcement/AnnouncementRepository';
 import { AnnouncementService } from '../services/AnnouncementService';
 import { AuthRequest } from '../middlewares/authMiddleware';
 import { UUID } from 'crypto';
