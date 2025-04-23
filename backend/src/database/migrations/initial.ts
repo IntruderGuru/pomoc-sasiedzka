@@ -1,6 +1,10 @@
 import { Kysely, sql } from 'kysely';
 import { Database } from '../connection';
 
+// For dev
+import { randomUUID } from 'crypto';
+import bcrypt from 'bcrypt';
+
 export async function up(db: Kysely<Database>): Promise<void> {
     await db.schema
         .createTable('users')
@@ -12,13 +16,13 @@ export async function up(db: Kysely<Database>): Promise<void> {
         )
         .execute();
 
+    // For dev
     await db
         .insertInto('users')
         .values({
-            id: '72fdabd7-5a84-474b-88b2-6411ec5fc30',
+            id: randomUUID(),
             email: 'yakui@gmail.com',
-            password:
-                '$2b$10$mK1suCUDB6lSPDXqFoo94.wBL/z6UYPyBfZnWYjL3SE86Tji0y7Q',
+            password: await bcrypt.hash('themaid', 10),
             role: 'admin'
         })
         .execute();
