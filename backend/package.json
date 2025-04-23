@@ -9,6 +9,7 @@
         "postgres:setup": "docker pull postgres && docker rm -f somsiad-db && docker run -d --name somsiad-db -p 5434:5432 -e POSTGRES_DB=somsiad -e POSTGRES_PASSWORD='root' postgres",
         "postgres:migrate": "tsx src/database/migrate.ts",
         "postgres:psql": "docker exec -it somsiad-db psql -U postgres",
+        "test": "vitest",
         "format": "prettier -w src"
     },
     "keywords": [],
@@ -38,6 +39,7 @@
         "prettier": "^3.5.3",
         "ts-node": "^10.9.2",
         "tsx": "^4.19.3",
-        "typescript": "^5.8.2"
+        "typescript": "^5.8.2",
+        "vitest": "^3.1.2"
     }
 }

@@ -21,7 +21,7 @@ export async function up(db: Kysely<Database>): Promise<void> {
         .insertInto('users')
         .values({
             id: randomUUID(),
-            email: 'yakui@gmail.com',
+            email: 'yakui@example.com',
             password: await bcrypt.hash('themaid', 10),
             role: 'admin'
         })
