@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
+
 import { User } from '../../models/User';
 import { UserRepository } from '../user/UserRepository';
 

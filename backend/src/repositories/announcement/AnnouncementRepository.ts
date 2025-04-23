@@ -1,7 +1,8 @@
+import { randomUUID, UUID } from 'crypto';
 import { Kysely } from 'kysely';
+
 import { Database } from '../../database/connection';
 import { Announcement } from '../../models/Announcement';
-import { randomUUID, UUID } from 'crypto';
 
 export class AnnouncementRepository {
     constructor(private db: Kysely<Database>) {}

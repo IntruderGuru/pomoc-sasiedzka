@@ -1,8 +1,9 @@
-import { UserRepository } from '../repositories/user/UserRepository';
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
+import jwt from 'jsonwebtoken';
+
 import { db } from '../database/connection';
+import { UserRepository } from '../repositories/user/UserRepository';
 
 dotenv.config();
 

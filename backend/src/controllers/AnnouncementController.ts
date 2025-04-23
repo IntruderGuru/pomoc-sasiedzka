@@ -1,9 +1,10 @@
+import { UUID } from 'crypto';
 import { Request, Response } from 'express';
+
 import { db } from '../database/connection';
+import { AuthRequest } from '../middlewares/authMiddleware';
 import { AnnouncementRepository } from '../repositories/announcement/AnnouncementRepository';
 import { AnnouncementService } from '../services/AnnouncementService';
-import { AuthRequest } from '../middlewares/authMiddleware';
-import { UUID } from 'crypto';
 
 const service = new AnnouncementService(new AnnouncementRepository(db));
 

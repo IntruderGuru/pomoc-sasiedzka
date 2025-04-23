@@ -1,7 +1,8 @@
-import { describe, expect, it, vi } from 'vitest';
-import { AnnouncementRepository } from '../announcement/AnnouncementRepository';
-import { Announcement } from '../../models/Announcement';
 import { UUID } from 'crypto';
+import { describe, expect, it, vi } from 'vitest';
+
+import { Announcement } from '../../models/Announcement';
+import { AnnouncementRepository } from '../announcement/AnnouncementRepository';
 
 describe('AnnouncementRepository', () => {
     const mockDb: any = {
@@ -47,15 +48,18 @@ describe('AnnouncementRepository', () => {
         const announcementRepo = new AnnouncementRepository(mockDb);
         const announcements = await announcementRepo.getAllAnnoucements();
 
-        const announcement = announcements[0];
-        expect(announcement?.id).toBe('c9005bb9-d42e-441c-ac8d-642709f02b7');
-        expect(announcement?.userId).toBe(
+        expect(Array.isArray(announcements)).toBe(true);
+        expect(announcements[0]).toBeInstanceOf(Announcement);
+        expect(announcements[0]?.id).toBe(
+            'c9005bb9-d42e-441c-ac8d-642709f02b7'
+        );
+        expect(announcements[0]?.userId).toBe(
             'f131ee94-7e48-4bc3-8cd8-752f775efc3'
         );
-        expect(announcement?.getTitle()).toBe(
+        expect(announcements[0]?.getTitle()).toBe(
             'The Brain—is wider than the Sky'
         );
-        expect(announcement?.getContent()).toBe(`
+        expect(announcements[0]?.getContent()).toBe(`
                     The Brain—is wider than the Sky—
                     For—put them side by side—
                     The one the other will contain
@@ -71,9 +75,9 @@ describe('AnnouncementRepository', () => {
                     And they will differ—if they do—
                     As Syllable from Sound— 
                 `);
-        expect(announcement?.getCategory()).toBe('literature');
-        expect(announcement?.getType()).toBe('none');
-        expect(announcement?.createdAt).toStrictEqual(new Date('1862'));
+        expect(announcements[0]?.getCategory()).toBe('literature');
+        expect(announcements[0]?.getType()).toBe('none');
+        expect(announcements[0]?.createdAt).toStrictEqual(new Date('1862'));
     });
 
     it('getAnnoucementsByUserId should return all annoucements posted by user', async () => {

@@ -1,9 +1,9 @@
-import { Kysely, sql } from 'kysely';
-import { Database } from '../connection';
-
+import bcrypt from 'bcrypt';
 // For dev
 import { randomUUID } from 'crypto';
-import bcrypt from 'bcrypt';
+import { Kysely, sql } from 'kysely';
+
+import { Database } from '../connection';
 
 export async function up(db: Kysely<Database>): Promise<void> {
     await db.schema

@@ -1,5 +1,6 @@
-import { AnnouncementRepository } from '../repositories/announcement/AnnouncementRepository';
 import { UUID } from 'crypto';
+
+import { AnnouncementRepository } from '../repositories/announcement/AnnouncementRepository';
 
 export class AnnouncementService {
     constructor(private repo: AnnouncementRepository) {}

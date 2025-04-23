@@ -11,6 +11,8 @@
         "postgres:psql": "docker exec -it somsiad-db psql -U postgres",
         "postgres:dump": "docker exec -it somsiad-db pg_dump -U postgres -h localhost -p 5432 somsiad > src/database/sql_dumps/dump-somsiad.sql",
         "test": "vitest",
+        "lint": "eslint src && tsc --noEmit",
+        "lint:fix": "eslint --fix src && tsc --noEmit",
         "format": "prettier -w src"
     },
     "keywords": [],
@@ -28,6 +30,7 @@
         "pg": "^8.14.1"
     },
     "devDependencies": {
+        "@eslint/js": "^9.25.1",
         "@types/bcrypt": "^5.0.0",
         "@types/cors": "^2.8.17",
         "@types/express": "^4.17.21",
@@ -35,12 +38,18 @@
         "@types/morgan": "^1.9.9",
         "@types/node": "^22.13.14",
         "@types/pg": "^8.11.11",
+        "eslint": "^9.25.1",
+        "eslint-config-prettier": "^10.1.2",
+        "eslint-plugin-prettier": "^5.2.6",
+        "eslint-plugin-simple-import-sort": "^12.1.1",
+        "globals": "^16.0.0",
         "kysely-migration-cli": "^0.4.2",
         "nodemon": "^3.1.9",
         "prettier": "^3.5.3",
         "ts-node": "^10.9.2",
         "tsx": "^4.19.3",
         "typescript": "^5.8.2",
+        "typescript-eslint": "^8.31.0",
         "vitest": "^3.1.2"
     }
 }

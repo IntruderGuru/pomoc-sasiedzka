@@ -1,10 +1,11 @@
-import express, { Request, Response } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import { AuthController } from './controllers/AuthController';
-import { checkAuth, AuthRequest } from './middlewares/authMiddleware';
-import { AnnouncementController } from './controllers/AnnouncementController';
+import express, { Request, Response } from 'express';
 import morgan from 'morgan';
+
+import { AnnouncementController } from './controllers/AnnouncementController';
+import { AuthController } from './controllers/AuthController';
+import { AuthRequest, checkAuth } from './middlewares/authMiddleware';
 
 dotenv.config();
 
@@ -13,11 +14,9 @@ app.use(cors());
 app.use(express.json());
 app.use(morgan('dev'));
 
-
 app.get('/api/healthcheck', (req: Request, res: Response) => {
     res.json({ status: 'OK', message: 'Backend powered by Vite now!' });
 });
-
 
 app.post('/api/auth/register', AuthController.register);
 app.post('/api/auth/login', AuthController.login);

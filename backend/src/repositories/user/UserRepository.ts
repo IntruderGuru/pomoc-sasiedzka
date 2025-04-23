@@ -1,6 +1,7 @@
 import { randomUUID, UUID } from 'crypto';
-import { Database } from '../../database/connection';
 import { Kysely } from 'kysely';
+
+import { Database } from '../../database/connection';
 import { User } from '../../models/User';
 
 export class UserRepository {
