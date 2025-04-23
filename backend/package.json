@@ -9,6 +9,7 @@
         "postgres:setup": "docker pull postgres && docker rm -f somsiad-db && docker run -d --name somsiad-db -p 5434:5432 -e POSTGRES_DB=somsiad -e POSTGRES_PASSWORD='root' postgres",
         "postgres:migrate": "tsx src/database/migrate.ts",
         "postgres:psql": "docker exec -it somsiad-db psql -U postgres",
+        "postgres:dump": "docker exec -it somsiad-db pg_dump -U postgres -h localhost -p 5432 somsiad > src/database/sql_dumps/dump-somsiad.sql",
         "test": "vitest",
         "format": "prettier -w src"
     },
