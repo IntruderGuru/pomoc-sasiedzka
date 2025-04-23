@@ -17,3 +17,7 @@ npm run postgres:migrate down
 # runs psql:
 npm run postgres:psql
 ```
+```
+# dumps databse:
+npm run postgres:dump
+```
