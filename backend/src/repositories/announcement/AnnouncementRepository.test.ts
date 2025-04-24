@@ -17,7 +17,7 @@ describe('AnnouncementRepository', () => {
         execute: vi.fn()
     };
 
-    it('getAllAnnoucement should return all annoucements', async () => {
+    it('getAllAnnouncement should return all announcements', async () => {
         mockDb.execute = vi.fn().mockResolvedValue([
             {
                 id: 'c9005bb9-d42e-441c-ac8d-642709f02b7',
@@ -46,7 +46,7 @@ describe('AnnouncementRepository', () => {
         ]);
 
         const announcementRepo = new AnnouncementRepository(mockDb);
-        const announcements = await announcementRepo.getAllAnnoucements();
+        const announcements = await announcementRepo.getAllAnnouncements();
 
         expect(Array.isArray(announcements)).toBe(true);
         expect(announcements[0]).toBeInstanceOf(Announcement);
@@ -80,7 +80,7 @@ describe('AnnouncementRepository', () => {
         expect(announcements[0]?.createdAt).toStrictEqual(new Date('1862'));
     });
 
-    it('getAnnoucementsByUserId should return all annoucements posted by user', async () => {
+    it('getAnnouncementsByUserId should return all announcements posted by user', async () => {
         mockDb.execute = vi.fn().mockResolvedValue([
             {
                 id: 'c9005bb9-d42e-441c-ac8d-642709f02b7',
@@ -94,7 +94,7 @@ describe('AnnouncementRepository', () => {
         ]);
 
         const announcementRepo = new AnnouncementRepository(mockDb);
-        const announcements = await announcementRepo.getAnnoucementsByUserId(
+        const announcements = await announcementRepo.getAnnouncementsByUserId(
             'f131ee94-7e48-4bc3-8cd8-752f775efc3' as UUID
         );
 
@@ -113,7 +113,7 @@ describe('AnnouncementRepository', () => {
 
     it('addAnnouncement should insert a new announcement and return it', async () => {
         const announcementRepo = new AnnouncementRepository(mockDb);
-        await announcementRepo.addAnnoucement(
+        await announcementRepo.addAnnouncement(
             'f131ee94-7e48-4bc3-8cd8-752f775efc3' as UUID,
             'Title',
             'Content',
@@ -128,7 +128,7 @@ describe('AnnouncementRepository', () => {
 
     it('updateAnnouncement should an update announcement', async () => {
         const announcementRepo = new AnnouncementRepository(mockDb);
-        await announcementRepo.updateAnnoucement(
+        await announcementRepo.updateAnnouncement(
             'c9005bb9-d42e-441c-ac8d-642709f02b7' as UUID,
             'Title',
             'Content',
@@ -144,7 +144,7 @@ describe('AnnouncementRepository', () => {
 
     it('deleteAnnouncement should delete an announcement', async () => {
         const announcementRepo = new AnnouncementRepository(mockDb);
-        await announcementRepo.deleteAnnoucement(
+        await announcementRepo.deleteAnnouncement(
             'c9005bb9-d42e-441c-ac8d-642709f02b7' as UUID
         );
 

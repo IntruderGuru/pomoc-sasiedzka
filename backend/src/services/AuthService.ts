@@ -7,62 +7,84 @@ import { UserRepository } from '../repositories/user/UserRepository';
 
 dotenv.config();
 
+// Fallback used if JWT_SECRET is not provided in .env (should be overridden in production)
 const JWT_SECRET = process.env.JWT_SECRET || 'defaultSecret';
+
+// Repository instance for handling user persistence
 const userRepo = new UserRepository(db);
 
+/**
+ * Service layer responsible for authentication logic:
+ * - Account creation (registration)
+ * - Credential validation (login)
+ * - Password hashing
+ * - Token generation (JWT)
+ */
 export class AuthService {
-    // REJESTRACJA
+
+    /**
+     * Registers a new user account after validating email uniqueness and hashing the password.
+     *
+     * @param email - The user’s email address
+     * @param plainPassword - The raw password input from the user
+     * @throws Error if the email is already in use
+     * @returns A lightweight object with the new user's ID and email
+     */
     static async registerUser(email: string, plainPassword: string) {
-        // 1. Sprawdzenie czy user o takim email już istnieje
+        // Prevent duplicate registration
         const existingUser = await userRepo.getUserByEmail(email);
         if (existingUser) {
             throw new Error('User already exists');
         }
 
-        // 2. Hashowanie hasła
+        // Hash the password with bcrypt
         const saltRounds = 10;
         const hashedPassword = await bcrypt.hash(plainPassword, saltRounds);
 
-        // 3. Tworzenie usera w bazie
+        // Create a new user with default 'user' role
         const newUser = await userRepo.addUser(email, hashedPassword, 'user');
 
-        // 4. Zwróć dane usera (bez hasła) – ewentualnie same metadane
-        return {
-            id: newUser.id,
-            email: newUser.getEmail()
-        };
+        // Return minimal public-safe data
+        return { id: newUser.id, email: newUser.getEmail() };
     }
 
-    // LOGOWANIE
+    /**
+     * Validates credentials and issues a signed JWT if valid.
+     *
+     * @param email - Email address entered during login
+     * @param plainPassword - Raw password entered by the user
+     * @throws Error if the credentials are invalid
+     * @returns An object containing a JWT and user information
+     */
     static async loginUser(email: string, plainPassword: string) {
-        // 1. Znajdź usera w bazie
         const user = await userRepo.getUserByEmail(email);
         if (!user) {
             throw new Error('Invalid credentials');
         }
 
-        // 2. Porównaj hasło
+        // Compare provided password with stored hash
         const isMatch = await bcrypt.compare(plainPassword, user.getPassword());
         if (!isMatch) {
             throw new Error('Invalid credentials');
         }
 
-        // 3. Generowanie tokenu JWT
-        //    Payload zawiera np. userId i role
+        // Generate JWT with user ID and role as payload
         const token = jwt.sign(
             {
-                userId: user.id
+                userId: user.id,
+                role: user.getRole()
             },
             JWT_SECRET,
             { expiresIn: process.env.JWT_EXPIRES_IN || '1h' }
         );
 
-        // 4. Zwróć token
+        // Return token and limited user data
         return {
             token,
             user: {
                 id: user.id,
-                email: user.getEmail()
+                email: user.getEmail(),
+                role: user.getRole()
             }
         };
     }
