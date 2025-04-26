@@ -134,3 +134,305 @@
     at Layer.handle [as handle_request] (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\express\lib\router\layer.js:95:5)
     at C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\express\lib\router\index.js:284:15
 2025-04-24T17:06:49.422Z error: Forbidden: ca3c490c-0b5c-44cf-b551-baae567d497c tried to access undefined
+2025-04-25T12:13:03.764Z error: AggregateError
+    at /Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/pg-pool/index.js:45:11
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async PostgresDriver.acquireConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/dialect/postgres/postgres-driver.js:21:24)
+    at async RuntimeDriver.acquireConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/driver/runtime-driver.js:46:28)
+    at async DefaultConnectionProvider.provideConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/driver/default-connection-provider.js:10:28)
+    at async DefaultQueryExecutor.executeQuery (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/query-executor/query-executor-base.js:36:16)
+    at async SelectQueryBuilderImpl.execute (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/query-builder/select-query-builder.js:317:24)
+    at async AnnouncementRepository.getFiltered (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/src/repositories/announcement/AnnouncementRepository.ts:153:24)
+    at async getAll (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/src/controllers/AnnouncementController.ts:52:26)
+2025-04-25T12:13:08.602Z error: AggregateError
+    at /Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/pg-pool/index.js:45:11
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async PostgresDriver.acquireConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/dialect/postgres/postgres-driver.js:21:24)
+    at async RuntimeDriver.acquireConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/driver/runtime-driver.js:46:28)
+    at async DefaultConnectionProvider.provideConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/driver/default-connection-provider.js:10:28)
+    at async DefaultQueryExecutor.executeQuery (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/query-executor/query-executor-base.js:36:16)
+    at async SelectQueryBuilderImpl.execute (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/query-builder/select-query-builder.js:317:24)
+    at async AnnouncementRepository.getFiltered (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/src/repositories/announcement/AnnouncementRepository.ts:153:24)
+    at async getAll (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/src/controllers/AnnouncementController.ts:52:26)
+2025-04-25T12:13:08.607Z error: AggregateError
+    at /Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/pg-pool/index.js:45:11
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async PostgresDriver.acquireConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/dialect/postgres/postgres-driver.js:21:24)
+    at async RuntimeDriver.acquireConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/driver/runtime-driver.js:46:28)
+    at async DefaultConnectionProvider.provideConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/driver/default-connection-provider.js:10:28)
+    at async DefaultQueryExecutor.executeQuery (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/query-executor/query-executor-base.js:36:16)
+    at async SelectQueryBuilderImpl.execute (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/query-builder/select-query-builder.js:317:24)
+    at async AnnouncementRepository.getFiltered (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/src/repositories/announcement/AnnouncementRepository.ts:153:24)
+    at async getAll (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/src/controllers/AnnouncementController.ts:52:26)
+2025-04-25T13:28:51.948Z error: AggregateError
+    at /Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/pg-pool/index.js:45:11
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async PostgresDriver.acquireConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/dialect/postgres/postgres-driver.js:21:24)
+    at async RuntimeDriver.acquireConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/driver/runtime-driver.js:46:28)
+    at async DefaultConnectionProvider.provideConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/driver/default-connection-provider.js:10:28)
+    at async DefaultQueryExecutor.executeQuery (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/query-executor/query-executor-base.js:36:16)
+    at async SelectQueryBuilderImpl.execute (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/query-builder/select-query-builder.js:317:24)
+    at async AnnouncementRepository.getFiltered (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/src/repositories/announcement/AnnouncementRepository.ts:153:24)
+    at async getAll (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/src/controllers/AnnouncementController.ts:52:26)
+2025-04-25T13:29:06.593Z error: AggregateError
+    at /Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/pg-pool/index.js:45:11
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async PostgresDriver.acquireConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/dialect/postgres/postgres-driver.js:21:24)
+    at async RuntimeDriver.acquireConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/driver/runtime-driver.js:46:28)
+    at async DefaultConnectionProvider.provideConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/driver/default-connection-provider.js:10:28)
+    at async DefaultQueryExecutor.executeQuery (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/query-executor/query-executor-base.js:36:16)
+    at async SelectQueryBuilderImpl.execute (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/query-builder/select-query-builder.js:317:24)
+    at async AnnouncementRepository.getFiltered (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/src/repositories/announcement/AnnouncementRepository.ts:153:24)
+    at async getAll (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/src/controllers/AnnouncementController.ts:52:26)
+2025-04-25T13:29:06.603Z error: AggregateError
+    at /Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/pg-pool/index.js:45:11
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async PostgresDriver.acquireConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/dialect/postgres/postgres-driver.js:21:24)
+    at async RuntimeDriver.acquireConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/driver/runtime-driver.js:46:28)
+    at async DefaultConnectionProvider.provideConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/driver/default-connection-provider.js:10:28)
+    at async DefaultQueryExecutor.executeQuery (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/query-executor/query-executor-base.js:36:16)
+    at async SelectQueryBuilderImpl.execute (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/query-builder/select-query-builder.js:317:24)
+    at async AnnouncementRepository.getFiltered (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/src/repositories/announcement/AnnouncementRepository.ts:153:24)
+    at async getAll (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/src/controllers/AnnouncementController.ts:52:26)
+2025-04-25T13:29:08.774Z error: AggregateError
+    at /Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/pg-pool/index.js:45:11
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async PostgresDriver.acquireConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/dialect/postgres/postgres-driver.js:21:24)
+    at async RuntimeDriver.acquireConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/driver/runtime-driver.js:46:28)
+    at async DefaultConnectionProvider.provideConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/driver/default-connection-provider.js:10:28)
+    at async DefaultQueryExecutor.executeQuery (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/query-executor/query-executor-base.js:36:16)
+    at async SelectQueryBuilderImpl.execute (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/query-builder/select-query-builder.js:317:24)
+    at async AnnouncementRepository.getFiltered (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/src/repositories/announcement/AnnouncementRepository.ts:153:24)
+    at async getAll (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/src/controllers/AnnouncementController.ts:52:26)
+2025-04-25T13:29:08.777Z error: AggregateError
+    at /Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/pg-pool/index.js:45:11
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async PostgresDriver.acquireConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/dialect/postgres/postgres-driver.js:21:24)
+    at async RuntimeDriver.acquireConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/driver/runtime-driver.js:46:28)
+    at async DefaultConnectionProvider.provideConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/driver/default-connection-provider.js:10:28)
+    at async DefaultQueryExecutor.executeQuery (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/query-executor/query-executor-base.js:36:16)
+    at async SelectQueryBuilderImpl.execute (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/query-builder/select-query-builder.js:317:24)
+    at async AnnouncementRepository.getFiltered (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/src/repositories/announcement/AnnouncementRepository.ts:153:24)
+    at async getAll (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/src/controllers/AnnouncementController.ts:52:26)
+2025-04-25T13:29:10.044Z error: AggregateError
+    at /Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/pg-pool/index.js:45:11
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async PostgresDriver.acquireConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/dialect/postgres/postgres-driver.js:21:24)
+    at async RuntimeDriver.acquireConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/driver/runtime-driver.js:46:28)
+    at async DefaultConnectionProvider.provideConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/driver/default-connection-provider.js:10:28)
+    at async DefaultQueryExecutor.executeQuery (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/query-executor/query-executor-base.js:36:16)
+    at async SelectQueryBuilderImpl.execute (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/query-builder/select-query-builder.js:317:24)
+    at async AnnouncementRepository.getFiltered (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/src/repositories/announcement/AnnouncementRepository.ts:153:24)
+    at async getAll (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/src/controllers/AnnouncementController.ts:52:26)
+2025-04-25T13:29:10.050Z error: AggregateError
+    at /Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/pg-pool/index.js:45:11
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async PostgresDriver.acquireConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/dialect/postgres/postgres-driver.js:21:24)
+    at async RuntimeDriver.acquireConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/driver/runtime-driver.js:46:28)
+    at async DefaultConnectionProvider.provideConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/driver/default-connection-provider.js:10:28)
+    at async DefaultQueryExecutor.executeQuery (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/query-executor/query-executor-base.js:36:16)
+    at async SelectQueryBuilderImpl.execute (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/query-builder/select-query-builder.js:317:24)
+    at async AnnouncementRepository.getFiltered (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/src/repositories/announcement/AnnouncementRepository.ts:153:24)
+    at async getAll (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/src/controllers/AnnouncementController.ts:52:26)
+2025-04-25T13:29:11.068Z error: AggregateError
+    at /Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/pg-pool/index.js:45:11
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async PostgresDriver.acquireConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/dialect/postgres/postgres-driver.js:21:24)
+    at async RuntimeDriver.acquireConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/driver/runtime-driver.js:46:28)
+    at async DefaultConnectionProvider.provideConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/driver/default-connection-provider.js:10:28)
+    at async DefaultQueryExecutor.executeQuery (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/query-executor/query-executor-base.js:36:16)
+    at async SelectQueryBuilderImpl.execute (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/query-builder/select-query-builder.js:317:24)
+    at async AnnouncementRepository.getFiltered (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/src/repositories/announcement/AnnouncementRepository.ts:153:24)
+    at async getAll (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/src/controllers/AnnouncementController.ts:52:26)
+2025-04-25T13:29:11.074Z error: AggregateError
+    at /Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/pg-pool/index.js:45:11
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async PostgresDriver.acquireConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/dialect/postgres/postgres-driver.js:21:24)
+    at async RuntimeDriver.acquireConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/driver/runtime-driver.js:46:28)
+    at async DefaultConnectionProvider.provideConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/driver/default-connection-provider.js:10:28)
+    at async DefaultQueryExecutor.executeQuery (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/query-executor/query-executor-base.js:36:16)
+    at async SelectQueryBuilderImpl.execute (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/query-builder/select-query-builder.js:317:24)
+    at async AnnouncementRepository.getFiltered (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/src/repositories/announcement/AnnouncementRepository.ts:153:24)
+    at async getAll (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/src/controllers/AnnouncementController.ts:52:26)
+2025-04-25T13:29:12.099Z error: AggregateError
+    at /Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/pg-pool/index.js:45:11
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async PostgresDriver.acquireConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/dialect/postgres/postgres-driver.js:21:24)
+    at async RuntimeDriver.acquireConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/driver/runtime-driver.js:46:28)
+    at async DefaultConnectionProvider.provideConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/driver/default-connection-provider.js:10:28)
+    at async DefaultQueryExecutor.executeQuery (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/query-executor/query-executor-base.js:36:16)
+    at async SelectQueryBuilderImpl.execute (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/query-builder/select-query-builder.js:317:24)
+    at async AnnouncementRepository.getFiltered (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/src/repositories/announcement/AnnouncementRepository.ts:153:24)
+    at async getAll (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/src/controllers/AnnouncementController.ts:52:26)
+2025-04-25T13:29:12.103Z error: AggregateError
+    at /Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/pg-pool/index.js:45:11
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async PostgresDriver.acquireConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/dialect/postgres/postgres-driver.js:21:24)
+    at async RuntimeDriver.acquireConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/driver/runtime-driver.js:46:28)
+    at async DefaultConnectionProvider.provideConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/driver/default-connection-provider.js:10:28)
+    at async DefaultQueryExecutor.executeQuery (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/query-executor/query-executor-base.js:36:16)
+    at async SelectQueryBuilderImpl.execute (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/query-builder/select-query-builder.js:317:24)
+    at async AnnouncementRepository.getFiltered (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/src/repositories/announcement/AnnouncementRepository.ts:153:24)
+    at async getAll (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/src/controllers/AnnouncementController.ts:52:26)
+2025-04-25T13:29:13.121Z error: AggregateError
+    at /Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/pg-pool/index.js:45:11
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async PostgresDriver.acquireConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/dialect/postgres/postgres-driver.js:21:24)
+    at async RuntimeDriver.acquireConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/driver/runtime-driver.js:46:28)
+    at async DefaultConnectionProvider.provideConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/driver/default-connection-provider.js:10:28)
+    at async DefaultQueryExecutor.executeQuery (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/query-executor/query-executor-base.js:36:16)
+    at async SelectQueryBuilderImpl.execute (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/query-builder/select-query-builder.js:317:24)
+    at async AnnouncementRepository.getFiltered (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/src/repositories/announcement/AnnouncementRepository.ts:153:24)
+    at async getAll (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/src/controllers/AnnouncementController.ts:52:26)
+2025-04-25T13:29:13.125Z error: AggregateError
+    at /Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/pg-pool/index.js:45:11
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async PostgresDriver.acquireConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/dialect/postgres/postgres-driver.js:21:24)
+    at async RuntimeDriver.acquireConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/driver/runtime-driver.js:46:28)
+    at async DefaultConnectionProvider.provideConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/driver/default-connection-provider.js:10:28)
+    at async DefaultQueryExecutor.executeQuery (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/query-executor/query-executor-base.js:36:16)
+    at async SelectQueryBuilderImpl.execute (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/query-builder/select-query-builder.js:317:24)
+    at async AnnouncementRepository.getFiltered (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/src/repositories/announcement/AnnouncementRepository.ts:153:24)
+    at async getAll (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/src/controllers/AnnouncementController.ts:52:26)
+2025-04-25T13:29:14.132Z error: AggregateError
+    at /Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/pg-pool/index.js:45:11
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async PostgresDriver.acquireConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/dialect/postgres/postgres-driver.js:21:24)
+    at async RuntimeDriver.acquireConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/driver/runtime-driver.js:46:28)
+    at async DefaultConnectionProvider.provideConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/driver/default-connection-provider.js:10:28)
+    at async DefaultQueryExecutor.executeQuery (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/query-executor/query-executor-base.js:36:16)
+    at async SelectQueryBuilderImpl.execute (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/query-builder/select-query-builder.js:317:24)
+    at async AnnouncementRepository.getFiltered (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/src/repositories/announcement/AnnouncementRepository.ts:153:24)
+    at async getAll (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/src/controllers/AnnouncementController.ts:52:26)
+2025-04-25T13:29:14.135Z error: AggregateError
+    at /Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/pg-pool/index.js:45:11
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async PostgresDriver.acquireConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/dialect/postgres/postgres-driver.js:21:24)
+    at async RuntimeDriver.acquireConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/driver/runtime-driver.js:46:28)
+    at async DefaultConnectionProvider.provideConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/driver/default-connection-provider.js:10:28)
+    at async DefaultQueryExecutor.executeQuery (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/query-executor/query-executor-base.js:36:16)
+    at async SelectQueryBuilderImpl.execute (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/query-builder/select-query-builder.js:317:24)
+    at async AnnouncementRepository.getFiltered (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/src/repositories/announcement/AnnouncementRepository.ts:153:24)
+    at async getAll (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/src/controllers/AnnouncementController.ts:52:26)
+2025-04-25T13:29:40.313Z error: AggregateError
+    at /Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/pg-pool/index.js:45:11
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async PostgresDriver.acquireConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/dialect/postgres/postgres-driver.js:21:24)
+    at async RuntimeDriver.acquireConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/driver/runtime-driver.js:46:28)
+    at async DefaultConnectionProvider.provideConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/driver/default-connection-provider.js:10:28)
+    at async DefaultQueryExecutor.executeQuery (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/query-executor/query-executor-base.js:36:16)
+    at async SelectQueryBuilderImpl.execute (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/query-builder/select-query-builder.js:317:24)
+    at async AnnouncementRepository.getFiltered (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/src/repositories/announcement/AnnouncementRepository.ts:153:24)
+    at async getAll (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/src/controllers/AnnouncementController.ts:52:26)
+2025-04-25T13:29:40.316Z error: AggregateError
+    at /Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/pg-pool/index.js:45:11
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async PostgresDriver.acquireConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/dialect/postgres/postgres-driver.js:21:24)
+    at async RuntimeDriver.acquireConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/driver/runtime-driver.js:46:28)
+    at async DefaultConnectionProvider.provideConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/driver/default-connection-provider.js:10:28)
+    at async DefaultQueryExecutor.executeQuery (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/query-executor/query-executor-base.js:36:16)
+    at async SelectQueryBuilderImpl.execute (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/query-builder/select-query-builder.js:317:24)
+    at async AnnouncementRepository.getFiltered (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/src/repositories/announcement/AnnouncementRepository.ts:153:24)
+    at async getAll (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/src/controllers/AnnouncementController.ts:52:26)
+2025-04-25T13:29:42.841Z error: AggregateError
+    at /Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/pg-pool/index.js:45:11
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async PostgresDriver.acquireConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/dialect/postgres/postgres-driver.js:21:24)
+    at async RuntimeDriver.acquireConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/driver/runtime-driver.js:46:28)
+    at async DefaultConnectionProvider.provideConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/driver/default-connection-provider.js:10:28)
+    at async DefaultQueryExecutor.executeQuery (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/query-executor/query-executor-base.js:36:16)
+    at async SelectQueryBuilderImpl.execute (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/query-builder/select-query-builder.js:317:24)
+    at async AnnouncementRepository.getFiltered (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/src/repositories/announcement/AnnouncementRepository.ts:153:24)
+    at async getAll (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/src/controllers/AnnouncementController.ts:52:26)
+2025-04-25T13:29:42.843Z error: AggregateError
+    at /Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/pg-pool/index.js:45:11
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async PostgresDriver.acquireConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/dialect/postgres/postgres-driver.js:21:24)
+    at async RuntimeDriver.acquireConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/driver/runtime-driver.js:46:28)
+    at async DefaultConnectionProvider.provideConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/driver/default-connection-provider.js:10:28)
+    at async DefaultQueryExecutor.executeQuery (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/query-executor/query-executor-base.js:36:16)
+    at async SelectQueryBuilderImpl.execute (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/query-builder/select-query-builder.js:317:24)
+    at async AnnouncementRepository.getFiltered (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/src/repositories/announcement/AnnouncementRepository.ts:153:24)
+    at async getAll (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/src/controllers/AnnouncementController.ts:52:26)
+2025-04-25T13:29:59.990Z error: AggregateError
+    at /Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/pg-pool/index.js:45:11
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async PostgresDriver.acquireConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/dialect/postgres/postgres-driver.js:21:24)
+    at async RuntimeDriver.acquireConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/driver/runtime-driver.js:46:28)
+    at async DefaultConnectionProvider.provideConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/driver/default-connection-provider.js:10:28)
+    at async DefaultQueryExecutor.executeQuery (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/query-executor/query-executor-base.js:36:16)
+    at async SelectQueryBuilderImpl.execute (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/query-builder/select-query-builder.js:317:24)
+    at async AnnouncementRepository.getFiltered (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/src/repositories/announcement/AnnouncementRepository.ts:153:24)
+    at async getAll (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/src/controllers/AnnouncementController.ts:52:26)
+2025-04-25T13:29:59.993Z error: AggregateError
+    at /Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/pg-pool/index.js:45:11
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async PostgresDriver.acquireConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/dialect/postgres/postgres-driver.js:21:24)
+    at async RuntimeDriver.acquireConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/driver/runtime-driver.js:46:28)
+    at async DefaultConnectionProvider.provideConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/driver/default-connection-provider.js:10:28)
+    at async DefaultQueryExecutor.executeQuery (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/query-executor/query-executor-base.js:36:16)
+    at async SelectQueryBuilderImpl.execute (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/query-builder/select-query-builder.js:317:24)
+    at async AnnouncementRepository.getFiltered (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/src/repositories/announcement/AnnouncementRepository.ts:153:24)
+    at async getAll (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/src/controllers/AnnouncementController.ts:52:26)
+2025-04-25T13:32:07.783Z error: AggregateError
+    at /Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/pg-pool/index.js:45:11
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async PostgresDriver.acquireConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/dialect/postgres/postgres-driver.js:21:24)
+    at async RuntimeDriver.acquireConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/driver/runtime-driver.js:46:28)
+    at async DefaultConnectionProvider.provideConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/driver/default-connection-provider.js:10:28)
+    at async DefaultQueryExecutor.executeQuery (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/query-executor/query-executor-base.js:36:16)
+    at async SelectQueryBuilderImpl.execute (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/query-builder/select-query-builder.js:317:24)
+    at async AnnouncementRepository.getFiltered (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/src/repositories/announcement/AnnouncementRepository.ts:153:24)
+    at async getAll (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/src/controllers/AnnouncementController.ts:52:26)
+2025-04-25T13:32:07.788Z error: AggregateError
+    at /Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/pg-pool/index.js:45:11
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async PostgresDriver.acquireConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/dialect/postgres/postgres-driver.js:21:24)
+    at async RuntimeDriver.acquireConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/driver/runtime-driver.js:46:28)
+    at async DefaultConnectionProvider.provideConnection (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/driver/default-connection-provider.js:10:28)
+    at async DefaultQueryExecutor.executeQuery (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/query-executor/query-executor-base.js:36:16)
+    at async SelectQueryBuilderImpl.execute (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/kysely/dist/cjs/query-builder/select-query-builder.js:317:24)
+    at async AnnouncementRepository.getFiltered (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/src/repositories/announcement/AnnouncementRepository.ts:153:24)
+    at async getAll (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/src/controllers/AnnouncementController.ts:52:26)
+2025-04-25T14:04:17.224Z error: Error: All fields are required
+    at AnnouncementService.create (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/src/services/AnnouncementService.ts:34:19)
+    at create (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/src/controllers/AnnouncementController.ts:34:40)
+    at Layer.handle [as handle_request] (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/express/lib/router/layer.js:95:5)
+    at next (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/express/lib/router/route.js:149:13)
+    at checkAuth (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/src/middlewares/authMiddleware.ts:53:9)
+    at Layer.handle [as handle_request] (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/express/lib/router/layer.js:95:5)
+    at next (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/express/lib/router/route.js:149:13)
+    at Route.dispatch (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/express/lib/router/route.js:119:3)
+    at Layer.handle [as handle_request] (/Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/express/lib/router/layer.js:95:5)
+    at /Users/jakub/WebstormProjects/pomoc-sasiedzka/backend/node_modules/express/lib/router/index.js:284:15
+2025-04-25T14:39:42.439Z error: Forbidden: ac50de45-2ef3-45dc-bf6a-6279d4fce87b tried to access undefined
+2025-04-25T14:39:45.695Z error: Forbidden: ac50de45-2ef3-45dc-bf6a-6279d4fce87b tried to access undefined
+2025-04-25T14:39:48.596Z error: Forbidden: ac50de45-2ef3-45dc-bf6a-6279d4fce87b tried to access undefined
+2025-04-25T14:41:52.344Z error: Forbidden: ac50de45-2ef3-45dc-bf6a-6279d4fce87b tried to access undefined
+2025-04-25T14:41:53.354Z error: Forbidden: ac50de45-2ef3-45dc-bf6a-6279d4fce87b tried to access undefined
+2025-04-25T14:41:54.245Z error: Forbidden: ac50de45-2ef3-45dc-bf6a-6279d4fce87b tried to access undefined
+2025-04-25T14:41:54.903Z error: Forbidden: ac50de45-2ef3-45dc-bf6a-6279d4fce87b tried to access undefined
+2025-04-25T14:41:56.747Z error: Forbidden: ac50de45-2ef3-45dc-bf6a-6279d4fce87b tried to access undefined
+2025-04-25T14:41:57.058Z error: Forbidden: ac50de45-2ef3-45dc-bf6a-6279d4fce87b tried to access undefined
+2025-04-25T14:41:57.224Z error: Forbidden: ac50de45-2ef3-45dc-bf6a-6279d4fce87b tried to access undefined
+2025-04-25T14:41:57.389Z error: Forbidden: ac50de45-2ef3-45dc-bf6a-6279d4fce87b tried to access undefined
+2025-04-25T14:41:57.556Z error: Forbidden: ac50de45-2ef3-45dc-bf6a-6279d4fce87b tried to access undefined
+2025-04-25T14:42:27.241Z error: Forbidden: ac50de45-2ef3-45dc-bf6a-6279d4fce87b tried to access undefined
+2025-04-25T14:42:28.203Z error: Forbidden: ac50de45-2ef3-45dc-bf6a-6279d4fce87b tried to access undefined
+2025-04-25T14:42:51.109Z error: Forbidden: ac50de45-2ef3-45dc-bf6a-6279d4fce87b tried to access undefined
+2025-04-25T14:42:51.288Z error: Forbidden: ac50de45-2ef3-45dc-bf6a-6279d4fce87b tried to access undefined
+2025-04-25T14:42:51.447Z error: Forbidden: ac50de45-2ef3-45dc-bf6a-6279d4fce87b tried to access undefined
+2025-04-25T14:42:51.613Z error: Forbidden: ac50de45-2ef3-45dc-bf6a-6279d4fce87b tried to access undefined
+2025-04-25T14:42:51.769Z error: Forbidden: ac50de45-2ef3-45dc-bf6a-6279d4fce87b tried to access undefined
+2025-04-25T14:42:51.937Z error: Forbidden: ac50de45-2ef3-45dc-bf6a-6279d4fce87b tried to access undefined
+2025-04-25T14:42:52.078Z error: Forbidden: ac50de45-2ef3-45dc-bf6a-6279d4fce87b tried to access undefined
+2025-04-25T14:42:52.679Z error: Forbidden: ac50de45-2ef3-45dc-bf6a-6279d4fce87b tried to access undefined
+2025-04-25T14:42:52.858Z error: Forbidden: ac50de45-2ef3-45dc-bf6a-6279d4fce87b tried to access undefined
+2025-04-25T14:49:32.490Z error: Forbidden: ac50de45-2ef3-45dc-bf6a-6279d4fce87b tried to access undefined
+2025-04-25T14:51:42.725Z error: Forbidden: ac50de45-2ef3-45dc-bf6a-6279d4fce87b tried to access undefined
+2025-04-25T14:51:44.113Z error: Forbidden: ac50de45-2ef3-45dc-bf6a-6279d4fce87b tried to access undefined
+2025-04-25T14:51:47.331Z error: Forbidden: ac50de45-2ef3-45dc-bf6a-6279d4fce87b tried to access undefined
+2025-04-25T14:52:58.265Z error: Forbidden: ac50de45-2ef3-45dc-bf6a-6279d4fce87b tried to access undefined
+2025-04-25T14:52:59.474Z error: Forbidden: ac50de45-2ef3-45dc-bf6a-6279d4fce87b tried to access undefined
+2025-04-25T14:53:00.504Z error: Forbidden: ac50de45-2ef3-45dc-bf6a-6279d4fce87b tried to access undefined
+2025-04-25T14:53:01.405Z error: Forbidden: ac50de45-2ef3-45dc-bf6a-6279d4fce87b tried to access undefined

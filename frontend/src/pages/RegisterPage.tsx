@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { registerUser } from '../services/api';
+import Nav from "../components/Nav.tsx";
 
 export const RegisterPage = () => {
   const [email, setEmail] = useState('');
@@ -28,6 +29,8 @@ export const RegisterPage = () => {
   };
 
   return (
+      <>
+        <Nav />
     <form onSubmit={handleSubmit}>
       <input
         value={email}
@@ -43,6 +46,7 @@ export const RegisterPage = () => {
       <button type='submit'>Zarejestruj</button>
       {error && <p>{error}</p>}
     </form>
+      </>
   );
 };
 

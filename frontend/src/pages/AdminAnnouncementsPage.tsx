@@ -1,12 +1,10 @@
 import { useEffect, useState } from 'react';
-import { fetchAll, remove } from '../services/AnnouncementService';
+import { fetchAllForAdmin, remove} from '../services/AnnouncementService';
 import Spinner from '../components/Spinner';
-import {getUserID} from "../services/api.ts";
-import { UUID } from 'crypto';
+import { UUID } from 'crypto'
 import {useNavigate} from "react-router";
-import Nav from "../components/Nav.tsx";
 
-export default function AnnouncementsPage() {
+export default function MyAnnouncementsPage() {
     interface Announcement {
         id: UUID;
         title: string;
@@ -14,14 +12,15 @@ export default function AnnouncementsPage() {
         category: string;
         userId: UUID;
         createdAt: string;
+        authorEmail: string;
     }
+
     const navigate = useNavigate();
     const [announcements, setAnnouncements] = useState<Announcement[]>([]);
     const [loading, setLoading] = useState(true);
-    const loggedUserId = getUserID();
 
     const getData = async () => {
-        const announcements = await fetchAll();
+        const announcements = await fetchAllForAdmin();
         setAnnouncements(announcements.data as Announcement[]);
         setLoading(false);
     };
@@ -40,8 +39,7 @@ export default function AnnouncementsPage() {
 
     return (
         <div>
-            <Nav />
-            <h1>Ogłoszenia</h1>
+            <h1>Ogłoszenia(ADMIN)</h1>
             <ul>
                 {announcements.map((a) => (
                     <li key={a.id}>
@@ -49,14 +47,11 @@ export default function AnnouncementsPage() {
                         <p>{a.content}</p>
                         <p>
                             {/* <i>{a.category}</i> —  */}
-                            {a.userId} ({a.createdAt}) {loggedUserId}</p>
+                            {a.userId} ({a.createdAt}) {a.authorEmail}</p>
 
-                        {a.userId == loggedUserId && (
-                            <>
-                                <button onClick={() => handleDelete(a.id)}>Usuń</button>
-                                <button onClick={() => navigate(`/announcements/${a.id}`)}>Edytuj</button>
-                            </>
-                        )}
+
+                        <button onClick={() => handleDelete(a.id)}>Usuń</button>
+                        <button onClick={() => navigate(`/announcements/${a.id}`)}>Edytuj</button>
                     </li>
                 ))}
             </ul>
