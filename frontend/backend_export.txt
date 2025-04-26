@@ -1,0 +1,381 @@
+=== ŚCIEŻKA ===
+package.json
+=== ZAWARTOŚĆ ===
+{
+  "name": "frontend",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "eslint .",
+    "preview": "vite preview",
+    "format": "prettier -w src"
+  },
+  "dependencies": {
+    "axios": "^1.8.4",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-router-dom": "^7.5.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.21.0",
+    "@types/axios": "^0.9.36",
+    "@types/react": "^19.0.10",
+    "@types/react-dom": "^19.0.4",
+    "@vitejs/plugin-react": "^4.3.4",
+    "eslint": "^9.21.0",
+    "eslint-plugin-react-hooks": "^5.1.0",
+    "eslint-plugin-react-refresh": "^0.4.19",
+    "globals": "^15.15.0",
+    "prettier": "^3.5.3",
+    "typescript": "~5.7.2",
+    "typescript-eslint": "^8.24.1",
+    "vite": "^6.2.0"
+  }
+}
+
+
+=== ŚCIEŻKA ===
+tsconfig.json
+=== ZAWARTOŚĆ ===
+{
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
+  ]
+}
+
+
+=== ŚCIEŻKA ===
+src/App.tsx
+=== ZAWARTOŚĆ ===
+import OptionSwitcher from "./components/OptionSwitcher.tsx";
+import LoginPage from "./pages/LoginPage.tsx";
+
+function App() {
+  return (
+    <div>
+      <OptionSwitcher />
+    </div>
+  );
+}
+
+export default App;
+
+
+=== ŚCIEŻKA ===
+src/main.tsx
+=== ZAWARTOŚĆ ===
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import './index.css';
+import App from './App.tsx';
+
+createRoot(document.getElementById('root')!).render(
+  <StrictMode>
+    <App />
+  </StrictMode>
+);
+
+
+=== ŚCIEŻKA ===
+src/components/OptionSwitcher.tsx
+=== ZAWARTOŚĆ ===
+import { useState } from 'react';
+import AnnouncementsPage from "../pages/AnnouncementsPage.tsx";
+import LoginPage from "../pages/LoginPage.tsx";
+import RegisterPage from "../pages/RegisterPage.tsx";
+import AnnouncementForm from '../pages/AnnouncementForm.tsx';
+
+export default function OptionSwitcher() {
+    const [selected, setSelected] = useState<'home' | 'login' | 'register' | 'add'>('home');
+
+    return (
+        <div>
+            <h2>Wybierz sekcję</h2>
+            <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem' }}>
+                <button onClick={() => setSelected('home')}>Strona główna</button>
+                <button onClick={() => setSelected('login')}>Logowanie</button>
+                <button onClick={() => setSelected('register')}>Rejestracja</button>
+                <button onClick={() => setSelected('add')}>Dodaj post</button>
+
+            </div>
+
+            <div>
+                {selected === 'home' && <AnnouncementsPage />}
+                {selected === 'login' && <LoginPage />}
+                {selected === 'register' && <RegisterPage />}
+                {selected === 'add' && <AnnouncementForm />}
+            </div>
+        </div>
+    );
+}
+
+
+=== ŚCIEŻKA ===
+src/components/Spinner.tsx
+=== ZAWARTOŚĆ ===
+export default function Spinner() {
+    return <div className="spinner">Ładowanie...</div>; // add spinner style or icon
+}
+
+
+=== ŚCIEŻKA ===
+src/pages/AnnouncementForm.tsx
+=== ZAWARTOŚĆ ===
+import { useEffect, useState } from 'react';
+import { create, fetchById, update } from '../services/AnnouncementService';
+import { useParams } from 'react-router-dom';
+import Spinner from '../components/Spinner';
+
+export default function AnnouncementForm() {
+  const { id } = useParams();
+  // const navigate = useNavigate();
+
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
+  const [loading, setLoading] = useState(!!id);
+
+  const isValid = title.trim() && content.trim();
+
+  useEffect(() => {
+    if (id) {
+      fetchById(id).then(res => {
+        const data = res.data as { title: string; content: string };
+        setTitle(data.title);
+        setContent(data.content);
+        // setCategory(data.category || '');
+        setLoading(false);
+      });
+    }
+  }, [id]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!isValid) return alert('Wszystkie pola muszą być wypełnione');
+
+    const data = { title, content };
+
+    if (id) {
+      await update(id, data);
+      alert('Ogłoszenie zaktualizowane');
+    } else {
+      await create(data);
+      alert('Ogłoszenie dodane');
+    }
+
+    // navigate('/announcements');
+  };
+
+  if (loading) return <Spinner />;
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <h2>{id ? 'Edytuj' : 'Dodaj'} ogłoszenie</h2>
+      <input
+        placeholder='Tytuł'
+        value={title}
+        onChange={e => setTitle(e.target.value)}
+        required
+      />
+      <textarea
+        placeholder='Treść'
+        value={content}
+        onChange={e => setContent(e.target.value)}
+        required
+      />
+      {/* <input placeholder="Kategoria (opcjonalnie)" value={category} onChange={e => setCategory(e.target.value)} /> */}
+      <button type='submit'>{id ? 'Zapisz zmiany' : 'Dodaj ogłoszenie'}</button>
+    </form>
+  );
+}
+
+
+=== ŚCIEŻKA ===
+src/pages/AnnouncementsPage.tsx
+=== ZAWARTOŚĆ ===
+import { useEffect, useState } from 'react';
+import { fetchAll, remove } from '../services/AnnouncementService';
+import Spinner from '../components/Spinner';
+
+export default function AnnouncementsPage() {
+    interface Announcement {
+        id: string;
+        title: string;
+        content: string;
+        category: string;
+        userId: string;
+        createdAt: string;
+    }
+
+    const [announcements, setAnnouncements] = useState<Announcement[]>([]);
+    const [loading, setLoading] = useState(true);
+    const loggedUserId = localStorage.getItem('userId');
+
+    const getData = async () => {
+        const announcements = await fetchAll();
+        setAnnouncements(announcements.data as Announcement[]);
+        setLoading(false);
+    };
+
+    const handleDelete = async (id: string) => {
+        await remove(id);
+        alert('Ogłoszenie usunięte');
+        getData();
+    };
+
+    useEffect(() => {
+        getData();
+    }, []);
+
+    if (loading) return <Spinner />;
+
+    return (
+        <div>
+            <h1>Ogłoszenia</h1>
+            {/* <button onClick={() => navigate('/announcements/create')}>Dodaj ogłoszenie</button> */}
+            <ul>
+                {announcements.map((a) => (
+                    <li key={a.id}>
+                        <h3>{a.title}</h3>
+                        <p>{a.content}</p>
+                        <p>
+                            {/* <i>{a.category}</i> —  */}
+                            {a.userId} ({a.createdAt})</p>
+
+                        {a.userId === loggedUserId && (
+                            <>
+                                {/* <button onClick={() => navigate(`/announcements/${a.id}`)}>Edytuj</button> */}
+                                <button onClick={() => handleDelete(a.id)}>Usuń</button>
+                            </>
+                        )}
+                    </li>
+                ))}
+            </ul>
+        </div>
+    );
+}
+
+
+=== ŚCIEŻKA ===
+src/pages/LoginPage.tsx
+=== ZAWARTOŚĆ ===
+import { useState } from 'react';
+import { loginUser, setToken } from '../services/api';
+
+export const LoginPage = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      const res = await loginUser({ email, password });
+      setToken(res.data.token);
+      alert('Zalogowano!');
+    } catch {
+      setError('Błędne dane logowania');
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <input
+        value={email}
+        onChange={e => setEmail(e.target.value)}
+        placeholder='Email'
+      />
+      <input
+        type='password'
+        value={password}
+        onChange={e => setPassword(e.target.value)}
+        placeholder='Hasło'
+      />
+      <button type='submit'>Zaloguj</button>
+      {error && <p>{error}</p>}
+    </form>
+  );
+};
+
+export default LoginPage;
+
+
+=== ŚCIEŻKA ===
+src/pages/RegisterPage.tsx
+=== ZAWARTOŚĆ ===
+import { useState } from 'react';
+import { registerUser } from '../services/api';
+
+export const RegisterPage = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!email.includes('@')) {
+      setError('Nieprawidłowy email');
+      return;
+    }
+
+    if (password.length < 6) {
+      setError('Hasło za krótkie');
+      return;
+    }
+
+    try {
+      await registerUser({ email, password });
+      alert('Rejestracja udana');
+    } catch {
+      setError('Błąd rejestracji');
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <input
+        value={email}
+        onChange={e => setEmail(e.target.value)}
+        placeholder='Email'
+      />
+      <input
+        type='password'
+        value={password}
+        onChange={e => setPassword(e.target.value)}
+        placeholder='Hasło'
+      />
+      <button type='submit'>Zarejestruj</button>
+      {error && <p>{error}</p>}
+    </form>
+  );
+};
+
+export default RegisterPage;
+
+
+=== ŚCIEŻKA ===
+src/routes/AppRoutes.tsx
+=== ZAWARTOŚĆ ===
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import AnnouncementsPage from '../pages/AnnouncementsPage';
+import AnnouncementForm from '../pages/AnnouncementForm';
+
+export default function AppRoutes() {
+    return (
+        <Router>
+            <Routes>
+                <Route path="/announcements" element={<AnnouncementsPage />} />
+                <Route path="/announcements/create" element={<AnnouncementForm />} />
+                <Route path="/announcements/:id" element={<AnnouncementForm />} />
+            </Routes>
+        </Router>
+    );
+}
+
+
