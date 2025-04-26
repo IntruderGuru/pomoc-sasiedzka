@@ -5,7 +5,7 @@ import { AuthRequest } from './authMiddleware';
 import { logger } from '../utils/logger';
 import { AnnouncementRepository } from '../repositories/announcement/AnnouncementRepository';
 import { db } from '../database/connection';
-import {UUID} from 'crypto'
+import { UUID } from 'crypto'
 
 // Instantiate repository so we can fetch announcements by ID
 const announcementRepo = new AnnouncementRepository(db);
@@ -43,6 +43,7 @@ export async function checkOwnerOrAdmin(
         return res.status(500).json({ message: 'Internal server error' });
     }
 
+    console.log('Fetched announcement:', announcement);
     // If announcement does not exist, respond with 404 Not Found
     if (!announcement) {
         return res.status(404).json({ message: 'Announcement not found' });

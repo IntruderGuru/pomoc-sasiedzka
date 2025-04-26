@@ -6,7 +6,6 @@ import { AuthRequest } from '../middlewares/authMiddleware';
 import { AnnouncementRepository } from '../repositories/announcement/AnnouncementRepository';
 import { AnnouncementService } from '../services/AnnouncementService';
 import { logger } from '../utils/logger';
-
 // Instantiate the service layer with the repository injected.
 // This allows controller logic to remain thin and offload business rules to the service.
 const service = new AnnouncementService(new AnnouncementRepository(db));
@@ -115,7 +114,9 @@ export class AnnouncementController {
         const { title, content, category, type } = req.body;
 
         try {
+            console.log('Updating announcement:', id, title, content, category, type);
             const updated = await service.update(id as UUID, title, content, category, type);
+            console.log('Updated announcement:', updated);
             return res.status(200).json(updated);
         } catch (e) {
             const errorMessage = (e as Error).message;
@@ -128,6 +129,21 @@ export class AnnouncementController {
                     : 400;
 
             return res.status(status).json({ error: errorMessage || 'An unknown error occurred' });
+        }
+    }
+
+    static async findById(req: Request, res: Response) {
+        const { id } = req.params;
+
+        try {
+            const announcement = await service.findById(id as UUID);
+            if (!announcement) {
+                return res.status(404).json({ error: 'Announcement not found' });
+            }
+            return res.json(announcement);
+        } catch (e) {
+            logger.error(e);
+            return res.status(500).json({ message: 'Internal server error' });
         }
     }
 

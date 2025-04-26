@@ -109,6 +109,12 @@ app.put(
     AnnouncementController.update
 );
 
+app.get(
+    '/api/announcements/:id',
+    checkAuth,
+    AnnouncementController.findById
+);
+
 /**
  * Delete an announcement.
  * Only allowed for owner or admin.
