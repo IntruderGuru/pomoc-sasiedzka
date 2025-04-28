@@ -14,6 +14,11 @@ export const setToken = (token: string) => {
   localStorage.setItem('token', token);
 };
 
+export const setUserID = (userId: string) => {
+  localStorage.setItem('userId', userId);
+};
+
 export const getToken = () => localStorage.getItem('token');
+export const getUserID = () => localStorage.getItem('userId');
 
 export default api;

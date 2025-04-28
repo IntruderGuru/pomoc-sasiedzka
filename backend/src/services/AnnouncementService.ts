@@ -98,6 +98,14 @@ export class AnnouncementService {
         return updated;
     }
 
+    async findById(id: UUID) {
+        const announcement = await this.repo.findById(id);
+        if (!announcement) {
+            throw new Error('Not found');
+        }
+        return announcement;
+    }
+
     /**
      * Deletes an announcement by ID.
      * 

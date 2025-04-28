@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { loginUser, setToken } from '../services/api';
+import {loginUser, setToken, setUserID} from '../services/api';
+import Nav from "../components/Nav.tsx";
 
 export const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -12,6 +13,7 @@ export const LoginPage = () => {
     try {
       const res = await loginUser({ email, password });
       setToken(res.data.token);
+      setUserID(res.data.user.id);
       alert('Zalogowano!');
     } catch {
       setError('Błędne dane logowania');
@@ -19,6 +21,8 @@ export const LoginPage = () => {
   };
 
   return (
+      <>
+          <Nav />
     <form onSubmit={handleSubmit}>
       <input
         value={email}
@@ -34,6 +38,7 @@ export const LoginPage = () => {
       <button type='submit'>Zaloguj</button>
       {error && <p>{error}</p>}
     </form>
+      </>
   );
 };
 

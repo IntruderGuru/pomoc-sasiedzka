@@ -6,13 +6,36 @@ import { Database } from '../../database/connection';
 import { Announcement } from '../../models/Announcement';
 
 /**
- * Repository responsible for accessing and modifying announcement-related data.
- * This class interacts directly with the database and returns domain models (not raw DB rows).
- * 
- * By separating data access from business logic, we maintain clean architecture and testability.
+ * Repository responsible for CRUD operations on the `announcements` table.
  */
 export class AnnouncementRepository {
     constructor(private db: Kysely<Database>) { }
+
+    /**
+     * Finds a single announcement by its ID.
+     * @param id - UUID of the announcement to retrieve
+     * @returns An Announcement instance if found; otherwise, null
+     */
+    async findById(id: UUID): Promise<Announcement | null> {
+        const row = await this.db
+            .selectFrom('announcements')
+            .selectAll()
+            .where('id', '=', id)
+            .executeTakeFirst();
+        if (!row) {
+            return null;
+        }
+
+        return new Announcement(
+            row.id as UUID,
+            row.userId as UUID,
+            row.title,
+            row.content,
+            row.category,
+            row.type,
+            row.createdAt
+        );
+    }
 
     /**
      * Returns all announcements in the system without filtering.
@@ -37,7 +60,7 @@ export class AnnouncementRepository {
 
     /**
      * Returns all announcements created by a specific user.
-     * @param userId - the UUID of the user
+     * @param userId - UUID of the user
      */
     async getAnnouncementsByUserId(userId: UUID): Promise<Announcement[]> {
         const result = await this.db
@@ -59,7 +82,7 @@ export class AnnouncementRepository {
 
     /**
      * Inserts a new announcement into the database.
-     * Generates a new UUID and creation timestamp on insert.
+     * Generates a new UUID and sets creation timestamp.
      */
     async addAnnouncement(
         userId: UUID,
@@ -78,7 +101,6 @@ export class AnnouncementRepository {
             new Date()
         );
 
-        // Insert the record into the DB
         await this.db
             .insertInto('announcements')
             .values({
@@ -97,7 +119,7 @@ export class AnnouncementRepository {
 
     /**
      * Updates an existing announcement.
-     * Returns the updated domain object if found; otherwise, returns null.
+     * @returns The updated Announcement, or null if not found.
      */
     async updateAnnouncement(
         id: UUID,
@@ -108,12 +130,7 @@ export class AnnouncementRepository {
     ): Promise<Announcement | null> {
         const row = await this.db
             .updateTable('announcements')
-            .set({
-                title,
-                content,
-                category,
-                type
-            })
+            .set({ title, content, category, type })
             .where('id', '=', id)
             .returningAll()
             .executeTakeFirst();
@@ -132,7 +149,7 @@ export class AnnouncementRepository {
     }
 
     /**
-     * Deletes an announcement by ID.
+     * Deletes an announcement by its ID.
      */
     async deleteAnnouncement(id: UUID): Promise<void> {
         await this.db
@@ -146,12 +163,10 @@ export class AnnouncementRepository {
      */
     async getFiltered(category?: string, type?: string): Promise<Announcement[]> {
         let qb = this.db.selectFrom('announcements').selectAll();
-
         if (category) qb = qb.where('category', '=', category);
         if (type) qb = qb.where('type', '=', type);
 
         const result = await qb.execute();
-
         return result.map(r => new Announcement(
             r.id as UUID,
             r.userId as UUID,
@@ -164,8 +179,8 @@ export class AnnouncementRepository {
     }
 
     /**
-     * Returns all announcements joined with author data (email).
-     * Used in admin views to associate posts with user accounts.
+     * Returns all announcements joined with author email.
+     * Used for admin views.
      */
     async getAllWithAuthors() {
         const rows = await this.db
@@ -196,8 +211,7 @@ export class AnnouncementRepository {
     }
 
     /**
-     * Returns a list of all distinct categories currently used in announcements.
-     * Useful for building dynamic filters on the frontend.
+     * Returns a list of distinct categories currently used.
      */
     async getDistinctCategories(): Promise<string[]> {
         const rows = await this.db

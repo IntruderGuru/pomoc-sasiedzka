@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { getToken } from './api.ts';
+import { UUID } from 'crypto';
 
 const api = axios.create({
   baseURL: 'http://localhost:3000/api'
@@ -13,14 +14,28 @@ api.interceptors.request.use(config => {
   return config;
 });
 
+export interface Announcement {
+  id: string;
+  title: string;
+  content: string;
+  category: string;
+  type: string;
+}
+
+
 export const fetchAll = () => api.get('/announcements');
 
-export const fetchById = (id: string) => api.get(`/announcements/:${id}`);
+export const fetchAllForAdmin = () => api.get('/admin/announcements');
 
-export const create = (data: { title: string; content: string }) =>
+export const fetchByUser = (id: UUID) => api.get(`/users/${id}/announcements`);
+
+export const fetchById = (id: UUID) =>
+  api.get<Announcement>(`/announcements/${id}`);
+
+export const create = (data: { title: string; content: string; category: string; type: string }) =>
   api.post('/announcements', data);
 
-export const update = (id: string, data: { title: string; content: string }) =>
-  axios.put(`/announcements/:${id}`, data);
+export const update = (id: UUID, data: { title: string; content: string; category: string; type: string }) =>
+  api.put(`/announcements/${id}`, data);
 
-export const remove = (id: string) => api.delete(`/announcements/:${id}`);
+export const remove = (id: UUID) => api.delete(`/announcements/${id}`);
