@@ -1,0 +1,136 @@
+2025-04-24T15:08:56.100Z error: error: relacja "announcements" nie istnieje
+    at C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\pg\lib\client.js:545:17
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async PostgresConnection.executeQuery (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\dialect\postgres\postgres-driver.js:75:28)
+    at async C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\query-executor\query-executor-base.js:37:28
+    at async DefaultConnectionProvider.provideConnection (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\driver\default-connection-provider.js:12:20)
+    at async DefaultQueryExecutor.executeQuery (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\query-executor\query-executor-base.js:36:16)
+    at async SelectQueryBuilderImpl.execute (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\query-builder\select-query-builder.js:317:24)
+    at async AnnouncementRepository.getFiltered (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\repositories\announcement\AnnouncementRepository.ts:124:24)
+    at async getAll (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\controllers\AnnouncementController.ts:29:26)
+    at PostgresConnection.executeQuery (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\dialect\postgres\postgres-driver.js:95:69)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\query-executor\query-executor-base.js:37:28
+    at async DefaultConnectionProvider.provideConnection (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\driver\default-connection-provider.js:12:20)
+    at async DefaultQueryExecutor.executeQuery (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\query-executor\query-executor-base.js:36:16)
+    at async SelectQueryBuilderImpl.execute (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\query-builder\select-query-builder.js:317:24)
+    at async AnnouncementRepository.getFiltered (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\repositories\announcement\AnnouncementRepository.ts:124:24)
+    at async getAll (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\controllers\AnnouncementController.ts:29:26)
+2025-04-24T15:08:56.138Z error: error: relacja "announcements" nie istnieje
+    at C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\pg\lib\client.js:545:17
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async PostgresConnection.executeQuery (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\dialect\postgres\postgres-driver.js:75:28)
+    at async C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\query-executor\query-executor-base.js:37:28
+    at async DefaultConnectionProvider.provideConnection (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\driver\default-connection-provider.js:12:20)
+    at async DefaultQueryExecutor.executeQuery (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\query-executor\query-executor-base.js:36:16)
+    at async SelectQueryBuilderImpl.execute (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\query-builder\select-query-builder.js:317:24)
+    at async AnnouncementRepository.getFiltered (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\repositories\announcement\AnnouncementRepository.ts:124:24)
+    at async getAll (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\controllers\AnnouncementController.ts:29:26)
+    at PostgresConnection.executeQuery (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\dialect\postgres\postgres-driver.js:95:69)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\query-executor\query-executor-base.js:37:28
+    at async DefaultConnectionProvider.provideConnection (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\driver\default-connection-provider.js:12:20)
+    at async DefaultQueryExecutor.executeQuery (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\query-executor\query-executor-base.js:36:16)
+    at async SelectQueryBuilderImpl.execute (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\query-builder\select-query-builder.js:317:24)
+    at async AnnouncementRepository.getFiltered (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\repositories\announcement\AnnouncementRepository.ts:124:24)
+    at async getAll (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\controllers\AnnouncementController.ts:29:26)
+2025-04-24T16:21:15.440Z error: Error: All fields are required
+    at AnnouncementService.create (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\services\AnnouncementService.ts:12:19)
+    at create (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\controllers\AnnouncementController.ts:19:40)
+    at Layer.handle [as handle_request] (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\express\lib\router\route.js:149:13)
+    at checkAuth (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\middlewares\authMiddleware.ts:28:9)
+    at Layer.handle [as handle_request] (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\express\lib\router\layer.js:95:5)
+    at C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\express\lib\router\index.js:284:15
+2025-04-24T16:21:16.264Z error: Error: All fields are required
+    at AnnouncementService.create (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\services\AnnouncementService.ts:12:19)
+    at create (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\controllers\AnnouncementController.ts:19:40)
+    at Layer.handle [as handle_request] (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\express\lib\router\route.js:149:13)
+    at checkAuth (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\middlewares\authMiddleware.ts:28:9)
+    at Layer.handle [as handle_request] (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\express\lib\router\layer.js:95:5)
+    at C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\express\lib\router\index.js:284:15
+2025-04-24T16:21:17.669Z error: Error: All fields are required
+    at AnnouncementService.create (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\services\AnnouncementService.ts:12:19)
+    at create (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\controllers\AnnouncementController.ts:19:40)
+    at Layer.handle [as handle_request] (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\express\lib\router\route.js:149:13)
+    at checkAuth (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\middlewares\authMiddleware.ts:28:9)
+    at Layer.handle [as handle_request] (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\express\lib\router\layer.js:95:5)
+    at C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\express\lib\router\index.js:284:15
+2025-04-24T16:21:17.999Z error: Error: All fields are required
+    at AnnouncementService.create (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\services\AnnouncementService.ts:12:19)
+    at create (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\controllers\AnnouncementController.ts:19:40)
+    at Layer.handle [as handle_request] (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\express\lib\router\route.js:149:13)
+    at checkAuth (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\middlewares\authMiddleware.ts:28:9)
+    at Layer.handle [as handle_request] (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\express\lib\router\layer.js:95:5)
+    at C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\express\lib\router\index.js:284:15
+2025-04-24T16:21:18.200Z error: Error: All fields are required
+    at AnnouncementService.create (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\services\AnnouncementService.ts:12:19)
+    at create (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\controllers\AnnouncementController.ts:19:40)
+    at Layer.handle [as handle_request] (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\express\lib\router\route.js:149:13)
+    at checkAuth (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\middlewares\authMiddleware.ts:28:9)
+    at Layer.handle [as handle_request] (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\express\lib\router\layer.js:95:5)
+    at C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\express\lib\router\index.js:284:15
+2025-04-24T16:21:18.371Z error: Error: All fields are required
+    at AnnouncementService.create (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\services\AnnouncementService.ts:12:19)
+    at create (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\controllers\AnnouncementController.ts:19:40)
+    at Layer.handle [as handle_request] (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\express\lib\router\route.js:149:13)
+    at checkAuth (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\middlewares\authMiddleware.ts:28:9)
+    at Layer.handle [as handle_request] (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\express\lib\router\layer.js:95:5)
+    at C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\express\lib\router\index.js:284:15
+2025-04-24T16:21:19.876Z error: Error: All fields are required
+    at AnnouncementService.create (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\services\AnnouncementService.ts:12:19)
+    at create (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\controllers\AnnouncementController.ts:19:40)
+    at Layer.handle [as handle_request] (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\express\lib\router\route.js:149:13)
+    at checkAuth (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\middlewares\authMiddleware.ts:28:9)
+    at Layer.handle [as handle_request] (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\express\lib\router\layer.js:95:5)
+    at C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\express\lib\router\index.js:284:15
+2025-04-24T16:21:20.083Z error: Error: All fields are required
+    at AnnouncementService.create (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\services\AnnouncementService.ts:12:19)
+    at create (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\controllers\AnnouncementController.ts:19:40)
+    at Layer.handle [as handle_request] (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\express\lib\router\route.js:149:13)
+    at checkAuth (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\middlewares\authMiddleware.ts:28:9)
+    at Layer.handle [as handle_request] (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\express\lib\router\layer.js:95:5)
+    at C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\express\lib\router\index.js:284:15
+2025-04-24T16:21:20.263Z error: Error: All fields are required
+    at AnnouncementService.create (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\services\AnnouncementService.ts:12:19)
+    at create (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\controllers\AnnouncementController.ts:19:40)
+    at Layer.handle [as handle_request] (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\express\lib\router\route.js:149:13)
+    at checkAuth (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\middlewares\authMiddleware.ts:28:9)
+    at Layer.handle [as handle_request] (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\express\lib\router\layer.js:95:5)
+    at C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\express\lib\router\index.js:284:15
+2025-04-24T17:06:49.422Z error: Forbidden: ca3c490c-0b5c-44cf-b551-baae567d497c tried to access undefined
