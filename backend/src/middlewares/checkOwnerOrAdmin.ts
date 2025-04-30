@@ -1,40 +1,51 @@
-// src/middlewares/checkOwnerOrAdmin.ts
-
 import { NextFunction, Response } from 'express';
 import { AuthRequest } from './authMiddleware';
 import { logger } from '../utils/logger';
-import { AnnouncementRepository } from '../repositories/announcement/AnnouncementRepository';
-import { db } from '../database/connection';
-import { UUID } from 'crypto'
 
-// Instantiate repository so we can fetch announcements by ID
+import { AnnouncementRepository } from '../repositories/announcement/AnnouncementRepository';
+import { CommentRepository } from '../repositories/comment/CommentRepository';
+import { ReactionRepository } from '../repositories/reaction/ReactionRepository';
+import { db } from '../database/connection';
+import { UUID } from 'crypto';
+
+// Instantiate repositories (expandable for future ownership checks on other models)
 const announcementRepo = new AnnouncementRepository(db);
+const commentRepo = new CommentRepository(db);
+const reactionRepo = new ReactionRepository(db);
 
 /**
- * Middleware to ensure that the authenticated user is either:
- *   - the owner of the announcement being modified/deleted,
- *   - or has the 'admin' role.
+ * Middleware to restrict access to users who are either:
+ *   - the owner of the resource (announcement),
+ *   - or an admin.
+ * 
+ * Assumes that `checkAuth` middleware has already validated the user
+ * and attached `req.user` to the request object.
+ * 
+ * Currently used for validating permissions on announcement modification/deletion.
  *
- * Must be used after `checkAuth`, which populates `req.user`.
+ * @param req - Authenticated request containing `user` and route param `id`
+ * @param res - Express response object
+ * @param next - Function to pass control to the next middleware
  */
 export async function checkOwnerOrAdmin(
     req: AuthRequest,
     res: Response,
     next: NextFunction
 ) {
-    // Reject if there's no authenticated user (should not happen if checkAuth ran)
+    // Reject if no authenticated user (should not happen if checkAuth ran)
     if (!req.user) {
         return res.status(401).json({ message: 'Unauthorized: missing user' });
     }
+
     const { userId, role } = req.user;
 
-    // Extract the announcement ID from route params
+    // Extract the resource ID from route params
     const announcementId = req.params.id;
     if (!announcementId) {
         return res.status(400).json({ message: 'Missing announcement ID' });
     }
 
-    // Fetch the announcement from the database
+    // Attempt to fetch the announcement by ID
     let announcement;
     try {
         announcement = await announcementRepo.findById(announcementId as UUID);
@@ -44,17 +55,18 @@ export async function checkOwnerOrAdmin(
     }
 
     console.log('Fetched announcement:', announcement);
-    // If announcement does not exist, respond with 404 Not Found
+
+    // Respond with 404 if the announcement does not exist
     if (!announcement) {
         return res.status(404).json({ message: 'Announcement not found' });
     }
 
-    // Allow if the requester is the owner or has admin privileges
+    // Allow if the user is the owner or has admin privileges
     if (announcement.userId !== userId && role !== 'admin') {
         logger.error(`Forbidden: ${userId} tried to access ${announcement.userId}`);
         return res.status(403).json({ message: 'Forbidden' });
     }
 
-    // All checks passed — proceed to the next middleware or route handler
+    // Authorization passed — continue to the next middleware
     next();
 }
