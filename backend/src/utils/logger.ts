@@ -1,5 +1,5 @@
-import { createLogger, format, transports } from 'winston';
 import path from 'path';
+import { createLogger, format, transports } from 'winston';
 
 /**
  * Application-wide logger instance configured with Winston.
@@ -16,8 +16,9 @@ export const logger = createLogger({
     format: format.combine(
         format.timestamp(), // Add ISO-formatted timestamp to each log entry
         format.errors({ stack: true }), // Ensure full stack traces are included for error objects
-        format.printf(({ timestamp, level, message, stack }) =>
-            `${timestamp} ${level}: ${stack || message}` // Custom log message format
+        format.printf(
+            ({ timestamp, level, message, stack }) =>
+                `${timestamp} ${level}: ${stack || message}` // Custom log message format
         )
     ),
 

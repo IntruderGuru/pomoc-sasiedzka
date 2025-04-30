@@ -1,12 +1,13 @@
 import dotenv from 'dotenv';
-import { Kysely, PostgresDialect } from 'kysely';
+import { Generated, Kysely, PostgresDialect } from 'kysely';
 import { Pool } from 'pg';
 
 dotenv.config();
 
 export interface Database {
     users: UsersTable;
-    announcements: AnnouncementTable;
+    announcements: AnnouncementsTable;
+    messages: MessagesTable;
 }
 
 export interface UsersTable {
@@ -16,14 +17,22 @@ export interface UsersTable {
     role: 'user' | 'admin';
 }
 
-export interface AnnouncementTable {
+export interface AnnouncementsTable {
     id: string;
-    userId: string;
+    user_id: string;
     title: string;
     content: string;
     category: string;
     type: string;
-    createdAt: Date;
+    created_at: Date;
+}
+
+export interface MessagesTable {
+    id: Generated<number>;
+    sender_id: string;
+    receiver_id: string;
+    content: string;
+    sent_at: Date;
 }
 
 export const db = new Kysely<Database>({

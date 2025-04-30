@@ -28,7 +28,6 @@ app.get('/api/healthcheck', (req: Request, res: Response) => {
     res.json({ status: 'OK', message: 'Backend powered by Vite now!' });
 });
 
-
 // ---------------- AUTH ROUTES ----------------
 
 /**
@@ -54,7 +53,6 @@ app.get('/api/profile', checkAuth, (req: Request, res: Response) => {
         userDecoded: authReq.user
     });
 });
-
 
 // ---------------- ANNOUNCEMENT ROUTES ----------------
 
@@ -109,11 +107,7 @@ app.put(
     AnnouncementController.update
 );
 
-app.get(
-    '/api/announcements/:id',
-    checkAuth,
-    AnnouncementController.findById
-);
+app.get('/api/announcements/:id', checkAuth, AnnouncementController.findById);
 
 /**
  * Delete an announcement.
@@ -125,7 +119,6 @@ app.delete(
     checkOwnerOrAdmin,
     AnnouncementController.delete
 );
-
 
 // ---------------- SERVER INIT ----------------
 

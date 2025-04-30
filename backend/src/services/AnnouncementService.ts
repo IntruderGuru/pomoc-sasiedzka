@@ -1,7 +1,6 @@
 import { UUID } from 'crypto';
 
 import { AnnouncementRepository } from '../repositories/announcement/AnnouncementRepository';
-import { logger } from '../utils/logger';
 
 /**
  * Service layer responsible for business logic related to announcements.
@@ -10,7 +9,7 @@ import { logger } from '../utils/logger';
  * This class contains validation, fallback logic, and coordinates complex operations.
  */
 export class AnnouncementService {
-    constructor(private repo: AnnouncementRepository) { }
+    constructor(private repo: AnnouncementRepository) {}
 
     /**
      * Creates a new announcement after validating required fields.
@@ -34,7 +33,13 @@ export class AnnouncementService {
             throw new Error('All fields are required');
         }
 
-        return this.repo.addAnnouncement(userId as UUID, title, content, category, type);
+        return this.repo.addAnnouncement(
+            userId as UUID,
+            title,
+            content,
+            category,
+            type
+        );
     }
 
     /**
@@ -75,7 +80,7 @@ export class AnnouncementService {
 
     /**
      * Updates an existing announcement.
-     * 
+     *
      * @param id - ID of the announcement to update
      * @param title - New title
      * @param content - New content
@@ -91,7 +96,13 @@ export class AnnouncementService {
         category: string,
         type: string
     ) {
-        const updated = await this.repo.updateAnnouncement(id, title, content, category, type);
+        const updated = await this.repo.updateAnnouncement(
+            id,
+            title,
+            content,
+            category,
+            type
+        );
         if (!updated) {
             throw new Error('Not found');
         }
@@ -99,7 +110,7 @@ export class AnnouncementService {
     }
 
     async findById(id: UUID) {
-        const announcement = await this.repo.findById(id);
+        const announcement = await this.repo.getById(id);
         if (!announcement) {
             throw new Error('Not found');
         }
@@ -108,7 +119,7 @@ export class AnnouncementService {
 
     /**
      * Deletes an announcement by ID.
-     * 
+     *
      * @param id - UUID of the announcement
      * @returns Promise that resolves when deletion is complete
      */

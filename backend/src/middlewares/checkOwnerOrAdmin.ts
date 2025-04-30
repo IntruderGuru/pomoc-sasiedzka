@@ -1,11 +1,12 @@
 // src/middlewares/checkOwnerOrAdmin.ts
 
+import { UUID } from 'crypto';
 import { NextFunction, Response } from 'express';
-import { AuthRequest } from './authMiddleware';
-import { logger } from '../utils/logger';
-import { AnnouncementRepository } from '../repositories/announcement/AnnouncementRepository';
+
 import { db } from '../database/connection';
-import { UUID } from 'crypto'
+import { AnnouncementRepository } from '../repositories/announcement/AnnouncementRepository';
+import { logger } from '../utils/logger';
+import { AuthRequest } from './authMiddleware';
 
 // Instantiate repository so we can fetch announcements by ID
 const announcementRepo = new AnnouncementRepository(db);
@@ -37,7 +38,7 @@ export async function checkOwnerOrAdmin(
     // Fetch the announcement from the database
     let announcement;
     try {
-        announcement = await announcementRepo.findById(announcementId as UUID);
+        announcement = await announcementRepo.getById(announcementId as UUID);
     } catch (err) {
         logger.error(err);
         return res.status(500).json({ message: 'Internal server error' });
@@ -51,7 +52,9 @@ export async function checkOwnerOrAdmin(
 
     // Allow if the requester is the owner or has admin privileges
     if (announcement.userId !== userId && role !== 'admin') {
-        logger.error(`Forbidden: ${userId} tried to access ${announcement.userId}`);
+        logger.error(
+            `Forbidden: ${userId} tried to access ${announcement.userId}`
+        );
         return res.status(403).json({ message: 'Forbidden' });
     }
 

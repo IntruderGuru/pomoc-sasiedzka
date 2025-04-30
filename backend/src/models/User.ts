@@ -20,7 +20,7 @@ export class User {
 
         /** Role-based access control flag — determines user privileges */
         private role: 'user' | 'admin'
-    ) { }
+    ) {}
 
     // Getter for the email address (used in token payloads, profile views, etc.)
     getEmail(): string {

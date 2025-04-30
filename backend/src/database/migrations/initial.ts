@@ -30,7 +30,7 @@ export async function up(db: Kysely<Database>): Promise<void> {
     await db.schema
         .createTable('announcements')
         .addColumn('id', 'varchar(36)', column => column.primaryKey())
-        .addColumn('userId', 'varchar(36)', column =>
+        .addColumn('user_id', 'varchar(36)', column =>
             column
                 .notNull()
                 .references('users.id')
@@ -41,11 +41,33 @@ export async function up(db: Kysely<Database>): Promise<void> {
         .addColumn('content', 'varchar(256)', column => column.notNull())
         .addColumn('category', 'varchar(256)', column => column.notNull())
         .addColumn('type', 'varchar(256)', column => column.notNull())
-        .addColumn('createdAt', 'timestamptz', column => column.notNull())
+        .addColumn('created_at', 'timestamptz', column => column.notNull())
+        .execute();
+
+    await db.schema
+        .createTable('messages')
+        .addColumn('id', 'serial', column => column.primaryKey())
+        .addColumn('sender_id', 'varchar(36)', column =>
+            column
+                .notNull()
+                .references('users.id')
+                .onUpdate('cascade')
+                .onDelete('cascade')
+        )
+        .addColumn('receiver_id', 'varchar(36)', column =>
+            column
+                .notNull()
+                .references('users.id')
+                .onUpdate('cascade')
+                .onDelete('cascade')
+        )
+        .addColumn('content', 'varchar(256)', column => column.notNull())
+        .addColumn('sent_at', 'timestamptz', column => column.notNull())
         .execute();
 }
 
 export async function down(db: Kysely<Database>): Promise<void> {
     await db.schema.dropTable('announcements').execute();
+    await db.schema.dropTable('messages').execute();
     await db.schema.dropTable('users').execute();
 }
