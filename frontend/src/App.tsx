@@ -5,6 +5,8 @@ import AnnouncementUpdateForm from "./pages/AnnouncementUpdateForm.tsx";
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import MyAnnouncementsPage from "./pages/MyAnnouncementsPage.tsx";
+import ConversationsPage from "./pages/ConversationsPage.tsx";
+import MessageThreadPage from "./pages/MessageThreadPage.tsx";
 
 function App() {
   return (
@@ -16,6 +18,8 @@ function App() {
           <Route path="/announcements/create" element={<AnnouncementForm />} />
           <Route path="/announcements/:id" element={<AnnouncementUpdateForm />} />
           <Route path="/announcements/my" element={<MyAnnouncementsPage />} />
+          <Route path="/messages" element={<ConversationsPage />} />
+          <Route path="/messages/:id" element={<MessageThreadPage />} />
           {/* Możesz dodać stronę 404 */}
           <Route path="*" element={<div>404 - Strona nie znaleziona</div>} />
       </Routes>

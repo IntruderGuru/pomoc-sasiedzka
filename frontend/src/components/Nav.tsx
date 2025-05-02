@@ -12,7 +12,7 @@ export default function Nav() {
                 <button onClick={() => navigate("/register")}>Rejestracja</button>
                 <button onClick={() => navigate("/announcements/create")}>Dodaj post</button>
                 <button onClick={() => navigate("/announcements/my")}>Moje ogłoszenia</button>
-
+                <button onClick={() => navigate("/messages")}>Wiadomości</button>
             </div>
         </div>
     );
