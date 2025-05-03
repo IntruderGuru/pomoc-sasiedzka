@@ -101,30 +101,28 @@ export class AnnouncementRepository {
         category: string,
         type: string
     ): Promise<Announcement> {
-        const newAnnouncement = new Announcement(
-            randomUUID(),
+        const result = await this.db
+            .insertInto('announcements')
+            .values({
+                id: randomUUID(),
+                user_id: userId,
+                title: title,
+                content: content,
+                category: category,
+                type: type
+            })
+            .returning(['id', 'created_at'])
+            .executeTakeFirstOrThrow();
+
+        return new Announcement(
+            result.id as UUID,
             userId,
             title,
             content,
             category,
             type,
-            new Date()
+            result.created_at
         );
-
-        await this.db
-            .insertInto('announcements')
-            .values({
-                id: newAnnouncement.id,
-                user_id: newAnnouncement.userId,
-                title: newAnnouncement.getTitle(),
-                content: newAnnouncement.getContent(),
-                category: newAnnouncement.getCategory(),
-                type: newAnnouncement.getType(),
-                created_at: newAnnouncement.createdAt
-            })
-            .execute();
-
-        return newAnnouncement;
     }
 
     /**
@@ -138,23 +136,25 @@ export class AnnouncementRepository {
         category: string,
         type: string
     ): Promise<Announcement | null> {
-        const row = await this.db
+        const result = await this.db
             .updateTable('announcements')
             .set({ title, content, category, type })
             .where('id', '=', id)
             .returningAll()
-            .executeTakeFirst();
+            .executeTakeFirstOrThrow();
 
-        if (!row) return null;
+        if (!result) {
+            return null;
+        }
 
         return new Announcement(
-            row.id as UUID,
-            row.user_id as UUID,
-            row.title,
-            row.content,
-            row.category,
-            row.type,
-            row.created_at
+            result.id as UUID,
+            result.user_id as UUID,
+            result.title,
+            result.content,
+            result.category,
+            result.type,
+            result.created_at
         );
     }
 
@@ -204,13 +204,13 @@ export class AnnouncementRepository {
             .innerJoin('users as u', 'a.user_id', 'u.id')
             .select([
                 'a.id',
+                'a.user_id',
                 'a.title',
                 'a.content',
                 'a.category',
                 'a.type',
                 'a.created_at',
-                'u.id as user_id',
-                'u.email as authorEmail'
+                'u.email'
             ])
             .execute();
 
@@ -222,7 +222,7 @@ export class AnnouncementRepository {
             type: r.type,
             createdAt: r.created_at,
             userId: r.user_id,
-            authorEmail: r.authorEmail
+            authorEmail: r.email
         }));
     }
 

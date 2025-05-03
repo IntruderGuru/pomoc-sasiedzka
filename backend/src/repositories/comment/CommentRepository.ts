@@ -2,59 +2,50 @@ import { UUID } from 'crypto';
 import { Kysely } from 'kysely';
 
 import { Database } from '../../database/connection';
-import { Message } from '../../models/Message';
+import { Comment } from '../../models/Comment';
 
-export class MessageRepository {
+export class CommentRepository {
     constructor(private db: Kysely<Database>) {}
 
-    async getConversation(
-        senderId: UUID,
-        receiverId: UUID
-    ): Promise<Message[]> {
+    async getComments(announcementId: UUID): Promise<Comment[]> {
         const result = await this.db
-            .selectFrom('messages')
+            .selectFrom('comments')
             .selectAll()
-            .where(eb =>
-                eb('sender_id', '=', senderId).and(
-                    'receiver_id',
-                    '=',
-                    receiverId
-                )
-            )
+            .where('announcement_id', '=', announcementId)
             .orderBy('sent_at', 'desc')
             .execute();
 
         return result.map(
             r =>
-                new Message(
+                new Comment(
                     r.id,
                     r.sender_id as UUID,
-                    r.receiver_id as UUID,
+                    r.announcement_id as UUID,
                     r.content,
                     r.sent_at
                 )
         );
     }
 
-    async addMessage(
+    async addComment(
         senderId: UUID,
-        receiverId: UUID,
+        announcementId: UUID,
         content: string
-    ): Promise<Message> {
+    ): Promise<Comment> {
         const result = await this.db
             .insertInto('messages')
             .values({
+                receiver_id: announcementId,
                 sender_id: senderId,
-                receiver_id: receiverId,
                 content: content
             })
             .returning(['id', 'sent_at'])
             .executeTakeFirstOrThrow();
 
-        return new Message(
+        return new Comment(
             result.id,
+            announcementId,
             senderId,
-            receiverId,
             content,
             result.sent_at
         );

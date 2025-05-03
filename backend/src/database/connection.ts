@@ -8,6 +8,7 @@ export interface Database {
     users: UsersTable;
     announcements: AnnouncementsTable;
     messages: MessagesTable;
+    comments: CommentsTable;
 }
 
 export interface UsersTable {
@@ -24,7 +25,7 @@ export interface AnnouncementsTable {
     content: string;
     category: string;
     type: string;
-    created_at: Date;
+    created_at: Generated<Date>;
 }
 
 export interface MessagesTable {
@@ -32,7 +33,15 @@ export interface MessagesTable {
     sender_id: string;
     receiver_id: string;
     content: string;
-    sent_at: Date;
+    sent_at: Generated<Date>;
+}
+
+export interface CommentsTable {
+    id: Generated<number>;
+    announcement_id: string;
+    sender_id: string;
+    content: string;
+    sent_at: Generated<Date>;
 }
 
 export const db = new Kysely<Database>({
