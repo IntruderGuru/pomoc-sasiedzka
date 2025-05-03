@@ -7,6 +7,7 @@ import RegisterPage from './pages/RegisterPage';
 import MyAnnouncementsPage from "./pages/MyAnnouncementsPage.tsx";
 import ConversationsPage from "./pages/ConversationsPage.tsx";
 import MessageThreadPage from "./pages/MessageThreadPage.tsx";
+import AnnouncementDetailsPage from "./pages/AnnouncementDetailsPage.tsx";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path="/announcements/my" element={<MyAnnouncementsPage />} />
           <Route path="/messages" element={<ConversationsPage />} />
           <Route path="/messages/:id" element={<MessageThreadPage />} />
+          <Route path="/announcements/:id/details" element={<AnnouncementDetailsPage />} />
           {/* Możesz dodać stronę 404 */}
           <Route path="*" element={<div>404 - Strona nie znaleziona</div>} />
       </Routes>

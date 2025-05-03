@@ -44,7 +44,7 @@ export default function AnnouncementsPage() {
             <h1>Ogłoszenia</h1>
             <ul>
                 {announcements.map((a) => (
-                    <li key={a.id}>
+                    <li key={a.id} onClick={() => navigate(`/announcements/${a.id}/details`)}>
                         <h3>{a.title}</h3>
                         <p>{a.content}</p>
                         <p>
