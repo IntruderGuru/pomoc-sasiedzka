@@ -9,6 +9,7 @@ export interface Database {
     announcements: AnnouncementsTable;
     messages: MessagesTable;
     comments: CommentsTable;
+    reactions: ReactionTable;
 }
 
 export interface UsersTable {
@@ -41,6 +42,15 @@ export interface CommentsTable {
     announcement_id: string;
     sender_id: string;
     content: string;
+    sent_at: Generated<Date>;
+}
+
+export interface ReactionTable {
+    id: Generated<number>;
+    announcement_id: string;
+    user_id: string;
+    comment_id: string;
+    type: string;
     sent_at: Generated<Date>;
 }
 

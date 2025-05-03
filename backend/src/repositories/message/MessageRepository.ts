@@ -46,7 +46,7 @@ export class MessageRepository {
             .values({
                 sender_id: senderId,
                 receiver_id: receiverId,
-                content: content
+                type: content
             })
             .returning(['id', 'sent_at'])
             .executeTakeFirstOrThrow();

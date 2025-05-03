@@ -28,14 +28,14 @@ export class CommentRepository {
     }
 
     async addComment(
-        senderId: UUID,
         announcementId: UUID,
+        senderId: UUID,
         content: string
     ): Promise<Comment> {
         const result = await this.db
-            .insertInto('messages')
+            .insertInto('comments')
             .values({
-                receiver_id: announcementId,
+                announcement_id: announcementId,
                 sender_id: senderId,
                 content: content
             })
@@ -49,5 +49,9 @@ export class CommentRepository {
             content,
             result.sent_at
         );
+    }
+
+    async deleteComment(id: number): Promise<void> {
+        await this.db.deleteFrom('comments').where('id', '=', id);
     }
 }
