@@ -16,9 +16,9 @@ api.interceptors.request.use(config => {
 
 export const addReaction = (targetType: string, targetId: UUID) => {
     if (targetType == 'comment') {
-        api.post(`/comments/${targetId}/reactions`);
+        api.post(`/comments/${targetId}/reactions`, { type: 'like' });
     } else {
-        api.post(`/announcements/${targetId}/reactions`);
+        api.post(`/announcements/${targetId}/reactions`, { type: 'like' });
     }
 }
 
