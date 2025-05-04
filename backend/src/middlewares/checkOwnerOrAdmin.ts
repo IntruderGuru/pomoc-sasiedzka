@@ -54,7 +54,6 @@ export async function checkOwnerOrAdmin(
         return res.status(500).json({ message: 'Internal server error' });
     }
 
-    console.log('Fetched announcement:', announcement);
 
     // Respond with 404 if the announcement does not exist
     if (!announcement) {

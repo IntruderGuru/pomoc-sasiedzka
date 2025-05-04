@@ -17,11 +17,12 @@ export class CommentService {
      * @returns The newly inserted comment row
      */
     addComment(userId: string, announcementId: string, content: string) {
+
         if (!content?.trim()) {
             throw { status: 400, message: 'Content cannot be empty' };
         }
 
-        return this.repo.addComment(userId as UUID, announcementId as UUID, content);
+        return this.repo.addComment(announcementId as UUID, userId as UUID, content);
     }
 
     /**

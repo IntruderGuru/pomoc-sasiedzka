@@ -63,6 +63,7 @@ export class AuthController {
             return res.status(200).json(result);
         } catch (error: any) {
             // Invalid credentials are treated as a 401 Unauthorized
+
             if (error.message === 'Invalid credentials') {
                 return res
                     .status(401)

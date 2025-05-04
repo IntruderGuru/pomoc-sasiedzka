@@ -32,7 +32,7 @@ export class ReactionRepository {
 
     async addReaction(
         userId: UUID,
-        type: 'like | dislike',
+        type: 'like' | 'dislike',
         itemId: UUID
     ): Promise<Reaction> {
         const result = await this.db

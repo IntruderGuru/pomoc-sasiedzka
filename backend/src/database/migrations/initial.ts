@@ -84,13 +84,6 @@ export async function up(db: Kysely<Database>): Promise<void> {
     await db.schema
         .createTable('reactions')
         .addColumn('id', 'varchar(36)', column => column.primaryKey())
-        .addColumn('announcement_id', 'varchar(36)', column =>
-            column
-                .notNull()
-                .references('announcements.id')
-                .onUpdate('cascade')
-                .onDelete('cascade')
-        )
         .addColumn('user_id', 'varchar(36)', column =>
             column
                 .notNull()
@@ -98,7 +91,7 @@ export async function up(db: Kysely<Database>): Promise<void> {
                 .onUpdate('cascade')
                 .onDelete('cascade')
         )
-        .addColumn('comment_id', 'varchar(36)', column =>
+        .addColumn('item_id', 'varchar(36)', column =>
             column
                 .notNull()
                 .references('comments.id')

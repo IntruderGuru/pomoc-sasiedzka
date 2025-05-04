@@ -32,6 +32,7 @@ export class CommentRepository {
         userId: UUID,
         content: string
     ): Promise<Comment> {
+
         const result = await this.db
             .insertInto('comments')
             .values({

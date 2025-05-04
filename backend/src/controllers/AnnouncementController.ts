@@ -119,14 +119,6 @@ export class AnnouncementController {
         const { title, content, category, type } = req.body;
 
         try {
-            console.log(
-                'Updating announcement:',
-                id,
-                title,
-                content,
-                category,
-                type
-            );
             const updated = await service.update(
                 id as UUID,
                 title,
@@ -134,7 +126,6 @@ export class AnnouncementController {
                 category,
                 type
             );
-            console.log('Updated announcement:', updated);
             return res.status(200).json(updated);
         } catch (e) {
             const errorMessage = (e as Error).message;

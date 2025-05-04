@@ -6,7 +6,7 @@ import jwt from 'jsonwebtoken';
 dotenv.config();
 
 // Fallback to a default value if JWT_SECRET is not defined (recommended to override in production)
-const JWT_SECRET = process.env.JWT_SECRET || 'defaultSecret';
+const JWT_SECRET = process.env.JWT_SECRET || 'jakisSekretnyKlucz';
 
 /**
  * Extended Request interface to include a `user` property.
@@ -36,7 +36,6 @@ export function checkAuth(req: AuthRequest, res: Response, next: NextFunction) {
         if (!authHeader) {
             return res.status(401).json({ message: 'No token provided' });
         }
-
         // Token is expected to follow the "Bearer <token>" format
         const token = authHeader.split(' ')[1];
         if (!token) {
