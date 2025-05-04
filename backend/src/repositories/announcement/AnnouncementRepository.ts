@@ -9,7 +9,7 @@ import { Announcement } from '../../models/Announcement';
  * Repository responsible for CRUD operations on the `announcements` table.
  */
 export class AnnouncementRepository {
-    constructor(private db: Kysely<Database>) {}
+    constructor(private db: Kysely<Database>) { }
 
     /**
      * Finds a single announcement by its ID.
@@ -69,7 +69,7 @@ export class AnnouncementRepository {
      * Returns all announcements created by a specific user.
      * @param userId - UUID of the user
      */
-    async getAnnouncementsByUserId(userId: UUID): Promise<Announcement[]> {
+    async getAnnouncementsByuserId(userId: UUID): Promise<Announcement[]> {
         const result = await this.db
             .selectFrom('announcements')
             .selectAll()

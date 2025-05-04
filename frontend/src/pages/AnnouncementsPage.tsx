@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { fetchAll, remove } from '../services/AnnouncementService';
 import Spinner from '../components/Spinner';
-import {getUserID} from "../services/api.ts";
+import { getuserId } from "../services/api.ts";
 import { UUID } from 'crypto';
-import {useNavigate} from "react-router";
+import { useNavigate } from "react-router";
 import Nav from "../components/Nav.tsx";
 
 export default function AnnouncementsPage() {
@@ -18,7 +18,7 @@ export default function AnnouncementsPage() {
     const navigate = useNavigate();
     const [announcements, setAnnouncements] = useState<Announcement[]>([]);
     const [loading, setLoading] = useState(true);
-    const loggedUserId = getUserID();
+    const loggeduserId = getuserId();
 
     const getData = async () => {
         const announcements = await fetchAll();
@@ -49,9 +49,9 @@ export default function AnnouncementsPage() {
                         <p>{a.content}</p>
                         <p>
                             {/* <i>{a.category}</i> —  */}
-                            {a.userId} ({a.createdAt}) {loggedUserId}</p>
+                            {a.userId} ({a.createdAt}) {loggeduserId}</p>
 
-                        {a.userId == loggedUserId && (
+                        {a.userId == loggeduserId && (
                             <>
                                 <button onClick={() => handleDelete(a.id)}>Usuń</button>
                                 <button onClick={() => navigate(`/announcements/${a.id}`)}>Edytuj</button>

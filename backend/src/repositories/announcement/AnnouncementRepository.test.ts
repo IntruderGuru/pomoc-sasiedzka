@@ -80,7 +80,7 @@ describe('AnnouncementRepository', () => {
         expect(announcements[0]?.createdAt).toStrictEqual(new Date('1862'));
     });
 
-    it('getAnnouncementsByUserId should return all announcements posted by user', async () => {
+    it('getAnnouncementsByuserId should return all announcements posted by user', async () => {
         mockDb.execute = vi.fn().mockResolvedValue([
             {
                 id: 'c9005bb9-d42e-441c-ac8d-642709f02b7',
@@ -94,7 +94,7 @@ describe('AnnouncementRepository', () => {
         ]);
 
         const announcementRepo = new AnnouncementRepository(mockDb);
-        const announcements = await announcementRepo.getAnnouncementsByUserId(
+        const announcements = await announcementRepo.getAnnouncementsByuserId(
             'f131ee94-7e48-4bc3-8cd8-752f775efc3' as UUID
         );
 

@@ -1,5 +1,5 @@
 import { ReactionRepository } from '../repositories/reaction/ReactionRepository';
-
+import { UUID } from 'crypto';
 /**
  * Service layer responsible for handling business logic related to reactions (like/dislike).
  * Validates reaction types and delegates persistence to the repository.
@@ -27,9 +27,9 @@ export class ReactionService {
      * @param type - Reaction type ('like' or 'dislike')
      * @returns The inserted reaction row
      */
-    addToAnnouncement(userId: string, announcementId: string, type: string) {
+    addToAnnouncement(userId: UUID, announcementId: string, type: string) {
         this.validateType(type);
-        return this.repo.addReaction(userId, type as any, { announcementId });
+        return this.repo.addReaction(userId, type as any, announcementId as UUID);
     }
 
     /**
@@ -39,8 +39,8 @@ export class ReactionService {
      * @param announcementId - ID of the announcement
      * @returns Promise resolving when the reaction is removed
      */
-    removeFromAnnouncement(userId: string, announcementId: string) {
-        return this.repo.removeReaction(userId, { announcementId });
+    removeFromAnnouncement(userId: UUID, announcementId: string) {
+        return this.repo.removeReaction(userId, announcementId as UUID);
     }
 
     /**
@@ -51,9 +51,9 @@ export class ReactionService {
      * @param type - Reaction type ('like' or 'dislike')
      * @returns The inserted reaction row
      */
-    addToComment(userId: string, commentId: string, type: string) {
+    addToComment(userId: UUID, commentId: string, type: string) {
         this.validateType(type);
-        return this.repo.addReaction(userId, type as any, { commentId });
+        return this.repo.addReaction(userId, type as any, commentId as UUID);
     }
 
     /**
@@ -63,7 +63,7 @@ export class ReactionService {
      * @param commentId - ID of the comment
      * @returns Promise resolving when the reaction is removed
      */
-    removeFromComment(userId: string, commentId: string) {
-        return this.repo.removeReaction(userId, { commentId });
+    removeFromComment(userId: UUID, commentId: string) {
+        return this.repo.removeReaction(userId, commentId as UUID);
     }
 }

@@ -144,8 +144,8 @@ export class AnnouncementController {
                 errorMessage === 'Not found'
                     ? 404
                     : errorMessage === 'Forbidden'
-                      ? 403
-                      : 400;
+                        ? 403
+                        : 400;
 
             return res
                 .status(status)

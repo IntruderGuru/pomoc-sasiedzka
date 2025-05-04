@@ -7,15 +7,15 @@ import { Message } from '../../models/Message';
 export class MessageRepository {
     constructor(private db: Kysely<Database>) { }
 
-    async getConversation(
-        senderId: UUID,
+    async getThread(
+        userId: UUID,
         receiverId: UUID
     ): Promise<Message[]> {
         const result = await this.db
             .selectFrom('messages')
             .selectAll()
             .where(eb =>
-                eb('sender_id', '=', senderId).and(
+                eb('user_id', '=', userId).and(
                     'receiver_id',
                     '=',
                     receiverId
@@ -27,8 +27,8 @@ export class MessageRepository {
         return result.map(
             r =>
                 new Message(
-                    r.id,
-                    r.sender_id as UUID,
+                    r.id as UUID,
+                    r.user_id as UUID,
                     r.receiver_id as UUID,
                     r.content,
                     r.sent_at
@@ -36,24 +36,53 @@ export class MessageRepository {
         );
     }
 
+    async getConversations(userId: UUID): Promise<Message[]> {
+        const result = await this.db
+            .selectFrom('messages')
+            .selectAll()
+            .where(eb =>
+                eb('user_id', '=', userId).or(
+                    'receiver_id',
+                    '=',
+                    userId
+                )
+            )
+            .groupBy('receiver_id')
+            .orderBy('sent_at', 'desc')
+            .execute();
+
+        return result.map(
+            r =>
+                new Message(
+                    r.id as UUID,
+                    r.user_id as UUID,
+                    r.receiver_id as UUID,
+                    r.content,
+                    r.sent_at
+                )
+        );
+
+    }
+
     async addMessage(
-        senderId: UUID,
+        userId: UUID,
         receiverId: UUID,
         content: string
     ): Promise<Message> {
         const result = await this.db
             .insertInto('messages')
             .values({
-                sender_id: senderId,
+                id: crypto.randomUUID(),
+                user_id: userId,
                 receiver_id: receiverId,
-                type: content
+                content: content
             })
             .returning(['id', 'sent_at'])
             .executeTakeFirstOrThrow();
 
         return new Message(
-            result.id,
-            senderId,
+            result.id as UUID,
+            userId,
             receiverId,
             content,
             result.sent_at

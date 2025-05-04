@@ -27,7 +27,7 @@ export default function ConversationsPage() {
         <div>
             <Nav />
             {conversations.map(c => (
-                <ConversationItem key={c.withUserId} {...c} onClick={() => navigate(`/messages/${c.withUserId}`)} />
+                <ConversationItem key={c.withuserId} {...c} onClick={() => navigate(`/messages/${c.withuserId}`)} />
             ))}
         </div>
     );

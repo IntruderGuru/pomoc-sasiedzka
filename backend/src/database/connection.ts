@@ -31,26 +31,25 @@ export interface AnnouncementsTable {
 }
 
 export interface MessagesTable {
-    id: Generated<number>;
-    sender_id: string;
+    id: string;
+    user_id: string;
     receiver_id: string;
     content: string;
     sent_at: Generated<Date>;
 }
 
 export interface CommentsTable {
-    id: Generated<number>;
+    id: string;
     announcement_id: string;
-    sender_id: string;
+    user_id: string;
     content: string;
     sent_at: Generated<Date>;
 }
 
 export interface ReactionTable {
-    id: Generated<number>;
-    announcement_id: string;
+    id: string;
+    item_id: string;
     user_id: string;
-    comment_id: string;
     type: string;
     sent_at: Generated<Date>;
 }

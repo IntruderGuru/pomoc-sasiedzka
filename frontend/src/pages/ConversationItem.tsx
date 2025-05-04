@@ -1,4 +1,4 @@
-export default function ConversationItem({ withUserId, withUserEmail, lastMessage, sentAt, onClick }) {
+export default function ConversationItem({ withuserId, withUserEmail, lastMessage, sentAt, onClick }) {
     return (
         <div onClick={onClick} className="cursor-pointer p-4 border-b hover:bg-gray-100">
             <div className="font-medium">{withUserEmail}</div>

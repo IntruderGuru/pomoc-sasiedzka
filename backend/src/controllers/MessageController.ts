@@ -55,17 +55,17 @@ export class MessageController {
     }
 
     /**
-     * GET /api/messages/:withUserId
+     * GET /api/messages/:withuserId
      * Retrieves the full message thread between the authenticated user and another user.
      * Messages are returned in chronological order.
      * 
-     * @param req - Authenticated request with `withUserId` in URL params
+     * @param req - Authenticated request with `withuserId` in URL params
      * @param res - HTTP response
      * @param next - Express error handler
      */
     static async getThread(req: AuthRequest, res: Response, next: Function) {
         try {
-            const other = req.params.withUserId;
+            const other = req.params.withuserId;
             const data = await service.getThread(req.user!.userId, other);
             res.json(data);
         } catch (e) {

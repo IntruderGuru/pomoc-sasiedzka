@@ -1,5 +1,5 @@
 import { CommentRepository } from '../repositories/comment/CommentRepository';
-
+import { UUID } from 'crypto';
 /**
  * Service layer responsible for business logic related to user comments.
  * Handles input validation, ownership checks, and delegates data access to the repository.
@@ -21,7 +21,7 @@ export class CommentService {
             throw { status: 400, message: 'Content cannot be empty' };
         }
 
-        return this.repo.addComment(userId, announcementId, content);
+        return this.repo.addComment(userId as UUID, announcementId as UUID, content);
     }
 
     /**
@@ -31,7 +31,7 @@ export class CommentService {
      * @returns Array of comment rows
      */
     getComments(announcementId: string) {
-        return this.repo.getByAnnouncement(announcementId);
+        return this.repo.getComments(announcementId as UUID);
     }
 
     /**
@@ -47,19 +47,19 @@ export class CommentService {
         userId: string,
         role: 'user' | 'admin'
     ) {
-        const comment = await this.repo.getById(commentId);
+        const comment = await this.repo.getCommentById(commentId as UUID);
 
         if (!comment) {
             throw { status: 404, message: 'Not found' };
         }
 
-        const isOwner = comment.user_id === userId;
+        const isOwner = comment.userId === userId;
         const isAdmin = role === 'admin';
 
         if (!isOwner && !isAdmin) {
             throw { status: 403, message: 'Forbidden' };
         }
 
-        await this.repo.delete(commentId);
+        await this.repo.deleteComment(commentId as UUID);
     }
 }

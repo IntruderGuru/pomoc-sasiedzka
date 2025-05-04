@@ -7,7 +7,7 @@ import { UUID } from 'crypto'
 export default function CommentList({ announcementId }) {
     const [comments, setComments] = useState([]);
     const [loading, setLoading] = useState(true);
-    const currentUserId = localStorage.getItem('userId');
+    const currentuserId = localStorage.getItem('userId');
     const isAdmin = localStorage.getItem('role') === 'admin';
 
     const loadComments = async () => {
@@ -34,7 +34,7 @@ export default function CommentList({ announcementId }) {
                 <CommentItem
                     key={comment.id}
                     comment={comment}
-                    showDelete={comment.authorId === currentUserId || isAdmin}
+                    showDelete={comment.authorId === currentuserId || isAdmin}
                     onDelete={() => handleDelete(comment.id)}
                 />
             ))}

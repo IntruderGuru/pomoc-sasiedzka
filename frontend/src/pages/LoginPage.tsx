@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import {loginUser, setToken, setUserID} from '../services/api';
+import { loginUser, setToken, setuserId } from '../services/api';
 import Nav from "../components/Nav.tsx";
 
 export const LoginPage = () => {
@@ -13,7 +13,7 @@ export const LoginPage = () => {
     try {
       const res = await loginUser({ email, password });
       setToken(res.data.token);
-      setUserID(res.data.user.id);
+      setuserId(res.data.user.id);
       alert('Zalogowano!');
     } catch {
       setError('Błędne dane logowania');
@@ -21,24 +21,24 @@ export const LoginPage = () => {
   };
 
   return (
-      <>
-          <Nav />
-    <form onSubmit={handleSubmit}>
-      <input
-        value={email}
-        onChange={e => setEmail(e.target.value)}
-        placeholder='Email'
-      />
-      <input
-        type='password'
-        value={password}
-        onChange={e => setPassword(e.target.value)}
-        placeholder='Hasło'
-      />
-      <button type='submit'>Zaloguj</button>
-      {error && <p>{error}</p>}
-    </form>
-      </>
+    <>
+      <Nav />
+      <form onSubmit={handleSubmit}>
+        <input
+          value={email}
+          onChange={e => setEmail(e.target.value)}
+          placeholder='Email'
+        />
+        <input
+          type='password'
+          value={password}
+          onChange={e => setPassword(e.target.value)}
+          placeholder='Hasło'
+        />
+        <button type='submit'>Zaloguj</button>
+        {error && <p>{error}</p>}
+      </form>
+    </>
   );
 };
 

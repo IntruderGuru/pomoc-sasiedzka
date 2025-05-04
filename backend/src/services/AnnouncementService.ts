@@ -9,7 +9,7 @@ import { AnnouncementRepository } from '../repositories/announcement/Announcemen
  * This class contains validation, fallback logic, and coordinates complex operations.
  */
 export class AnnouncementService {
-    constructor(private repo: AnnouncementRepository) {}
+    constructor(private repo: AnnouncementRepository) { }
 
     /**
      * Creates a new announcement after validating required fields.
@@ -59,7 +59,7 @@ export class AnnouncementService {
      * @returns List of that user's announcements
      */
     async getByUser(userId: string) {
-        return this.repo.getAnnouncementsByUserId(userId as UUID);
+        return this.repo.getAnnouncementsByuserId(userId as UUID);
     }
 
     /**

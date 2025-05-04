@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Spinner from '../components/Spinner';
-import { fetchById} from '../services/AnnouncementService.ts';
+import { fetchById } from '../services/AnnouncementService.ts';
 import ReactionButton from './ReactionButton';
 import CommentList from './CommentList';
 import CommentForm from './CommentForm';

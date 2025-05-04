@@ -29,7 +29,7 @@ export class Announcement {
 
         /** Creation timestamp (set when announcement is created) */
         readonly createdAt: Date
-    ) {}
+    ) { }
 
     // Accessor methods to expose private fields in a controlled manner
 

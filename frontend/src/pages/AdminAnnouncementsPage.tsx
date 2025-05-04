@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import { fetchAllForAdmin, remove} from '../services/AnnouncementService';
+import { fetchAllForAdmin, remove } from '../services/AnnouncementService';
 import Spinner from '../components/Spinner';
 import { UUID } from 'crypto'
-import {useNavigate} from "react-router";
+import { useNavigate } from "react-router";
 
 export default function MyAnnouncementsPage() {
     interface Announcement {

@@ -3,6 +3,7 @@ import { AuthRequest } from '../middlewares/authMiddleware';
 import { ReactionService } from '../services/ReactionService';
 import { ReactionRepository } from '../repositories/reaction/ReactionRepository';
 import { db } from '../database/connection';
+import { UUID } from 'crypto';
 
 // Instantiate the service layer with an injected ReactionRepository instance.
 // This maintains separation of concerns between transport and domain logic.
@@ -26,7 +27,7 @@ export class ReactionController {
     static addToAnnouncement = async (req: AuthRequest, res: Response, next: Function) => {
         try {
             const { type } = req.body;
-            const r = await service.addToAnnouncement(req.user!.userId, req.params.id, type);
+            const r = await service.addToAnnouncement(req.user!.userId as UUID, req.params.id, type);
             res.status(201).json(r); // Return newly added reaction
         } catch (e) {
             next(e);
@@ -43,7 +44,7 @@ export class ReactionController {
      */
     static removeFromAnnouncement = async (req: AuthRequest, res: Response, next: Function) => {
         try {
-            await service.removeFromAnnouncement(req.user!.userId, req.params.id);
+            await service.removeFromAnnouncement(req.user!.userId as UUID, req.params.id);
             res.status(204).send(); // No content on successful delete
         } catch (e) {
             next(e);
@@ -61,7 +62,7 @@ export class ReactionController {
     static addToComment = async (req: AuthRequest, res: Response, next: Function) => {
         try {
             const { type } = req.body;
-            const r = await service.addToComment(req.user!.userId, req.params.id, type);
+            const r = await service.addToComment(req.user!.userId as UUID, req.params.id, type);
             res.status(201).json(r);
         } catch (e) {
             next(e);
@@ -78,7 +79,7 @@ export class ReactionController {
      */
     static removeFromComment = async (req: AuthRequest, res: Response, next: Function) => {
         try {
-            await service.removeFromComment(req.user!.userId, req.params.id);
+            await service.removeFromComment(req.user!.userId as UUID, req.params.id);
             res.status(204).send();
         } catch (e) {
             next(e);

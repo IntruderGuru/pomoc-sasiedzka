@@ -159,10 +159,10 @@ app.post('/api/messages', checkAuth, MessageController.sendMessage);
 app.get('/api/messages/conversations', checkAuth, MessageController.getConversations);
 
 /**
- * GET /api/messages/:withUserId
+ * GET /api/messages/:withuserId
  * Fetches the full message thread with a specific user.
  */
-app.get('/api/messages/:withUserId', checkAuth, MessageController.getThread);
+app.get('/api/messages/:withuserId', checkAuth, MessageController.getThread);
 
 // ---------------- COMMENT ROUTES ----------------
 

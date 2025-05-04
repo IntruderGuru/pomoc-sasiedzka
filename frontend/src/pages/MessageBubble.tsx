@@ -1,6 +1,6 @@
 export default function MessageBubble({ message }) {
-    const currentUserId = localStorage.getItem('userId');
-    const isOwn = message.senderId === currentUserId;
+    const currentuserId = localStorage.getItem('userId');
+    const isOwn = message.userId === currentuserId;
     return (
         <div className={`flex ${isOwn ? 'justify-end' : 'justify-start'}`}>
             <div className={`p-2 rounded-xl max-w-xs ${isOwn ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black'}`}>

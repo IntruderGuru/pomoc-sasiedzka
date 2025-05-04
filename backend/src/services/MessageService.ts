@@ -1,5 +1,5 @@
 import { MessageRepository } from '../repositories/message/MessageRepository';
-
+import { UUID } from 'crypto'
 /**
  * Service layer responsible for business logic related to private messaging.
  * Performs input validation and delegates database access to the repository.
@@ -22,7 +22,7 @@ export class MessageService {
             throw { status: 400, message: 'Content cannot be empty' };
         }
 
-        return this.repo.addMessage(sender, receiver, content);
+        return this.repo.addMessage(sender as UUID, receiver as UUID, content);
     }
 
     /**
@@ -33,7 +33,7 @@ export class MessageService {
      * @returns Array of latest messages from each conversation
      */
     getConversations(userId: string) {
-        return this.repo.findConversations(userId);
+        return this.repo.getConversations(userId as UUID);
     }
 
     /**
@@ -44,6 +44,6 @@ export class MessageService {
      * @returns Array of all messages exchanged between the two users
      */
     getThread(a: string, b: string) {
-        return this.repo.findThread(a, b);
+        return this.repo.getThread(a as UUID, b as UUID);
     }
 }

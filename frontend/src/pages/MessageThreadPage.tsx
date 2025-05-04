@@ -6,16 +6,16 @@ import MessageForm from './MessageForm';
 import Spinner from '../components/Spinner';
 
 export default function MessageThreadPage() {
-    const { withUserId } = useParams();
+    const { withuserId } = useParams();
     const [messages, setMessages] = useState([]);
     const [loading, setLoading] = useState(true);
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        const messages = fetchThread(withUserId)
+        const messages = fetchThread(withuserId)
         setMessages(messages)
         setLoading(false)
-    }, [withUserId]);
+    }, [withuserId]);
 
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -32,7 +32,7 @@ export default function MessageThreadPage() {
                 ))}
                 <div ref={messagesEndRef} />
             </div>
-            <MessageForm withUserId={withUserId!} onNewMessage={msg => setMessages([...messages, msg])} />
+            <MessageForm withuserId={withuserId!} onNewMessage={msg => setMessages([...messages, msg])} />
         </div>
     );
 }
