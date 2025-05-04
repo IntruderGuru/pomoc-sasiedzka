@@ -1,82 +1,57 @@
+import { UUID } from 'crypto';
 import { Kysely } from 'kysely';
-import { randomUUID } from 'crypto';
-import { Database } from '../../database/connection';
 
-/**
- * Repository class responsible for performing CRUD operations
- * on the `comments` table in the database.
- * 
- * Handles data access logic related to user comments under announcements.
- */
+import { Database } from '../../database/connection';
+import { Comment } from '../../models/Comment';
+
 export class CommentRepository {
     constructor(private db: Kysely<Database>) { }
 
-    /**
-     * Retrieves all comments for a specific announcement,
-     * sorted in ascending order of creation date.
-     * 
-     * @param announcementId - The ID of the announcement
-     * @returns Array of matching comment rows
-     */
-    getByAnnouncement(announcementId: string) {
-        return this.db
+    async getComments(announcementId: UUID): Promise<Comment[]> {
+        const result = await this.db
             .selectFrom('comments')
             .selectAll()
             .where('announcement_id', '=', announcementId)
-            .orderBy('created_at', 'asc')
+            .orderBy('sent_at', 'desc')
             .execute();
+
+        return result.map(
+            r =>
+                new Comment(
+                    r.id,
+                    r.sender_id as UUID,
+                    r.announcement_id as UUID,
+                    r.content,
+                    r.sent_at
+                )
+        );
     }
 
-    /**
-     * Inserts a new comment into the database.
-     * Generates a UUID and sets the creation timestamp.
-     * 
-     * @param userId - The ID of the user adding the comment
-     * @param announcementId - The announcement being commented on
-     * @param content - Text content of the comment
-     * @returns The inserted comment row
-     */
-    addComment(userId: string, announcementId: string, content: string) {
-        const row = {
-            id: randomUUID(),
-            user_id: userId,
-            announcement_id: announcementId,
-            content,
-            created_at: new Date()
-        };
-
-        return this.db
+    async addComment(
+        announcementId: UUID,
+        senderId: UUID,
+        content: string
+    ): Promise<Comment> {
+        const result = await this.db
             .insertInto('comments')
-            .values(row)
-            .execute()
-            .then(() => row);
+            .values({
+                announcement_id: announcementId,
+                sender_id: senderId,
+                content: content
+            })
+            .returning(['id', 'sent_at'])
+            .executeTakeFirstOrThrow();
+
+        return new Comment(
+            result.id,
+            announcementId,
+            senderId,
+            content,
+            result.sent_at
+        );
     }
 
-    /**
-     * Deletes a comment by its ID.
-     * 
-     * @param commentId - The ID of the comment to delete
-     * @returns A promise that resolves when the comment is deleted
-     */
-    delete(commentId: string) {
-        return this.db
-            .deleteFrom('comments')
-            .where('id', '=', commentId)
-            .execute();
-    }
-
-    /**
-     * Retrieves a single comment by its ID.
-     * Used to check ownership before deletion.
-     * 
-     * @param commentId - The ID of the comment to fetch
-     * @returns The comment row if found, otherwise null
-     */
-    getById(commentId: string) {
-        return this.db
-            .selectFrom('comments')
-            .selectAll()
-            .where('id', '=', commentId)
-            .executeTakeFirst();
+    async deleteComment(id: number): Promise<void> {
+        await this.db.deleteFrom('comments').where('id', '=', id);
     }
 }

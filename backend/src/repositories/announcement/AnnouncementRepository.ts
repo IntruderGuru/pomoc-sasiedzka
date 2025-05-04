@@ -9,31 +9,35 @@ import { Announcement } from '../../models/Announcement';
  * Repository responsible for CRUD operations on the `announcements` table.
  */
 export class AnnouncementRepository {
-    constructor(private db: Kysely<Database>) { }
+    constructor(private db: Kysely<Database>) {}
 
     /**
      * Finds a single announcement by its ID.
      * @param id - UUID of the announcement to retrieve
      * @returns An Announcement instance if found; otherwise, null
      */
-    async findById(id: UUID): Promise<Announcement | null> {
-        const row = await this.db
+    async getById(id: UUID): Promise<Announcement | null> {
+        const result = await this.db
             .selectFrom('announcements')
             .selectAll()
             .where('id', '=', id)
-            .executeTakeFirst();
-        if (!row) {
+            .execute();
+
+        if (result.length <= 0) {
             return null;
         }
 
+        const { user_id, title, content, category, type, created_at } =
+            result[0];
+
         return new Announcement(
-            row.id as UUID,
-            row.userId as UUID,
-            row.title,
-            row.content,
-            row.category,
-            row.type,
-            row.createdAt
+            id,
+            user_id as UUID,
+            title,
+            content,
+            category,
+            type,
+            created_at
         );
     }
 
@@ -47,15 +51,18 @@ export class AnnouncementRepository {
             .selectAll()
             .execute();
 
-        return result.map(r => new Announcement(
-            r.id as UUID,
-            r.userId as UUID,
-            r.title,
-            r.content,
-            r.category,
-            r.type,
-            r.createdAt
-        ));
+        return result.map(
+            r =>
+                new Announcement(
+                    r.id as UUID,
+                    r.user_id as UUID,
+                    r.title,
+                    r.content,
+                    r.category,
+                    r.type,
+                    r.created_at
+                )
+        );
     }
 
     /**
@@ -66,18 +73,21 @@ export class AnnouncementRepository {
         const result = await this.db
             .selectFrom('announcements')
             .selectAll()
-            .where('userId', '=', userId)
+            .where('user_id', '=', userId)
             .execute();
 
-        return result.map(r => new Announcement(
-            r.id as UUID,
-            r.userId as UUID,
-            r.title,
-            r.content,
-            r.category,
-            r.type,
-            r.createdAt
-        ));
+        return result.map(
+            r =>
+                new Announcement(
+                    r.id as UUID,
+                    r.user_id as UUID,
+                    r.title,
+                    r.content,
+                    r.category,
+                    r.type,
+                    r.created_at
+                )
+        );
     }
 
     /**
@@ -91,30 +101,28 @@ export class AnnouncementRepository {
         category: string,
         type: string
     ): Promise<Announcement> {
-        const newAnnouncement = new Announcement(
-            randomUUID(),
+        const result = await this.db
+            .insertInto('announcements')
+            .values({
+                id: randomUUID(),
+                user_id: userId,
+                title: title,
+                content: content,
+                category: category,
+                type: type
+            })
+            .returning(['id', 'created_at'])
+            .executeTakeFirstOrThrow();
+
+        return new Announcement(
+            result.id as UUID,
             userId,
             title,
             content,
             category,
             type,
-            new Date()
+            result.created_at
         );
-
-        await this.db
-            .insertInto('announcements')
-            .values({
-                id: newAnnouncement.id,
-                userId: newAnnouncement.userId,
-                title: newAnnouncement.getTitle(),
-                content: newAnnouncement.getContent(),
-                category: newAnnouncement.getCategory(),
-                type: newAnnouncement.getType(),
-                createdAt: newAnnouncement.createdAt
-            })
-            .execute();
-
-        return newAnnouncement;
     }
 
     /**
@@ -128,23 +136,25 @@ export class AnnouncementRepository {
         category: string,
         type: string
     ): Promise<Announcement | null> {
-        const row = await this.db
+        const result = await this.db
             .updateTable('announcements')
             .set({ title, content, category, type })
             .where('id', '=', id)
             .returningAll()
-            .executeTakeFirst();
+            .executeTakeFirstOrThrow();
 
-        if (!row) return null;
+        if (!result) {
+            return null;
+        }
 
         return new Announcement(
-            row.id as UUID,
-            row.userId as UUID,
-            row.title,
-            row.content,
-            row.category,
-            row.type,
-            row.createdAt
+            result.id as UUID,
+            result.user_id as UUID,
+            result.title,
+            result.content,
+            result.category,
+            result.type,
+            result.created_at
         );
     }
 
@@ -161,21 +171,27 @@ export class AnnouncementRepository {
     /**
      * Returns announcements filtered by optional category and/or type.
      */
-    async getFiltered(category?: string, type?: string): Promise<Announcement[]> {
+    async getFiltered(
+        category?: string,
+        type?: string
+    ): Promise<Announcement[]> {
         let qb = this.db.selectFrom('announcements').selectAll();
         if (category) qb = qb.where('category', '=', category);
         if (type) qb = qb.where('type', '=', type);
 
         const result = await qb.execute();
-        return result.map(r => new Announcement(
-            r.id as UUID,
-            r.userId as UUID,
-            r.title,
-            r.content,
-            r.category,
-            r.type,
-            r.createdAt
-        ));
+        return result.map(
+            r =>
+                new Announcement(
+                    r.id as UUID,
+                    r.user_id as UUID,
+                    r.title,
+                    r.content,
+                    r.category,
+                    r.type,
+                    r.created_at
+                )
+        );
     }
 
     /**
@@ -185,16 +201,16 @@ export class AnnouncementRepository {
     async getAllWithAuthors() {
         const rows = await this.db
             .selectFrom('announcements as a')
-            .innerJoin('users as u', 'a.userId', 'u.id')
+            .innerJoin('users as u', 'a.user_id', 'u.id')
             .select([
                 'a.id',
+                'a.user_id',
                 'a.title',
                 'a.content',
                 'a.category',
                 'a.type',
-                'a.createdAt',
-                'u.id as userId',
-                'u.email as authorEmail'
+                'a.created_at',
+                'u.email'
             ])
             .execute();
 
@@ -204,9 +220,9 @@ export class AnnouncementRepository {
             content: r.content,
             category: r.category,
             type: r.type,
-            createdAt: r.createdAt,
-            userId: r.userId,
-            authorEmail: r.authorEmail
+            createdAt: r.created_at,
+            userId: r.user_id,
+            authorEmail: r.email
         }));
     }
 

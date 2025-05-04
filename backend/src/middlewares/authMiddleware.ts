@@ -24,7 +24,7 @@ export interface AuthRequest extends Request {
 /**
  * Middleware to validate JWT token from the Authorization header.
  * Ensures that only authenticated users can access protected routes.
- * 
+ *
  * Expected header format:
  *   Authorization: Bearer <token>
  */

@@ -48,7 +48,7 @@ export async function checkOwnerOrAdmin(
     // Attempt to fetch the announcement by ID
     let announcement;
     try {
-        announcement = await announcementRepo.findById(announcementId as UUID);
+        announcement = await announcementRepo.getById(announcementId as UUID);
     } catch (err) {
         logger.error(err);
         return res.status(500).json({ message: 'Internal server error' });
@@ -63,7 +63,9 @@ export async function checkOwnerOrAdmin(
 
     // Allow if the user is the owner or has admin privileges
     if (announcement.userId !== userId && role !== 'admin') {
-        logger.error(`Forbidden: ${userId} tried to access ${announcement.userId}`);
+        logger.error(
+            `Forbidden: ${userId} tried to access ${announcement.userId}`
+        );
         return res.status(403).json({ message: 'Forbidden' });
     }
 

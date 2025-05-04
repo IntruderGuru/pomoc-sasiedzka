@@ -16,21 +16,10 @@ export async function up(db: Kysely<Database>): Promise<void> {
         )
         .execute();
 
-    // For dev
-    await db
-        .insertInto('users')
-        .values({
-            id: randomUUID(),
-            email: 'yakui@example.com',
-            password: await bcrypt.hash('themaid', 10),
-            role: 'admin'
-        })
-        .execute();
-
     await db.schema
         .createTable('announcements')
         .addColumn('id', 'varchar(36)', column => column.primaryKey())
-        .addColumn('userId', 'varchar(36)', column =>
+        .addColumn('user_id', 'varchar(36)', column =>
             column
                 .notNull()
                 .references('users.id')
@@ -41,11 +30,103 @@ export async function up(db: Kysely<Database>): Promise<void> {
         .addColumn('content', 'varchar(256)', column => column.notNull())
         .addColumn('category', 'varchar(256)', column => column.notNull())
         .addColumn('type', 'varchar(256)', column => column.notNull())
-        .addColumn('createdAt', 'timestamptz', column => column.notNull())
+        .addColumn('created_at', 'timestamptz', column =>
+            column.notNull().defaultTo(sql`NOW()`)
+        )
+        .execute();
+
+    await db.schema
+        .createTable('messages')
+        .addColumn('id', 'serial', column => column.primaryKey())
+        .addColumn('sender_id', 'varchar(36)', column =>
+            column
+                .notNull()
+                .references('users.id')
+                .onUpdate('cascade')
+                .onDelete('cascade')
+        )
+        .addColumn('receiver_id', 'varchar(36)', column =>
+            column
+                .notNull()
+                .references('users.id')
+                .onUpdate('cascade')
+                .onDelete('cascade')
+        )
+        .addColumn('content', 'varchar(256)', column => column.notNull())
+        .addColumn('sent_at', 'timestamptz', column =>
+            column.notNull().defaultTo(sql`NOW()`)
+        )
+        .execute();
+
+    await db.schema
+        .createTable('comments')
+        .addColumn('id', 'serial', column => column.primaryKey())
+        .addColumn('announcement_id', 'varchar(36)', column =>
+            column
+                .notNull()
+                .references('announcements.id')
+                .onUpdate('cascade')
+                .onDelete('cascade')
+        )
+        .addColumn('sender_id', 'varchar(36)', column =>
+            column
+                .notNull()
+                .references('users.id')
+                .onUpdate('cascade')
+                .onDelete('cascade')
+        )
+        .addColumn('content', 'varchar(256)', column => column.notNull())
+        .addColumn('sent_at', 'timestamptz', column =>
+            column.notNull().defaultTo(sql`NOW()`)
+        )
+        .execute();
+
+    await db.schema
+        .createTable('reactions')
+        .addColumn('id', 'serial', column => column.primaryKey())
+        .addColumn('announcement_id', 'varchar(36)', column =>
+            column
+                .notNull()
+                .references('announcements.id')
+                .onUpdate('cascade')
+                .onDelete('cascade')
+        )
+        .addColumn('user_id', 'varchar(36)', column =>
+            column
+                .notNull()
+                .references('users.id')
+                .onUpdate('cascade')
+                .onDelete('cascade')
+        )
+        .addColumn('comment_id', 'serial', column =>
+            column
+                .notNull()
+                .references('comments.id')
+                .onUpdate('cascade')
+                .onDelete('cascade')
+        )
+        .addColumn('type', 'varchar(256)', column => column.notNull())
+        .addColumn('sent_at', 'timestamptz', column =>
+            column.notNull().defaultTo(sql`NOW()`)
+        )
+        .execute();
+
+    // For dev
+    await db
+        .insertInto('users')
+        .values({
+            id: randomUUID(),
+            email: 'yakui@example.com',
+            password: await bcrypt.hash('themaid', 10),
+            role: 'admin'
+        })
         .execute();
 }
 
 export async function down(db: Kysely<Database>): Promise<void> {
+    await db.schema.dropTable('messages').execute();
+    await db.schema.dropTable('reactions').execute();
+    await db.schema.dropTable('comments').execute();
     await db.schema.dropTable('announcements').execute();
     await db.schema.dropTable('users').execute();
 }

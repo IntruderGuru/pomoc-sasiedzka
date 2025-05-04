@@ -1,106 +1,80 @@
-import { Kysely, sql } from 'kysely';
-import { randomUUID } from 'crypto';
-import { Database } from '../../database/connection';
+import { UUID } from 'crypto';
+import { Kysely } from 'kysely';
 
-/**
- * Repository class responsible for managing reactions in the database.
- * Supports likes/dislikes for both announcements and comments.
- */
+import { Database } from '../../database/connection';
+import { Reaction } from '../../models/Reaction';
+
 export class ReactionRepository {
     constructor(private db: Kysely<Database>) { }
 
-    /**
-     * Retrieves all reactions for a specific announcement.
-     *
-     * @param id - ID of the announcement
-     * @returns Array of reaction rows
-     */
-    getByAnnouncement(id: string) {
-        return this.db
+    async getReactionsByAnnouncementId(
+        announcementId: UUID
+    ): Promise<Reaction[]> {
+        const result = await this.db
             .selectFrom('reactions')
             .selectAll()
-            .where('announcement_id', '=', id)
+            .where('announcement_id', '=', announcementId)
+            .orderBy('sent_at', 'desc')
             .execute();
+
+        return result.map(
+            r =>
+                new Reaction(
+                    r.id,
+                    r.announcement_id as UUID,
+                    r.user_id as UUID,
+                    r.comment_id as UUID, // ???
+                    r.type,
+                    r.sent_at
+                )
+        );
     }
 
-    /**
-     * Retrieves all reactions for a specific comment.
-     *
-     * @param id - ID of the comment
-     * @returns Array of reaction rows
-     */
-    getByComment(id: string) {
-        return this.db
+    async getReactionsByCommentId(commentId: UUID): Promise<Reaction[]> {
+        const result = await this.db
             .selectFrom('reactions')
             .selectAll()
-            .where('comment_id', '=', id)
+            .where('comment_id', '=', commentId)
+            .orderBy('sent_at', 'desc')
             .execute();
+
+        return result.map(
+            r =>
+                new Reaction(
+                    r.id,
+                    r.announcement_id as UUID,
+                    r.user_id as UUID,
+                    r.comment_id as UUID,
+                    r.type,
+                    r.sent_at
+                )
+        );
     }
 
-    /**
-     * Inserts a new reaction (like/dislike) into the database.
-     * Automatically determines whether the target is a comment or announcement.
-     *
-     * @param userId - ID of the user reacting
-     * @param type - Type of reaction: 'like' or 'dislike'
-     * @param target - Object specifying either an announcementId or commentId
-     * @returns The inserted reaction row
-     */
-    addReaction(
-        userId: string,
-        type: 'like' | 'dislike',
-        target: { announcementId?: string; commentId?: string }
-    ) {
-        const row = {
-            id: randomUUID(),
-            user_id: userId,
-            announcement_id: target.announcementId ?? null,
-            comment_id: target.commentId ?? null,
-            type,
-            created_at: new Date()
-        };
-
-        return this.db
+    async addReaction(
+        announcementId: UUID,
+        userId: UUID,
+        commentId: UUID,
+        type: string
+    ): Promise<Reaction> {
+        const result = await this.db
             .insertInto('reactions')
-            .values(row)
-            .execute()
-            .then(() => row);
-    }
+            .values({
+                announcement_id: announcementId,
+                user_id: userId,
+                comment_id: commentId,
+                type: type
+            })
+            .returning(['id', 'sent_at'])
+            .executeTakeFirstOrThrow();
 
-    /**
-     * Removes a user's reaction from either a comment or announcement.
-     *
-     * @param userId - ID of the user whose reaction should be removed
-     * @param target - Object specifying the reaction target
-     * @returns Promise resolving when the reaction is deleted
-     */
-    removeReaction(
-        userId: string,
-        target: { announcementId?: string; commentId?: string }
-    ) {
-        let qb = this.db
-            .deleteFrom('reactions')
-            .where('user_id', '=', userId);
-
-        qb = target.announcementId
-            ? qb.where('announcement_id', '=', target.announcementId)
-            : qb.where('comment_id', '=', target.commentId!);
-
-        return qb.execute();
-    }
-
-    /**
-     * Retrieves minimal ownership info (user_id) for a given reaction.
-     * Used to verify that a user is authorized to delete it.
-     *
-     * @param reactionId - ID of the reaction
-     * @returns Reaction row with ID and user_id
-     */
-    async getOwnerInfo(reactionId: string) {
-        return this.db
-            .selectFrom('reactions')
-            .select(['id', 'user_id'])
-            .where('id', '=', reactionId)
-            .executeTakeFirst();
+        return new Reaction(
+            result.id,
+            announcementId,
+            userId,
+            commentId,
+            type,
+            result.sent_at
+        );
     }
 }

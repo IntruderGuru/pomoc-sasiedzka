@@ -7,7 +7,6 @@ import { AuthService } from '../services/AuthService';
  * Delegates all business logic to the AuthService.
  */
 export class AuthController {
-
     /**
      * POST /api/auth/register
      * Handles user registration.
@@ -30,7 +29,6 @@ export class AuthController {
 
             // Respond with 201 Created and user data (id + email)
             return res.status(201).json(user);
-
         } catch (error: any) {
             // Specific error if the user already exists
             if (error.message === 'User already exists') {
@@ -63,7 +61,6 @@ export class AuthController {
             const result = await AuthService.loginUser(email, password);
 
             return res.status(200).json(result);
-
         } catch (error: any) {
             // Invalid credentials are treated as a 401 Unauthorized
             if (error.message === 'Invalid credentials') {

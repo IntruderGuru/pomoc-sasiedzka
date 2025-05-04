@@ -10,7 +10,7 @@ import { User } from '../../models/User';
  * Returns domain objects (User instances) rather than raw query results.
  */
 export class UserRepository {
-    constructor(private db: Kysely<Database>) { }
+    constructor(private db: Kysely<Database>) {}
 
     /**
      * Adds a new user to the database.

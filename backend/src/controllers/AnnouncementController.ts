@@ -15,7 +15,6 @@ const service = new AnnouncementService(new AnnouncementRepository(db));
  * Delegates all core logic to AnnouncementService and communicates results to the client.
  */
 export class AnnouncementController {
-
     /**
      * POST /api/announcements
      * Creates a new announcement associated with the currently authenticated user.
@@ -30,7 +29,13 @@ export class AnnouncementController {
             }
 
             // Pass input to the service layer for validation and persistence
-            const data = await service.create(req.user.userId, title, content, category, type);
+            const data = await service.create(
+                req.user.userId,
+                title,
+                content,
+                category,
+                type
+            );
 
             return res.status(201).json(data);
         } catch (e: any) {
@@ -114,21 +119,37 @@ export class AnnouncementController {
         const { title, content, category, type } = req.body;
 
         try {
-            console.log('Updating announcement:', id, title, content, category, type);
-            const updated = await service.update(id as UUID, title, content, category, type);
+            console.log(
+                'Updating announcement:',
+                id,
+                title,
+                content,
+                category,
+                type
+            );
+            const updated = await service.update(
+                id as UUID,
+                title,
+                content,
+                category,
+                type
+            );
             console.log('Updated announcement:', updated);
             return res.status(200).json(updated);
         } catch (e) {
             const errorMessage = (e as Error).message;
 
             // Map domain errors to HTTP status codes
-            const status = errorMessage === 'Not found'
-                ? 404
-                : errorMessage === 'Forbidden'
-                    ? 403
-                    : 400;
+            const status =
+                errorMessage === 'Not found'
+                    ? 404
+                    : errorMessage === 'Forbidden'
+                      ? 403
+                      : 400;
 
-            return res.status(status).json({ error: errorMessage || 'An unknown error occurred' });
+            return res
+                .status(status)
+                .json({ error: errorMessage || 'An unknown error occurred' });
         }
     }
 
@@ -138,7 +159,9 @@ export class AnnouncementController {
         try {
             const announcement = await service.findById(id as UUID);
             if (!announcement) {
-                return res.status(404).json({ error: 'Announcement not found' });
+                return res
+                    .status(404)
+                    .json({ error: 'Announcement not found' });
             }
             return res.json(announcement);
         } catch (e) {

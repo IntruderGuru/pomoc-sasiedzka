@@ -21,7 +21,6 @@ const userRepo = new UserRepository(db);
  * - Token generation (JWT)
  */
 export class AuthService {
-
     /**
      * Registers a new user account after validating email uniqueness and hashing the password.
      *
