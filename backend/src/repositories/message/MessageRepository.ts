@@ -11,6 +11,7 @@ export class MessageRepository {
         userId: UUID,
         receiverId: UUID
     ): Promise<Message[]> {
+
         const result = await this.db
             .selectFrom('messages')
             .selectAll()
@@ -23,7 +24,7 @@ export class MessageRepository {
             )
             .orderBy('sent_at', 'desc')
             .execute();
-
+        console.log(result);
         return result.map(
             r =>
                 new Message(
@@ -40,17 +41,10 @@ export class MessageRepository {
         const result = await this.db
             .selectFrom('messages')
             .selectAll()
-            .where(eb =>
-                eb('user_id', '=', userId).or(
-                    'receiver_id',
-                    '=',
-                    userId
-                )
-            )
-            .groupBy('receiver_id')
+            .where('user_id', '=', userId)
+            // .groupBy('receiver_id')
             .orderBy('sent_at', 'desc')
             .execute();
-
         return result.map(
             r =>
                 new Message(

@@ -4,18 +4,23 @@ import { fetchThread } from '../services/MessagesService.ts';
 import MessageBubble from './MessageBubble';
 import MessageForm from './MessageForm';
 import Spinner from '../components/Spinner';
+import { UUID } from 'crypto';
 
 export default function MessageThreadPage() {
-    const { withuserId } = useParams();
+    const { id } = useParams();
     const [messages, setMessages] = useState([]);
     const [loading, setLoading] = useState(true);
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
+    const getThread = async () => {
+        const response = await fetchThread(id as UUID);
+        setMessages(response.data);
+        setLoading(false);
+    };
+
     useEffect(() => {
-        const messages = fetchThread(withuserId)
-        setMessages(messages)
-        setLoading(false)
-    }, [withuserId]);
+        getThread();
+    }, []);
 
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -32,7 +37,7 @@ export default function MessageThreadPage() {
                 ))}
                 <div ref={messagesEndRef} />
             </div>
-            <MessageForm withuserId={withuserId!} onNewMessage={msg => setMessages([...messages, msg])} />
+            {/* <MessageForm withuserId={withuserId!} onNewMessage={msg => setMessages([...messages, msg])} /> */}
         </div>
     );
 }

@@ -16,6 +16,6 @@ api.interceptors.request.use(config => {
 
 export const fetchConversations = () => api.get('/messages/conversations');
 
-export const fetchThread = (withuserId: UUID) => api.get(`/messages/${withuserId}`);
+export const fetchThread = (userId: UUID) => api.get(`/messages/${userId}`);
 
 export const sendMessage = (data: { receiverId: UUID, content: string }) => api.post(`/users/messages`, data);
