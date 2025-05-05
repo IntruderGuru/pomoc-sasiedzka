@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-import { Generated, Kysely, PostgresDialect } from 'kysely';
+import { ColumnType, Generated, Kysely, PostgresDialect } from 'kysely';
 import { Pool } from 'pg';
 
 // Load environment variables from .env file
@@ -48,12 +48,11 @@ export interface CommentsTable {
 
 export interface ReactionsTable {
     id: string;
-    item_id: string;
     user_id: string;
-    type: string;
-    sent_at: Generated<Date>;
+    announcement_id: ColumnType<string | null>;
+    comment_id: ColumnType<string | null>;
+    type: 'like' | 'dislike';
 }
-
 
 export const db = new Kysely<Database>({
     dialect: new PostgresDialect({

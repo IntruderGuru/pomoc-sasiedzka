@@ -91,16 +91,20 @@ export async function up(db: Kysely<Database>): Promise<void> {
                 .onUpdate('cascade')
                 .onDelete('cascade')
         )
-        .addColumn('item_id', 'varchar(36)', column =>
+        .addColumn('announcement_id', 'varchar(36)', column =>
             column
-                .notNull()
+                .references('announcements.id')
+                .onUpdate('cascade')
+                .onDelete('cascade')
+        )
+        .addColumn('comment_id', 'varchar(36)', column =>
+            column
                 .references('comments.id')
                 .onUpdate('cascade')
                 .onDelete('cascade')
         )
-        .addColumn('type', 'varchar(256)', column => column.notNull())
-        .addColumn('sent_at', 'timestamptz', column =>
-            column.notNull().defaultTo(sql`NOW()`)
+        .addColumn('type', 'varchar(7)', column =>
+            column.notNull().check(sql`type IN ('like', 'dislike')`)
         )
         .execute();
 
