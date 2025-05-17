@@ -108,6 +108,15 @@ export async function up(db: Kysely<Database>): Promise<void> {
         )
         .execute();
 
+    await db.schema
+        .createTable('categories')
+        .addColumn('id', 'varchar(36)', column => column.primaryKey())
+        .addColumn('name', 'varchar(256)', column => column.notNull().unique())
+        .addColumn('created_at', 'timestamptz', column =>
+            column.notNull().defaultTo(sql`NOW()`)
+        )
+        .execute();
+
     // For dev
     await db
         .insertInto('users')
@@ -126,4 +135,5 @@ export async function down(db: Kysely<Database>): Promise<void> {
     await db.schema.dropTable('comments').execute();
     await db.schema.dropTable('announcements').execute();
     await db.schema.dropTable('users').execute();
+    await db.schema.dropTable('categories').execute();
 }
