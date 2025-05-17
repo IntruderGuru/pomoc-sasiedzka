@@ -94,7 +94,7 @@ describe('AnnouncementRepository', () => {
         ]);
 
         const announcementRepo = new AnnouncementRepository(mockDb);
-        const announcements = await announcementRepo.getAnnouncementsByuserId(
+        const announcements = await announcementRepo.getAnnouncementsByUserId(
             'f131ee94-7e48-4bc3-8cd8-752f775efc3' as UUID
         );
 

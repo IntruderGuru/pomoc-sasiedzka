@@ -9,7 +9,7 @@ import { Announcement } from '../../models/Announcement';
  * Repository responsible for CRUD operations on the `announcements` table.
  */
 export class AnnouncementRepository {
-    constructor(private db: Kysely<Database>) { }
+    constructor(private db: Kysely<Database>) {}
 
     /**
      * Finds a single announcement by its ID.
@@ -27,7 +27,7 @@ export class AnnouncementRepository {
             return null;
         }
 
-        const { user_id, title, content, category, type, created_at } =
+        const { user_id, title, content, category, type, status, created_at } =
             result[0];
 
         return new Announcement(
@@ -37,6 +37,7 @@ export class AnnouncementRepository {
             content,
             category,
             type,
+            status,
             created_at
         );
     }
@@ -60,6 +61,7 @@ export class AnnouncementRepository {
                     r.content,
                     r.category,
                     r.type,
+                    r.status,
                     r.created_at
                 )
         );
@@ -69,7 +71,7 @@ export class AnnouncementRepository {
      * Returns all announcements created by a specific user.
      * @param userId - UUID of the user
      */
-    async getAnnouncementsByuserId(userId: UUID): Promise<Announcement[]> {
+    async getAnnouncementsByUserId(userId: UUID): Promise<Announcement[]> {
         const result = await this.db
             .selectFrom('announcements')
             .selectAll()
@@ -85,6 +87,7 @@ export class AnnouncementRepository {
                     r.content,
                     r.category,
                     r.type,
+                    r.status,
                     r.created_at
                 )
         );
@@ -111,7 +114,7 @@ export class AnnouncementRepository {
                 category: category,
                 type: type
             })
-            .returning(['id', 'created_at'])
+            .returning(['id', 'status', 'created_at'])
             .executeTakeFirstOrThrow();
 
         return new Announcement(
@@ -121,6 +124,7 @@ export class AnnouncementRepository {
             content,
             category,
             type,
+            result.status,
             result.created_at
         );
     }
@@ -134,6 +138,7 @@ export class AnnouncementRepository {
         title: string,
         content: string,
         category: string,
+        status: string,
         type: string
     ): Promise<Announcement | null> {
         const result = await this.db
@@ -154,6 +159,7 @@ export class AnnouncementRepository {
             result.content,
             result.category,
             result.type,
+            result.status,
             result.created_at
         );
     }
@@ -189,6 +195,7 @@ export class AnnouncementRepository {
                     r.content,
                     r.category,
                     r.type,
+                    r.status,
                     r.created_at
                 )
         );
@@ -209,6 +216,7 @@ export class AnnouncementRepository {
                 'a.content',
                 'a.category',
                 'a.type',
+                'a.status',
                 'a.created_at',
                 'u.email'
             ])
@@ -220,6 +228,7 @@ export class AnnouncementRepository {
             content: r.content,
             category: r.category,
             type: r.type,
+            status: r.status,
             createdAt: r.created_at,
             userId: r.user_id,
             authorEmail: r.email

@@ -28,6 +28,7 @@ export interface AnnouncementsTable {
     content: string;
     category: string;
     type: string;
+    status: Generated<'pending' | 'approved' | 'rejected'>;
     created_at: Generated<Date>;
 }
 

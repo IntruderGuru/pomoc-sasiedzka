@@ -30,6 +30,12 @@ export async function up(db: Kysely<Database>): Promise<void> {
         .addColumn('content', 'varchar(256)', column => column.notNull())
         .addColumn('category', 'varchar(256)', column => column.notNull())
         .addColumn('type', 'varchar(256)', column => column.notNull())
+        .addColumn('status', 'varchar(8)', column =>
+            column
+                .notNull()
+                .check(sql`role IN ('pending', 'approved', 'rejected')`)
+                .defaultTo('pending')
+        )
         .addColumn('created_at', 'timestamptz', column =>
             column.notNull().defaultTo(sql`NOW()`)
         )

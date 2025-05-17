@@ -27,9 +27,11 @@ export class Announcement {
         /** Type label (e.g., "offer", "request") */
         private type: string,
 
+        private status: 'pending' | 'approved' | 'rejected',
+
         /** Creation timestamp (set when announcement is created) */
         readonly createdAt: Date
-    ) { }
+    ) {}
 
     // Accessor methods to expose private fields in a controlled manner
 
@@ -47,5 +49,13 @@ export class Announcement {
 
     getType(): string {
         return this.type;
+    }
+
+    getStatus(): 'pending' | 'approved' | 'rejected' {
+        return this.status;
+    }
+
+    setStatus(newStatus: 'pending' | 'approved' | 'rejected') {
+        this.status = newStatus;
     }
 }
