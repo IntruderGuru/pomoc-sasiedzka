@@ -11,6 +11,8 @@ export interface Database {
     messages: MessagesTable;
     comments: CommentsTable;
     reactions: ReactionsTable;
+    categories: CategoriesTable;
+    audit_logs: AuditLogsTable;
 }
 
 export interface UsersTable {
@@ -52,6 +54,22 @@ export interface ReactionsTable {
     announcement_id: ColumnType<string | null>;
     comment_id: ColumnType<string | null>;
     type: 'like' | 'dislike';
+}
+
+export interface CategoriesTable {
+    id: string;
+    name: string;
+    created_at: Date;
+}
+
+export interface AuditLogsTable {
+    id: string;
+    user_id: string | null;
+    action: string;
+    entity: string;
+    entity_id: string | null;
+    details: unknown | null;
+    created_at: Date;
 }
 
 export const db = new Kysely<Database>({
