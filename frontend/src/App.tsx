@@ -8,6 +8,7 @@ import MyAnnouncementsPage from "./pages/MyAnnouncementsPage.tsx";
 import ConversationsPage from "./pages/ConversationsPage.tsx";
 import MessageThreadPage from "./pages/MessageThreadPage.tsx";
 import AnnouncementDetailsPage from "./pages/AnnouncementDetailsPage.tsx";
+import "tailwindcss";
 
 function App() {
   return (
