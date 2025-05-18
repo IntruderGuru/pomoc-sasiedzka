@@ -12,6 +12,7 @@ export interface Database {
     comments: CommentsTable;
     reactions: ReactionsTable;
     categories: CategoriesTable;
+    audit_logs: AuditLogsRepository;
 }
 
 export interface UsersTable {
@@ -59,6 +60,15 @@ export interface ReactionsTable {
 export interface CategoriesTable {
     id: string;
     name: string;
+    created_at: Generated<Date>;
+}
+
+export interface AuditLogsRepository {
+    id: string;
+    user_id: string;
+    action: string;
+    announcement_id: ColumnType<string | null>;
+    comment_id: ColumnType<string | null>;
     created_at: Generated<Date>;
 }
 

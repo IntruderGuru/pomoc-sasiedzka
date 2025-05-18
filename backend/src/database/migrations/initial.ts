@@ -123,6 +123,34 @@ export async function up(db: Kysely<Database>): Promise<void> {
         )
         .execute();
 
+    await db.schema
+        .createTable('audit_logs')
+        .addColumn('id', 'varchar(36)', column => column.primaryKey())
+        .addColumn('user_id', 'varchar(36)', column =>
+            column
+                .notNull()
+                .references('users.id')
+                .onUpdate('cascade')
+                .onDelete('cascade')
+        )
+        .addColumn('action', 'varchar(256)', column => column.notNull())
+        .addColumn('announcement_id', 'varchar(36)', column =>
+            column
+                .references('announcements.id')
+                .onUpdate('cascade')
+                .onDelete('cascade')
+        )
+        .addColumn('comment_id', 'varchar(36)', column =>
+            column
+                .references('comments.id')
+                .onUpdate('cascade')
+                .onDelete('cascade')
+        )
+        .addColumn('created_at', 'timestamptz', column =>
+            column.notNull().defaultTo(sql`NOW()`)
+        )
+        .execute();
+
     // For dev
     await db
         .insertInto('users')
@@ -138,6 +166,7 @@ export async function up(db: Kysely<Database>): Promise<void> {
 export async function down(db: Kysely<Database>): Promise<void> {
     await db.schema.dropTable('messages').execute();
     await db.schema.dropTable('reactions').execute();
+    await db.schema.dropTable('audit_logs').execute();
     await db.schema.dropTable('comments').execute();
     await db.schema.dropTable('announcements').execute();
     await db.schema.dropTable('users').execute();
