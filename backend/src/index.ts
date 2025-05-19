@@ -12,6 +12,11 @@ import { MessageController } from './controllers/MessageController';
 import { CommentController } from './controllers/CommentController';
 import { ReactionController } from './controllers/ReactionController';
 import { logger } from './utils/logger';
+import { AdminCategoryController } from './controllers/AdminCategoryController';
+import { AdminUserController } from './controllers/AdminUserController';
+import { AnnouncementModerationController } from './controllers/AnnouncementModerationController';
+import { AdminCommentController } from './controllers/AdminCommentController';
+import { getDashboard } from './controllers/AdminDashboardController';
 
 // ---------------- ENVIRONMENT SETUP ----------------
 
@@ -209,6 +214,38 @@ app.post('/api/comments/:id/reactions', checkAuth, ReactionController.addToComme
  * Removes user's reaction from a comment.
  */
 app.delete('/api/comments/:id/reactions', checkAuth, ReactionController.removeFromComment);
+
+// ---------- ADMIN  ----------
+app.use('/api/admin/*', checkAuth, checkAdmin);
+
+// users
+app.get('/api/admin/users', AdminUserController.getAll);
+app.put('/api/admin/users/:id/role', AdminUserController.updateRole);
+app.put('/api/admin/users/:id/deactivate', AdminUserController.deactivate);
+
+// ----- ADMIN: categories -----
+app.get('/api/admin/categories', checkAuth, checkAdmin, AdminCategoryController.getAll);
+app.post('/api/admin/categories', checkAuth, checkAdmin, AdminCategoryController.create);
+app.put('/api/admin/categories/:id', checkAuth, checkAdmin, AdminCategoryController.update);
+app.delete('/api/admin/categories/:id', checkAuth, checkAdmin, AdminCategoryController.delete);
+
+// ----- PUBLIC: filtering -----
+app.get('/api/categories', async (_req, res) => {
+    const repo = new (await import('./repositories/category/CategoryRepository')).CategoryRepository(db);
+    res.json(await repo.getAll());
+});
+
+// announcements moderation
+app.get('/api/admin/announcements', AnnouncementModerationController.get);
+app.put('/api/admin/announcements/:id/status', AnnouncementModerationController.updateStatus);
+
+// comments moderation
+app.get('/api/admin/comments', AdminCommentController.getAll);
+app.delete('/api/admin/comments/:id', AdminCommentController.delete);
+
+// dashboard
+app.get('/api/admin/dashboard', getDashboard);
+
 
 // ---------------- GLOBAL ERROR HANDLING ----------------
 

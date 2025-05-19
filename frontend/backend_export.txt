@@ -1,0 +1,969 @@
+=== ŚCIEŻKA ===
+package.json
+=== ZAWARTOŚĆ ===
+{
+  "name": "frontend",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "eslint .",
+    "preview": "vite preview",
+    "format": "prettier -w src"
+  },
+  "dependencies": {
+    "axios": "^1.8.4",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-router-dom": "^7.5.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.21.0",
+    "@types/axios": "^0.9.36",
+    "@types/react": "^19.0.10",
+    "@types/react-dom": "^19.0.4",
+    "@vitejs/plugin-react": "^4.3.4",
+    "eslint": "^9.21.0",
+    "eslint-plugin-react-hooks": "^5.1.0",
+    "eslint-plugin-react-refresh": "^0.4.19",
+    "globals": "^15.15.0",
+    "prettier": "^3.5.3",
+    "typescript": "~5.7.2",
+    "typescript-eslint": "^8.24.1",
+    "vite": "^6.2.0"
+  }
+}
+
+
+=== ŚCIEŻKA ===
+tsconfig.json
+=== ZAWARTOŚĆ ===
+{
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
+  ]
+}
+
+
+=== ŚCIEŻKA ===
+src/App.tsx
+=== ZAWARTOŚĆ ===
+import { Routes, Route, Navigate } from 'react-router-dom';
+import AnnouncementsPage from './pages/AnnouncementsPage';
+import AnnouncementForm from './pages/AnnouncementForm';
+import AnnouncementUpdateForm from "./pages/AnnouncementUpdateForm.tsx";
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
+import MyAnnouncementsPage from "./pages/MyAnnouncementsPage.tsx";
+import ConversationsPage from "./pages/ConversationsPage.tsx";
+import MessageThreadPage from "./pages/MessageThreadPage.tsx";
+import AnnouncementDetailsPage from "./pages/AnnouncementDetailsPage.tsx";
+
+function App() {
+  return (
+      <Routes>
+          <Route path="/" element={<Navigate to="/announcements" />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/announcements" element={<AnnouncementsPage />} />
+          <Route path="/announcements/create" element={<AnnouncementForm />} />
+          <Route path="/announcements/:id" element={<AnnouncementUpdateForm />} />
+          <Route path="/announcements/my" element={<MyAnnouncementsPage />} />
+          <Route path="/messages" element={<ConversationsPage />} />
+          <Route path="/messages/:id" element={<MessageThreadPage />} />
+          <Route path="/announcements/:id/details" element={<AnnouncementDetailsPage />} />
+          {/* Możesz dodać stronę 404 */}
+          <Route path="*" element={<div>404 - Strona nie znaleziona</div>} />
+      </Routes>
+  );
+}
+
+export default App;
+
+
+=== ŚCIEŻKA ===
+src/main.tsx
+=== ZAWARTOŚĆ ===
+import { StrictMode } from 'react';
+import ReactDOM from 'react-dom/client';
+import './index.css';
+import App from './App.tsx';
+import {BrowserRouter} from "react-router-dom";
+
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  <StrictMode>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+  </StrictMode>
+);
+
+
+=== ŚCIEŻKA ===
+src/components/Nav.tsx
+=== ZAWARTOŚĆ ===
+import {useNavigate} from "react-router";
+
+export default function Nav() {
+    const navigate = useNavigate();
+
+    return (
+        <div>
+            <h2>Wybierz sekcję</h2>
+            <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem' }}>
+                <button onClick={() => navigate("/announcements")}>Strona główna</button>
+                <button onClick={() => navigate("/login")}>Logowanie</button>
+                <button onClick={() => navigate("/register")}>Rejestracja</button>
+                <button onClick={() => navigate("/announcements/create")}>Dodaj post</button>
+                <button onClick={() => navigate("/announcements/my")}>Moje ogłoszenia</button>
+                <button onClick={() => navigate("/messages")}>Wiadomości</button>
+            </div>
+        </div>
+    );
+}
+
+
+=== ŚCIEŻKA ===
+src/components/Spinner.tsx
+=== ZAWARTOŚĆ ===
+export default function Spinner() {
+    return <div className="spinner">Ładowanie...</div>; // add spinner style or icon
+}
+
+
+=== ŚCIEŻKA ===
+src/pages/AdminAnnouncementsPage.tsx
+=== ZAWARTOŚĆ ===
+import { useEffect, useState } from 'react';
+import { fetchAllForAdmin, remove } from '../services/AnnouncementService';
+import Spinner from '../components/Spinner';
+import { UUID } from 'crypto'
+import { useNavigate } from "react-router";
+
+export default function MyAnnouncementsPage() {
+    interface Announcement {
+        id: UUID;
+        title: string;
+        content: string;
+        category: string;
+        userId: UUID;
+        createdAt: string;
+        authorEmail: string;
+    }
+
+    const navigate = useNavigate();
+    const [announcements, setAnnouncements] = useState<Announcement[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    const getData = async () => {
+        const announcements = await fetchAllForAdmin();
+        setAnnouncements(announcements.data as Announcement[]);
+        setLoading(false);
+    };
+
+    const handleDelete = async (id: UUID) => {
+        await remove(id);
+        alert('Ogłoszenie usunięte');
+        getData();
+    };
+
+    useEffect(() => {
+        getData();
+    }, []);
+
+    if (loading) return <Spinner />;
+
+    return (
+        <div>
+            <h1>Ogłoszenia(ADMIN)</h1>
+            <ul>
+                {announcements.map((a) => (
+                    <li key={a.id}>
+                        <h3>{a.title}</h3>
+                        <p>{a.content}</p>
+                        <p>
+                            {/* <i>{a.category}</i> —  */}
+                            {a.userId} ({a.createdAt}) {a.authorEmail}</p>
+
+
+                        <button onClick={() => handleDelete(a.id)}>Usuń</button>
+                        <button onClick={() => navigate(`/announcements/${a.id}`)}>Edytuj</button>
+                    </li>
+                ))}
+            </ul>
+        </div>
+    );
+}
+
+
+=== ŚCIEŻKA ===
+src/pages/AnnouncementDetailsPage.tsx
+=== ZAWARTOŚĆ ===
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import Spinner from '../components/Spinner';
+import { fetchById } from '../services/AnnouncementService.ts';
+import ReactionButton from './ReactionButton';
+import CommentList from './CommentList';
+import CommentForm from './CommentForm';
+import { UUID } from 'crypto'
+
+export default function AnnouncementDetailsPage() {
+    interface Announcement {
+        id: UUID;
+        title: string;
+        content: string;
+        category: string;
+        type: string;
+        userId: UUID;
+        createdAt: string;
+    }
+    const { id } = useParams();
+    const [announcement, setAnnouncement] = useState<Announcement>();
+    const [loading, setLoading] = useState(true);
+
+    const getAnnouncement = async () => {
+        const announcement = await fetchById(id);
+        setAnnouncement(announcement.data as Announcement);
+        setLoading(false);
+    }
+
+    useEffect(() => {
+        getAnnouncement();
+    }, []);
+
+    if (loading) return <Spinner />;
+    if (!announcement) return <p>Nie znaleziono ogłoszenia.</p>;
+
+    return (
+        <div className="p-4">
+            <h1 className="text-2xl font-bold">{announcement.title}</h1>
+            <p className="text-gray-700">{announcement.content}</p>
+            <p className="text-sm text-gray-500">
+                {announcement.category} • {announcement.type} •{' '}
+                {new Date(announcement.createdAt).toLocaleString()} • {announcement.userId}
+            </p>
+
+            <div className="my-2">
+                <ReactionButton targetType="announcement" targetId={id!} />
+            </div>
+
+            <CommentList announcementId={id!} />
+            <CommentForm announcementId={id!} />
+        </div>
+    );
+}
+
+
+=== ŚCIEŻKA ===
+src/pages/AnnouncementForm.tsx
+=== ZAWARTOŚĆ ===
+import { useState } from 'react';
+import { create } from '../services/AnnouncementService';
+import Nav from "../components/Nav.tsx";
+
+export default function AnnouncementForm() {
+
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
+  const [category, setCategory] = useState('');
+  const [type, setType] = useState('');
+
+  const isValid = title.trim() && content.trim();
+
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!isValid) return alert('Wszystkie pola muszą być wypełnione');
+
+    const data = { title, content, category, type };
+    await create(data);
+    alert('Ogłoszenie dodane');
+  };
+
+  return (
+      <>
+          <Nav />
+    <form onSubmit={handleSubmit}>
+      <h2>Dodaj ogłoszenie</h2>
+      <input
+        placeholder='Tytuł'
+        value={title}
+        onChange={e => setTitle(e.target.value)}
+        required
+      />
+      <textarea
+        placeholder='Treść'
+        value={content}
+        onChange={e => setContent(e.target.value)}
+        required
+      />
+      <input
+          placeholder='Kategoria'
+          value={category}
+          onChange={e => setCategory(e.target.value)}
+          required
+      />
+      <input
+          placeholder='Typ'
+          value={type}
+          onChange={e => setType(e.target.value)}
+          required
+      />
+      <button type='submit'>{'Dodaj ogłoszenie'}</button>
+    </form>
+      </>
+  );
+}
+
+
+=== ŚCIEŻKA ===
+src/pages/AnnouncementsPage.tsx
+=== ZAWARTOŚĆ ===
+import { useEffect, useState } from 'react';
+import { fetchAll, remove } from '../services/AnnouncementService';
+import Spinner from '../components/Spinner';
+import { getuserId } from "../services/api.ts";
+import { UUID } from 'crypto';
+import { useNavigate } from "react-router";
+import Nav from "../components/Nav.tsx";
+
+export default function AnnouncementsPage() {
+    interface Announcement {
+        id: UUID;
+        title: string;
+        content: string;
+        category: string;
+        userId: UUID;
+        createdAt: string;
+    }
+    const navigate = useNavigate();
+    const [announcements, setAnnouncements] = useState<Announcement[]>([]);
+    const [loading, setLoading] = useState(true);
+    const loggeduserId = getuserId();
+
+    const getData = async () => {
+        const announcements = await fetchAll();
+        setAnnouncements(announcements.data as Announcement[]);
+        setLoading(false);
+    };
+
+    const handleDelete = async (id: UUID) => {
+        await remove(id);
+        alert('Ogłoszenie usunięte');
+        getData();
+    };
+
+    useEffect(() => {
+        getData();
+    }, []);
+
+    if (loading) return <Spinner />;
+
+    return (
+        <div>
+            <Nav />
+            <h1>Ogłoszenia</h1>
+            <ul>
+                {announcements.map((a) => (
+                    <li key={a.id} onClick={() => navigate(`/announcements/${a.id}/details`)}>
+                        <h3>{a.title}</h3>
+                        <p>{a.content}</p>
+                        <p>
+                            {/* <i>{a.category}</i> —  */}
+                            {a.userId} ({a.createdAt}) {loggeduserId}</p>
+
+                        {a.userId == loggeduserId && (
+                            <>
+                                <button onClick={() => handleDelete(a.id)}>Usuń</button>
+                                <button onClick={() => navigate(`/announcements/${a.id}`)}>Edytuj</button>
+                            </>
+                        )}
+                    </li>
+                ))}
+            </ul>
+        </div>
+    );
+}
+
+
+=== ŚCIEŻKA ===
+src/pages/AnnouncementUpdateForm.tsx
+=== ZAWARTOŚĆ ===
+import { useEffect, useState } from 'react';
+import { fetchById, update } from '../services/AnnouncementService';
+import Spinner from '../components/Spinner';
+import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router";
+import Nav from "../components/Nav.tsx";
+
+export default function AnnouncementUpdateForm() {
+    const { id } = useParams();
+    const navigate = useNavigate();
+
+    const [title, setTitle] = useState('');
+    const [content, setContent] = useState('');
+    const [category, setCategory] = useState('');
+    const [type, setType] = useState('');
+    const [loading, setLoading] = useState(true);
+
+    const isValid = title.trim() && content.trim();
+
+    useEffect(() => {
+        fetchById(id)
+            .then(res => {
+                const announcement = res.data;
+                setTitle(announcement.title);
+                setContent(announcement.content);
+                setCategory(announcement.category);
+                setType(announcement.type);
+                setLoading(false);
+            });
+
+    }, [id]);
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!isValid) return alert('Wszystkie pola muszą być wypełnione');
+        const data = { title, content, category, type };
+        await update(id, data);
+        alert('Ogłoszenie zaktualizowane');
+        navigate('/');
+    };
+
+    if (loading) return <Spinner />;
+
+    return (
+        <>
+            <Nav />
+            <form onSubmit={handleSubmit}>
+                <h2>Edytuj ogłoszenie</h2>
+                <input
+                    placeholder='Tytuł'
+                    value={title}
+                    onChange={e => setTitle(e.target.value)}
+                    required
+                />
+                <textarea
+                    placeholder='Treść'
+                    value={content}
+                    onChange={e => setContent(e.target.value)}
+                    required
+                />
+                <input
+                    placeholder='Kategoria'
+                    value={category}
+                    onChange={e => setCategory(e.target.value)}
+                    required
+                />
+                <input
+                    placeholder='Typ'
+                    value={type}
+                    onChange={e => setType(e.target.value)}
+                    required
+                />
+                <button type="submit">{'Zapisz zmiany'}</button>
+            </form>
+        </>
+    );
+}
+
+
+=== ŚCIEŻKA ===
+src/pages/CommentForm.tsx
+=== ZAWARTOŚĆ ===
+import { useState } from 'react';
+import { addComment } from '../services/CommentService.ts';
+import { UUID } from 'crypto'
+
+export default function CommentForm({ announcementId }) {
+    const [content, setContent] = useState('');
+
+    const handleSubmit = async e => {
+        e.preventDefault();
+        if (!content.trim()) return;
+        await addComment(announcementId, { content });
+        setContent('');
+        // Ideally use callback to update parent or trigger reload
+    };
+
+    return (
+        <form onSubmit={handleSubmit} className="mt-2 flex gap-2">
+            <textarea
+                className="flex-1 p-2 border rounded"
+                placeholder="Dodaj komentarz..."
+                value={content}
+                onChange={e => setContent(e.target.value)}
+            />
+            <button type="submit" disabled={!content.trim()} className="bg-green-600 text-white px-4 py-2 rounded">
+                Dodaj
+            </button>
+        </form>
+    );
+}
+
+
+=== ŚCIEŻKA ===
+src/pages/CommentItem.tsx
+=== ZAWARTOŚĆ ===
+import ReactionButton from './ReactionButton';
+
+export default function CommentItem({ comment, showDelete, onDelete }) {
+    return (
+        <div className="border p-2 rounded">
+            <div className="flex justify-between text-sm text-gray-600">
+                <span>{comment.author}</span>
+                <span>{new Date(comment.createdAt).toLocaleString()}</span>
+            </div>
+            <p className="my-1">{comment.content}</p>
+            <div className="flex items-center gap-2">
+                <ReactionButton targetType="comment" targetId={comment.id} />
+                {showDelete && (
+                    <button onClick={onDelete} className="text-red-500 text-sm hover:underline">
+                        Usuń
+                    </button>
+                )}
+            </div>
+        </div>
+    );
+}
+
+
+=== ŚCIEŻKA ===
+src/pages/CommentList.tsx
+=== ZAWARTOŚĆ ===
+import { useEffect, useState } from 'react';
+import { fetchComments, deleteComment } from '../services/CommentService.ts';
+import Spinner from '../components/Spinner';
+import CommentItem from './CommentItem';
+import { UUID } from 'crypto'
+
+export default function CommentList({ announcementId }) {
+    const [comments, setComments] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const currentuserId = localStorage.getItem('userId');
+    const isAdmin = localStorage.getItem('role') === 'admin';
+
+    const loadComments = async () => {
+        const comments = await fetchComments(announcementId);
+        setComments(comments.data);
+        setLoading(false);
+    };
+
+    useEffect(() => {
+        loadComments();
+    }, [announcementId]);
+
+    const handleDelete = async (id: UUID) => {
+        await deleteComment(id);
+        loadComments();
+    };
+
+    if (loading) return <Spinner />;
+    if (comments.length === 0) return <p>Brak komentarzy.</p>;
+
+    return (
+        <div className="space-y-2 my-4">
+            {comments.map(comment => (
+                <CommentItem
+                    key={comment.id}
+                    comment={comment}
+                    showDelete={comment.authorId === currentuserId || isAdmin}
+                    onDelete={() => handleDelete(comment.id)}
+                />
+            ))}
+        </div>
+    );
+}
+
+
+=== ŚCIEŻKA ===
+src/pages/ConversationItem.tsx
+=== ZAWARTOŚĆ ===
+export default function ConversationItem({ withuserId, lastMessage, sentAt, onClick }) {
+    return (
+        <div onClick={onClick} className="cursor-pointer p-4 border-b hover:bg-gray-100">
+            <div className="text-sm text-gray-600">{lastMessage}</div>
+            <div className="text-xs text-gray-400">{new Date(sentAt).toLocaleString()}</div>
+        </div>
+    );
+}
+
+
+=== ŚCIEŻKA ===
+src/pages/ConversationsPage.tsx
+=== ZAWARTOŚĆ ===
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { fetchConversations } from '../services/MessagesService.ts';
+import Spinner from '../components/Spinner';
+import ConversationItem from "./ConversationItem.tsx";
+import Nav from "../components/Nav.tsx";
+
+
+export default function ConversationsPage() {
+    const [conversations, setConversations] = useState<Conversation[]>([]);
+    const [loading, setLoading] = useState(true);
+    const navigate = useNavigate();
+
+    interface Conversation {
+        id: string;
+        userId: string;
+        receiverId: string;
+        content: string;
+        sentAt: string;
+    }
+
+
+
+    const getData = async () => {
+
+        const conversations = await fetchConversations();
+        console.log(conversations);
+        setConversations(conversations.data as Conversation[]);
+        setLoading(false);
+
+
+    };
+
+    useEffect(() => {
+        getData();
+    }, []);
+
+
+    if (loading) return <Spinner />;
+    if (conversations.length === 0) return <p>Brak wiadomości.</p>;
+    return (
+        <div>
+            <Nav />
+            {conversations.map(c => (
+                <ConversationItem withuserId={c.userId} lastMessage={c.content} sentAt={c.sentAt} onClick={() => navigate(`/messages/${c.receiverId}`)} />
+            ))}
+        </div>
+    );
+}
+
+
+=== ŚCIEŻKA ===
+src/pages/LoginPage.tsx
+=== ZAWARTOŚĆ ===
+import { useState } from 'react';
+import { loginUser, setToken, setuserId } from '../services/api';
+import Nav from "../components/Nav.tsx";
+
+export const LoginPage = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      const res = await loginUser({ email, password });
+      setToken(res.data.token);
+      setuserId(res.data.user.id);
+      alert('Zalogowano!');
+    } catch {
+      setError('Błędne dane logowania');
+    }
+  };
+
+  return (
+    <>
+      <Nav />
+      <form onSubmit={handleSubmit}>
+        <input
+          value={email}
+          onChange={e => setEmail(e.target.value)}
+          placeholder='Email'
+        />
+        <input
+          type='password'
+          value={password}
+          onChange={e => setPassword(e.target.value)}
+          placeholder='Hasło'
+        />
+        <button type='submit'>Zaloguj</button>
+        {error && <p>{error}</p>}
+      </form>
+    </>
+  );
+};
+
+export default LoginPage;
+
+
+=== ŚCIEŻKA ===
+src/pages/MessageBubble.tsx
+=== ZAWARTOŚĆ ===
+export default function MessageBubble({ message }) {
+    const currentuserId = localStorage.getItem('userId');
+    const isOwn = message.userId === currentuserId;
+    return (
+        <div className={`flex ${isOwn ? 'justify-end' : 'justify-start'}`}>
+            <div className={`p-2 rounded-xl max-w-xs ${isOwn ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black'}`}>
+                <div>{message.content}</div>
+                <div className="text-xs text-right">{new Date(message.sentAt).toLocaleTimeString()}</div>
+            </div>
+        </div>
+    );
+}
+
+
+=== ŚCIEŻKA ===
+src/pages/MessageForm.tsx
+=== ZAWARTOŚĆ ===
+import { useState } from 'react';
+import { sendMessage } from '../services/MessagesService.ts';
+
+export default function MessageForm({ withuserId, onNewMessage }) {
+    const [content, setContent] = useState('');
+    const [loading, setLoading] = useState(false);
+
+    const handleSubmit = async e => {
+        e.preventDefault();
+        if (!content.trim()) return;
+
+        setLoading(true);
+        try {
+            const newMsg = await sendMessage(withuserId, content);
+            onNewMessage(newMsg);
+            setContent('');
+        } catch (err) {
+            alert('Błąd podczas wysyłania wiadomości');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return (
+        <form onSubmit={handleSubmit} className="p-2 flex gap-2 border-t">
+            <textarea
+                className="flex-1 p-2 border rounded"
+                placeholder="Napisz wiadomość..."
+                value={content}
+                onChange={e => setContent(e.target.value)}
+                disabled={loading}
+            />
+            <button type="submit" disabled={loading || !content.trim()} className="bg-blue-600 text-white px-4 py-2 rounded">
+                Wyślij
+            </button>
+        </form>
+    );
+}
+
+
+=== ŚCIEŻKA ===
+src/pages/MessageThreadPage.tsx
+=== ZAWARTOŚĆ ===
+import { useEffect, useRef, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { fetchThread } from '../services/MessagesService.ts';
+import MessageBubble from './MessageBubble';
+import MessageForm from './MessageForm';
+import Spinner from '../components/Spinner';
+import { UUID } from 'crypto';
+
+export default function MessageThreadPage() {
+    const { id } = useParams();
+    const [messages, setMessages] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const messagesEndRef = useRef<HTMLDivElement>(null);
+
+    const getThread = async () => {
+        const response = await fetchThread(id as UUID);
+        setMessages(response.data);
+        setLoading(false);
+    };
+
+    useEffect(() => {
+        getThread();
+    }, []);
+
+    useEffect(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, [messages]);
+
+    if (loading) return <Spinner />;
+    if (messages.length === 0) return <p>Brak wiadomości.</p>;
+
+    return (
+        <div className="flex flex-col h-full">
+            <div className="flex-1 overflow-auto p-4 space-y-2">
+                {messages.map(m => (
+                    <MessageBubble key={m.id} message={m} />
+                ))}
+                <div ref={messagesEndRef} />
+            </div>
+            {/* <MessageForm withuserId={withuserId!} onNewMessage={msg => setMessages([...messages, msg])} /> */}
+        </div>
+    );
+}
+
+
+=== ŚCIEŻKA ===
+src/pages/MyAnnouncementsPage.tsx
+=== ZAWARTOŚĆ ===
+import { useEffect, useState } from 'react';
+import { fetchByUser, remove } from '../services/AnnouncementService';
+import Spinner from '../components/Spinner';
+import { getuserId } from '../services/api.ts';
+import { UUID } from 'crypto'
+import Nav from "../components/Nav.tsx";
+import { useNavigate } from "react-router";
+
+export default function MyAnnouncementsPage() {
+    interface Announcement {
+        id: UUID;
+        title: string;
+        content: string;
+        category: string;
+        userId: UUID;
+        createdAt: string;
+    }
+    const navigate = useNavigate();
+    const [announcements, setAnnouncements] = useState<Announcement[]>([]);
+    const [loading, setLoading] = useState(true);
+    const loggeduserId = getuserId();
+
+    const getData = async () => {
+        const announcements = await fetchByUser(loggeduserId);
+        setAnnouncements(announcements.data as Announcement[]);
+        setLoading(false);
+    };
+
+    const handleDelete = async (id: UUID) => {
+        await remove(id);
+        alert('Ogłoszenie usunięte');
+        getData();
+    };
+
+    useEffect(() => {
+        getData();
+    }, []);
+
+    if (loading) return <Spinner />;
+
+    return (
+        <div>
+            <Nav />
+            <h1>Moje Ogłoszenia</h1>
+            <ul>
+                {announcements.map((a) => (
+                    <li key={a.id}>
+                        <h3>{a.title}</h3>
+                        <p>{a.content}</p>
+                        <p>
+                            {/* <i>{a.category}</i> —  */}
+                            {a.userId} ({a.createdAt})</p>
+
+
+                        <button onClick={() => handleDelete(a.id)}>Usuń</button>
+                        <button onClick={() => navigate(`/announcements/${a.id}`)}>Edytuj</button>
+                    </li>
+                ))}
+            </ul>
+        </div>
+    );
+}
+
+
+=== ŚCIEŻKA ===
+src/pages/ReactionButton.tsx
+=== ZAWARTOŚĆ ===
+import { useEffect, useState } from 'react';
+import { addReaction, removeReaction } from '../services/ReactionsService';
+
+export default function ReactionButton({ targetType, targetId }) {
+    const [liked, setLiked] = useState(false);
+    const [count, setCount] = useState(0);
+
+    useEffect(() => {
+        // Fetch initial state if API provides it (or pass from parent)
+        // Placeholder values here:
+        setLiked(false);
+        setCount(Math.floor(Math.random() * 10)); // replace with actual data
+    }, [targetId]);
+
+    const toggle = async () => {
+        if (liked) {
+            await removeReaction(targetType, targetId);
+            setCount(c => c - 1);
+        } else {
+            await addReaction(targetType, targetId);
+            setCount(c => c + 1);
+        }
+        setLiked(!liked);
+    };
+
+    return (
+        <button onClick={toggle} className={`text-sm ${liked ? 'text-blue-600' : 'text-gray-500'}`}>
+            ❤️ {count}
+        </button>
+    );
+}
+
+
+=== ŚCIEŻKA ===
+src/pages/RegisterPage.tsx
+=== ZAWARTOŚĆ ===
+import { useState } from 'react';
+import { registerUser } from '../services/api';
+import Nav from "../components/Nav.tsx";
+
+export const RegisterPage = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!email.includes('@')) {
+      setError('Nieprawidłowy email');
+      return;
+    }
+
+    if (password.length < 6) {
+      setError('Hasło za krótkie');
+      return;
+    }
+
+    try {
+      await registerUser({ email, password });
+      alert('Rejestracja udana');
+    } catch {
+      setError('Błąd rejestracji');
+    }
+  };
+
+  return (
+      <>
+        <Nav />
+    <form onSubmit={handleSubmit}>
+      <input
+        value={email}
+        onChange={e => setEmail(e.target.value)}
+        placeholder='Email'
+      />
+      <input
+        type='password'
+        value={password}
+        onChange={e => setPassword(e.target.value)}
+        placeholder='Hasło'
+      />
+      <button type='submit'>Zarejestruj</button>
+      {error && <p>{error}</p>}
+    </form>
+      </>
+  );
+};
+
+export default RegisterPage;
+
+
