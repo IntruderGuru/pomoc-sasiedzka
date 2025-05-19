@@ -33,7 +33,7 @@ export async function up(db: Kysely<Database>): Promise<void> {
         .addColumn('status', 'varchar(8)', column =>
             column
                 .notNull()
-                .check(sql`role IN ('pending', 'approved', 'rejected')`)
+                .check(sql`status IN ('pending', 'approved', 'rejected')`)
                 .defaultTo('pending')
         )
         .addColumn('created_at', 'timestamptz', column =>

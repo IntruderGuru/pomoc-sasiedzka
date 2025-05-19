@@ -4,8 +4,8 @@ import { Kysely } from 'kysely';
 import { Database } from '../../database/connection';
 import { AuditLog } from '../../models/AuditLog';
 
-export class CommentRepository {
-    constructor(private db: Kysely<Database>) {}
+export class AuditLogRepository {
+    constructor(private db: Kysely<Database>) { }
 
     async getAuditLogs(
         announcementId?: UUID,

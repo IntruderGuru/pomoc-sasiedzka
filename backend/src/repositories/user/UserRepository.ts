@@ -10,7 +10,7 @@ import { User } from '../../models/User';
  * Returns domain objects (User instances) rather than raw query results.
  */
 export class UserRepository {
-    constructor(private db: Kysely<Database>) {}
+    constructor(private db: Kysely<Database>) { }
 
     /**
      * Adds a new user to the database.
@@ -63,4 +63,32 @@ export class UserRepository {
 
         return new User(id as UUID, email, password, role);
     }
+
+    async getAllUsers(): Promise<User[]> {
+        return await this.db
+            .selectFrom('users')
+            .selectAll()
+            .execute()
+            .then((result) =>
+                result.map(
+                    (r) => new User(r.id as UUID, r.email, r.password, r.role)
+                )
+            );
+    }
+
+    async updateUserRole(userId: UUID, role: 'user' | 'admin'): Promise<void> {
+        await this.db
+            .updateTable('users')
+            .set({ role: role })
+            .where('id', '=', userId)
+            .execute();
+    }
+
+    // async deactivateUser(userId: UUID): Promise<void> {
+    //     await this.db
+    //         .updateTable('users')
+    //         .set({ is_active: false })
+    //         .where('id', '=', userId)
+    //         .execute();
+    // }
 }

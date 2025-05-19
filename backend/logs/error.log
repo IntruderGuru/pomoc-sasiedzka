@@ -2893,3 +2893,171 @@
     at async SelectQueryBuilderImpl.execute (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\query-builder\select-query-builder.js:317:24)
     at async MessageRepository.getConversations (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\repositories\message\MessageRepository.ts:41:24)
     at async getConversations (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\controllers\MessageController.ts:50:26)
+2025-05-19T19:54:00.950Z error: AggregateError
+    at C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\pg-pool\index.js:45:11
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async PostgresDriver.acquireConnection (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\dialect\postgres\postgres-driver.js:21:24)
+    at async RuntimeDriver.acquireConnection (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\driver\runtime-driver.js:46:28)
+    at async DefaultConnectionProvider.provideConnection (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\driver\default-connection-provider.js:10:28)
+    at async DefaultQueryExecutor.executeQuery (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\query-executor\query-executor-base.js:36:16)
+    at async SelectQueryBuilderImpl.execute (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\query-builder\select-query-builder.js:317:24)
+    at async AnnouncementRepository.getFiltered (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\repositories\announcement\AnnouncementRepository.ts:188:24)
+    at async getAll (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\controllers\AnnouncementController.ts:56:26)
+2025-05-19T19:54:00.980Z error: AggregateError
+    at C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\pg-pool\index.js:45:11
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async PostgresDriver.acquireConnection (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\dialect\postgres\postgres-driver.js:21:24)
+    at async RuntimeDriver.acquireConnection (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\driver\runtime-driver.js:46:28)
+    at async DefaultConnectionProvider.provideConnection (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\driver\default-connection-provider.js:10:28)
+    at async DefaultQueryExecutor.executeQuery (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\query-executor\query-executor-base.js:36:16)
+    at async SelectQueryBuilderImpl.execute (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\query-builder\select-query-builder.js:317:24)
+    at async AnnouncementRepository.getFiltered (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\repositories\announcement\AnnouncementRepository.ts:188:24)
+    at async getAll (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\controllers\AnnouncementController.ts:56:26)
+2025-05-19T19:54:01.227Z error: AggregateError
+    at C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\pg-pool\index.js:45:11
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async PostgresDriver.acquireConnection (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\dialect\postgres\postgres-driver.js:21:24)
+    at async RuntimeDriver.acquireConnection (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\driver\runtime-driver.js:46:28)
+    at async DefaultConnectionProvider.provideConnection (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\driver\default-connection-provider.js:10:28)
+    at async DefaultQueryExecutor.executeQuery (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\query-executor\query-executor-base.js:36:16)
+    at async SelectQueryBuilderImpl.execute (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\query-builder\select-query-builder.js:317:24)
+    at async AnnouncementRepository.getFiltered (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\repositories\announcement\AnnouncementRepository.ts:188:24)
+    at async getAll (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\controllers\AnnouncementController.ts:56:26)
+2025-05-19T19:54:01.230Z error: AggregateError
+    at C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\pg-pool\index.js:45:11
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async PostgresDriver.acquireConnection (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\dialect\postgres\postgres-driver.js:21:24)
+    at async RuntimeDriver.acquireConnection (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\driver\runtime-driver.js:46:28)
+    at async DefaultConnectionProvider.provideConnection (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\driver\default-connection-provider.js:10:28)
+    at async DefaultQueryExecutor.executeQuery (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\query-executor\query-executor-base.js:36:16)
+    at async SelectQueryBuilderImpl.execute (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\query-builder\select-query-builder.js:317:24)
+    at async AnnouncementRepository.getFiltered (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\repositories\announcement\AnnouncementRepository.ts:188:24)
+    at async getAll (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\controllers\AnnouncementController.ts:56:26)
+2025-05-19T19:54:11.024Z error: AggregateError
+    at C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\pg-pool\index.js:45:11
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async PostgresDriver.acquireConnection (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\dialect\postgres\postgres-driver.js:21:24)
+    at async RuntimeDriver.acquireConnection (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\driver\runtime-driver.js:46:28)
+    at async DefaultConnectionProvider.provideConnection (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\driver\default-connection-provider.js:10:28)
+    at async DefaultQueryExecutor.executeQuery (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\query-executor\query-executor-base.js:36:16)
+    at async SelectQueryBuilderImpl.execute (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\query-builder\select-query-builder.js:317:24)
+    at async AnnouncementRepository.getFiltered (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\repositories\announcement\AnnouncementRepository.ts:188:24)
+    at async getAll (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\controllers\AnnouncementController.ts:56:26)
+2025-05-19T19:54:11.026Z error: AggregateError
+    at C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\pg-pool\index.js:45:11
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async PostgresDriver.acquireConnection (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\dialect\postgres\postgres-driver.js:21:24)
+    at async RuntimeDriver.acquireConnection (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\driver\runtime-driver.js:46:28)
+    at async DefaultConnectionProvider.provideConnection (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\driver\default-connection-provider.js:10:28)
+    at async DefaultQueryExecutor.executeQuery (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\query-executor\query-executor-base.js:36:16)
+    at async SelectQueryBuilderImpl.execute (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\query-builder\select-query-builder.js:317:24)
+    at async AnnouncementRepository.getFiltered (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\repositories\announcement\AnnouncementRepository.ts:188:24)
+    at async getAll (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\controllers\AnnouncementController.ts:56:26)
+2025-05-19T19:58:48.182Z error: error: relation "announcements" does not exist
+    at C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\pg\lib\client.js:545:17
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async PostgresConnection.executeQuery (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\dialect\postgres\postgres-driver.js:75:28)
+    at async C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\query-executor\query-executor-base.js:37:28
+    at async DefaultConnectionProvider.provideConnection (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\driver\default-connection-provider.js:12:20)
+    at async DefaultQueryExecutor.executeQuery (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\query-executor\query-executor-base.js:36:16)
+    at async SelectQueryBuilderImpl.execute (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\query-builder\select-query-builder.js:317:24)
+    at async AnnouncementRepository.getFiltered (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\repositories\announcement\AnnouncementRepository.ts:188:24)
+    at async getAll (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\controllers\AnnouncementController.ts:56:26)
+    at PostgresConnection.executeQuery (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\dialect\postgres\postgres-driver.js:95:69)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\query-executor\query-executor-base.js:37:28
+    at async DefaultConnectionProvider.provideConnection (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\driver\default-connection-provider.js:12:20)
+    at async DefaultQueryExecutor.executeQuery (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\query-executor\query-executor-base.js:36:16)
+    at async SelectQueryBuilderImpl.execute (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\query-builder\select-query-builder.js:317:24)
+    at async AnnouncementRepository.getFiltered (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\repositories\announcement\AnnouncementRepository.ts:188:24)
+    at async getAll (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\controllers\AnnouncementController.ts:56:26)
+2025-05-19T19:58:48.183Z error: error: relation "announcements" does not exist
+    at C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\pg\lib\client.js:545:17
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async PostgresConnection.executeQuery (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\dialect\postgres\postgres-driver.js:75:28)
+    at async C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\query-executor\query-executor-base.js:37:28
+    at async DefaultConnectionProvider.provideConnection (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\driver\default-connection-provider.js:12:20)
+    at async DefaultQueryExecutor.executeQuery (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\query-executor\query-executor-base.js:36:16)
+    at async SelectQueryBuilderImpl.execute (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\query-builder\select-query-builder.js:317:24)
+    at async AnnouncementRepository.getFiltered (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\repositories\announcement\AnnouncementRepository.ts:188:24)
+    at async getAll (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\controllers\AnnouncementController.ts:56:26)
+    at PostgresConnection.executeQuery (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\dialect\postgres\postgres-driver.js:95:69)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\query-executor\query-executor-base.js:37:28
+    at async DefaultConnectionProvider.provideConnection (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\driver\default-connection-provider.js:12:20)
+    at async DefaultQueryExecutor.executeQuery (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\query-executor\query-executor-base.js:36:16)
+    at async SelectQueryBuilderImpl.execute (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\query-builder\select-query-builder.js:317:24)
+    at async AnnouncementRepository.getFiltered (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\repositories\announcement\AnnouncementRepository.ts:188:24)
+    at async getAll (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\controllers\AnnouncementController.ts:56:26)
+2025-05-19T19:59:10.368Z error: error: relation "announcements" does not exist
+    at C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\pg\lib\client.js:545:17
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async PostgresConnection.executeQuery (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\dialect\postgres\postgres-driver.js:75:28)
+    at async C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\query-executor\query-executor-base.js:37:28
+    at async DefaultConnectionProvider.provideConnection (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\driver\default-connection-provider.js:12:20)
+    at async DefaultQueryExecutor.executeQuery (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\query-executor\query-executor-base.js:36:16)
+    at async SelectQueryBuilderImpl.execute (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\query-builder\select-query-builder.js:317:24)
+    at async AnnouncementRepository.getFiltered (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\repositories\announcement\AnnouncementRepository.ts:188:24)
+    at async getAll (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\controllers\AnnouncementController.ts:56:26)
+    at PostgresConnection.executeQuery (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\dialect\postgres\postgres-driver.js:95:69)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\query-executor\query-executor-base.js:37:28
+    at async DefaultConnectionProvider.provideConnection (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\driver\default-connection-provider.js:12:20)
+    at async DefaultQueryExecutor.executeQuery (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\query-executor\query-executor-base.js:36:16)
+    at async SelectQueryBuilderImpl.execute (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\query-builder\select-query-builder.js:317:24)
+    at async AnnouncementRepository.getFiltered (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\repositories\announcement\AnnouncementRepository.ts:188:24)
+    at async getAll (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\controllers\AnnouncementController.ts:56:26)
+2025-05-19T19:59:10.372Z error: error: relation "announcements" does not exist
+    at C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\pg\lib\client.js:545:17
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async PostgresConnection.executeQuery (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\dialect\postgres\postgres-driver.js:75:28)
+    at async C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\query-executor\query-executor-base.js:37:28
+    at async DefaultConnectionProvider.provideConnection (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\driver\default-connection-provider.js:12:20)
+    at async DefaultQueryExecutor.executeQuery (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\query-executor\query-executor-base.js:36:16)
+    at async SelectQueryBuilderImpl.execute (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\query-builder\select-query-builder.js:317:24)
+    at async AnnouncementRepository.getFiltered (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\repositories\announcement\AnnouncementRepository.ts:188:24)
+    at async getAll (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\controllers\AnnouncementController.ts:56:26)
+    at PostgresConnection.executeQuery (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\dialect\postgres\postgres-driver.js:95:69)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\query-executor\query-executor-base.js:37:28
+    at async DefaultConnectionProvider.provideConnection (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\driver\default-connection-provider.js:12:20)
+    at async DefaultQueryExecutor.executeQuery (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\query-executor\query-executor-base.js:36:16)
+    at async SelectQueryBuilderImpl.execute (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\query-builder\select-query-builder.js:317:24)
+    at async AnnouncementRepository.getFiltered (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\repositories\announcement\AnnouncementRepository.ts:188:24)
+    at async getAll (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\controllers\AnnouncementController.ts:56:26)
+2025-05-19T19:59:29.576Z error: error: relation "announcements" does not exist
+    at C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\pg\lib\client.js:545:17
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async PostgresConnection.executeQuery (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\dialect\postgres\postgres-driver.js:75:28)
+    at async C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\query-executor\query-executor-base.js:37:28
+    at async DefaultConnectionProvider.provideConnection (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\driver\default-connection-provider.js:12:20)
+    at async DefaultQueryExecutor.executeQuery (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\query-executor\query-executor-base.js:36:16)
+    at async SelectQueryBuilderImpl.execute (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\query-builder\select-query-builder.js:317:24)
+    at async AnnouncementRepository.getFiltered (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\repositories\announcement\AnnouncementRepository.ts:188:24)
+    at async getAll (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\controllers\AnnouncementController.ts:56:26)
+    at PostgresConnection.executeQuery (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\dialect\postgres\postgres-driver.js:95:69)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\query-executor\query-executor-base.js:37:28
+    at async DefaultConnectionProvider.provideConnection (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\driver\default-connection-provider.js:12:20)
+    at async DefaultQueryExecutor.executeQuery (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\query-executor\query-executor-base.js:36:16)
+    at async SelectQueryBuilderImpl.execute (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\query-builder\select-query-builder.js:317:24)
+    at async AnnouncementRepository.getFiltered (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\repositories\announcement\AnnouncementRepository.ts:188:24)
+    at async getAll (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\controllers\AnnouncementController.ts:56:26)
+2025-05-19T19:59:29.578Z error: error: relation "announcements" does not exist
+    at C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\pg\lib\client.js:545:17
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async PostgresConnection.executeQuery (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\dialect\postgres\postgres-driver.js:75:28)
+    at async C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\query-executor\query-executor-base.js:37:28
+    at async DefaultConnectionProvider.provideConnection (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\driver\default-connection-provider.js:12:20)
+    at async DefaultQueryExecutor.executeQuery (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\query-executor\query-executor-base.js:36:16)
+    at async SelectQueryBuilderImpl.execute (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\query-builder\select-query-builder.js:317:24)
+    at async AnnouncementRepository.getFiltered (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\repositories\announcement\AnnouncementRepository.ts:188:24)
+    at async getAll (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\controllers\AnnouncementController.ts:56:26)
+    at PostgresConnection.executeQuery (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\dialect\postgres\postgres-driver.js:95:69)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\query-executor\query-executor-base.js:37:28
+    at async DefaultConnectionProvider.provideConnection (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\driver\default-connection-provider.js:12:20)
+    at async DefaultQueryExecutor.executeQuery (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\query-executor\query-executor-base.js:36:16)
+    at async SelectQueryBuilderImpl.execute (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\query-builder\select-query-builder.js:317:24)
+    at async AnnouncementRepository.getFiltered (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\repositories\announcement\AnnouncementRepository.ts:188:24)
+    at async getAll (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\controllers\AnnouncementController.ts:56:26)

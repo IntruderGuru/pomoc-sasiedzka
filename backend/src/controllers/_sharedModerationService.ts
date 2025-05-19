@@ -7,5 +7,5 @@ import { ModerationService } from '../services/ModerationService';
 export const service = new ModerationService(
     new AnnouncementRepository(db),
     new CommentRepository(db),
-    new AuditLogRepository(db)
+    new AuditLogRepository()
 );

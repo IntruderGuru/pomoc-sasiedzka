@@ -17,6 +17,7 @@ import { AdminUserController } from './controllers/AdminUserController';
 import { AnnouncementModerationController } from './controllers/AnnouncementModerationController';
 import { AdminCommentController } from './controllers/AdminCommentController';
 import { getDashboard } from './controllers/AdminDashboardController';
+import { db } from './database/connection';
 
 // ---------------- ENVIRONMENT SETUP ----------------
 
@@ -221,7 +222,7 @@ app.use('/api/admin/*', checkAuth, checkAdmin);
 // users
 app.get('/api/admin/users', AdminUserController.getAll);
 app.put('/api/admin/users/:id/role', AdminUserController.updateRole);
-app.put('/api/admin/users/:id/deactivate', AdminUserController.deactivate);
+// app.put('/api/admin/users/:id/deactivate', AdminUserController.deactivate);
 
 // ----- ADMIN: categories -----
 app.get('/api/admin/categories', checkAuth, checkAdmin, AdminCategoryController.getAll);
@@ -232,12 +233,12 @@ app.delete('/api/admin/categories/:id', checkAuth, checkAdmin, AdminCategoryCont
 // ----- PUBLIC: filtering -----
 app.get('/api/categories', async (_req, res) => {
     const repo = new (await import('./repositories/category/CategoryRepository')).CategoryRepository(db);
-    res.json(await repo.getAll());
+    res.json(await repo.getAllCategories());
 });
 
 // announcements moderation
-app.get('/api/admin/announcements', AnnouncementModerationController.get);
-app.put('/api/admin/announcements/:id/status', AnnouncementModerationController.updateStatus);
+// app.get('/api/admin/announcements', AnnouncementModerationController.get);
+// app.put('/api/admin/announcements/:id/status', AnnouncementModerationController.updateStatus);
 
 // comments moderation
 app.get('/api/admin/comments', AdminCommentController.getAll);

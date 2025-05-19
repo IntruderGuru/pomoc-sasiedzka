@@ -8,7 +8,7 @@ import { UUID } from 'crypto';
 
 const service = new AdminUserService(
     new UserRepository(db),
-    new AuditLogRepository(db)
+    new AuditLogRepository()
 );
 
 export class AdminUserController {
@@ -25,11 +25,11 @@ export class AdminUserController {
         res.status(204).send();
     }
 
-    static async deactivate(req: AuthRequest, res: Response) {
-        await service.deactivateUser(
-            req.user!.userId as UUID,
-            req.params.id as UUID
-        );
-        res.status(204).send();
-    }
+    // static async deactivate(req: AuthRequest, res: Response) {
+    //     await service.deactivateUser(
+    //         req.user!.userId as UUID,
+    //         req.params.id as UUID
+    //     );
+    //     res.status(204).send();
+    // }
 }

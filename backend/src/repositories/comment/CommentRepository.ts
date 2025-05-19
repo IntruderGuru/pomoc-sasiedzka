@@ -77,4 +77,23 @@ export class CommentRepository {
         );
     }
 
+    getAllComments(): Promise<Comment[]> {
+        return this.db
+            .selectFrom('comments')
+            .selectAll()
+            .execute()
+            .then((result) =>
+                result.map(
+                    (r) =>
+                        new Comment(
+                            r.id as UUID,
+                            r.user_id as UUID,
+                            r.announcement_id as UUID,
+                            r.content,
+                            r.sent_at
+                        )
+                )
+            );
+    }
+
 }

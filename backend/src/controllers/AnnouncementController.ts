@@ -124,7 +124,8 @@ export class AnnouncementController {
                 title,
                 content,
                 category,
-                type
+                type,
+                status
             );
             return res.status(200).json(updated);
         } catch (e) {

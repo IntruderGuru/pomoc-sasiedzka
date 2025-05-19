@@ -9,7 +9,7 @@ import { AnnouncementRepository } from '../repositories/announcement/Announcemen
  * This class contains validation, fallback logic, and coordinates complex operations.
  */
 export class AnnouncementService {
-    constructor(private repo: AnnouncementRepository) {}
+    constructor(private repo: AnnouncementRepository) { }
 
     /**
      * Creates a new announcement after validating required fields.
@@ -94,14 +94,16 @@ export class AnnouncementService {
         title: string,
         content: string,
         category: string,
-        type: string
+        type: string,
+        status: string
     ) {
         const updated = await this.repo.updateAnnouncement(
             id,
             title,
             content,
             category,
-            type
+            type,
+            status
         );
         if (!updated) {
             throw new Error('Not found');

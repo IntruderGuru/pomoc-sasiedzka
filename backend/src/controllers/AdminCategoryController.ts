@@ -8,7 +8,7 @@ import { UUID } from 'crypto';
 
 const service = new CategoryService(
     new CategoryRepository(db),
-    new AuditLogRepository(db)
+    new AuditLogRepository()
 );
 
 export class AdminCategoryController {
