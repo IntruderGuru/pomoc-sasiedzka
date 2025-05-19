@@ -10,9 +10,10 @@ export class ModerationService {
         private audit: AuditLogRepository
     ) { }
 
-    // getAnnouncements(status?: 'pending' | 'approved' | 'rejected') {
-    //     return this.ann.getByStatus(status);
-    // }
+    getAnnouncements() {
+        console.log('getAnnouncements');
+        return this.ann.getAllAnnouncements;
+    }
 
     // async approve(adminId: UUID, id: UUID) {
     //     await this.ann.updateStatus(id, 'approved');

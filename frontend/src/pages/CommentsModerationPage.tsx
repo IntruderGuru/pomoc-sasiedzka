@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import {fetchCommentsMod, removeComment} from "../services/AdminService";
-import {Toast} from "../components/Toast.tsx";
-import {Spinner} from "../components/Spinner.tsx";
-import {ConfirmModal} from "../components/ConfirmModal.tsx";
+import { fetchCommentsMod, removeComment } from "../services/AdminService";
+import { Toast } from "../components/Toast.tsx";
+import { Spinner } from "../components/Spinner.tsx";
+import { ConfirmModal } from "../components/ConfirmModal.tsx";
 
 
 export const CommentsModerationPage = () => {
@@ -10,10 +10,15 @@ export const CommentsModerationPage = () => {
     const [loading, setLoading] = useState(true);
     const [selectedComment, setSelectedComment] = useState(null);
 
-    useEffect(() => {
-        const _comments = fetchCommentsMod();
+    async function loadComments() {
+        const _comments = await fetchCommentsMod();
         setComments(_comments.data);
+        console.log(_comments.data);
         setLoading(false);
+    }
+
+    useEffect(() => {
+        loadComments();
     }, []);
 
     const handleDelete = async () => {

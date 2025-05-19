@@ -3,6 +3,7 @@ import { Kysely } from 'kysely';
 
 import { Database } from '../../database/connection';
 import { Comment } from '../../models/Comment';
+import { exec } from 'child_process';
 
 export class CommentRepository {
     constructor(private db: Kysely<Database>) { }
@@ -54,7 +55,7 @@ export class CommentRepository {
     }
 
     async deleteComment(id: UUID): Promise<void> {
-        await this.db.deleteFrom('comments').where('id', '=', id);
+        await this.db.deleteFrom('comments').where('id', '=', id).execute();
     }
 
     async getCommentById(id: UUID): Promise<Comment | null> {

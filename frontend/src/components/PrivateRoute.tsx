@@ -4,7 +4,7 @@ import { Navigate, Outlet } from "react-router-dom";
 export const PrivateRoute = () => {
     const user = null;
 
-    if (!user || !user) {
+    if (false) {
         return <Navigate to="/" replace />;
     }
 

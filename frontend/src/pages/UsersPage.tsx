@@ -1,9 +1,9 @@
 // pages/UsersPage.tsx
 import { useEffect, useState } from "react";
-import {deactivateUser, fetchUsers, updateRole} from "../services/AdminService";
-import {Toast} from "../components/Toast.tsx";
-import {Spinner} from "../components/Spinner.tsx";
-import {ConfirmModal} from "../components/ConfirmModal.tsx";
+import { deactivateUser, fetchUsers, updateRole } from "../services/AdminService";
+import { Toast } from "../components/Toast.tsx";
+import { Spinner } from "../components/Spinner.tsx";
+import { ConfirmModal } from "../components/ConfirmModal.tsx";
 
 
 export const UsersPage = () => {
@@ -12,10 +12,14 @@ export const UsersPage = () => {
     const [selectedUser, setSelectedUser] = useState(null);
     const [showModal, setShowModal] = useState(false);
 
-    useEffect(() => {
-        const _users = fetchUsers();
+    const loadUsers = async () => {
+        const _users = await fetchUsers();
         setUsers(_users.data);
         setLoading(false);
+    }
+
+    useEffect(() => {
+        loadUsers();
     }, []);
 
     const handleDeactivate = (user) => {
@@ -37,35 +41,35 @@ export const UsersPage = () => {
             <h1 className="text-2xl font-semibold mb-4">Users</h1>
             <table className="w-full bg-white shadow rounded">
                 <thead>
-                <tr>
-                    <th>Email</th>
-                    <th>Role</th>
-                    <th>Actions</th>
-                </tr>
+                    <tr>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Actions</th>
+                    </tr>
                 </thead>
                 <tbody>
-                {users.map(user => (
-                    <tr key={user.id} className="border-t">
-                        <td>{user.email}</td>
-                        <td>
-                            <select
-                                value={user.role}
-                                onChange={(e) =>
-                                    updateRole(user.id, {role: e.target.value})
-                                        .then(() => Toast.success("Role updated"))
-                                }
-                            >
-                                <option value="user">User</option>
-                                <option value="admin">Admin</option>
-                            </select>
-                        </td>
-                        <td>
-                            <button onClick={() => handleDeactivate(user)} className="text-red-600 hover:underline">
-                                Deactivate
-                            </button>
-                        </td>
-                    </tr>
-                ))}
+                    {users.map(user => (
+                        <tr key={user.id} className="border-t">
+                            <td>{user.email}</td>
+                            <td>
+                                <select
+                                    value={user.role}
+                                    onChange={(e) =>
+                                        updateRole(user.id, { role: e.target.value })
+                                            .then(() => Toast.success("Role updated"))
+                                    }
+                                >
+                                    <option value="user">User</option>
+                                    <option value="admin">Admin</option>
+                                </select>
+                            </td>
+                            <td>
+                                <button onClick={() => handleDeactivate(user)} className="text-red-600 hover:underline">
+                                    Deactivate
+                                </button>
+                            </td>
+                        </tr>
+                    ))}
                 </tbody>
             </table>
 

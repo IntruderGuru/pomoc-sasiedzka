@@ -6,10 +6,15 @@ export const DashboardPage = () => {
     const [stats, setStats] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        const _stats = fetchDashboard();
+    const loadDashboard = async () => {
+        const _stats = await fetchDashboard();
         setStats(_stats.data);
         setLoading(false);
+    }
+
+
+    useEffect(() => {
+        loadDashboard();
     }, []);
 
     if (loading) return <Spinner />;

@@ -4,9 +4,9 @@ import { service } from './_sharedModerationService';
 import { UUID } from 'crypto';
 
 export class AnnouncementModerationController {
-    // static async get(req: AuthRequest, res: Response) {
-    //     res.json(await service.getAnnouncements(req.query.status as any));
-    // }
+    static async get(req: AuthRequest, res: Response) {
+        res.json(await service.getAnnouncements());
+    }
 
     // static async updateStatus(req: AuthRequest, res: Response) {
     //     const { status } = req.body;

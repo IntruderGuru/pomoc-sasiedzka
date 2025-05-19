@@ -1,27 +1,33 @@
 import { useEffect, useState } from "react";
-import {fetchAnnouncementsMod} from "../services/AdminService";
-
+import { fetchAnnouncementsMod } from "../services/AdminService";
+import { Spinner } from "../components/Spinner.tsx";
 
 export const AnnouncementsModerationPage = () => {
     const [announcements, setAnnouncements] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        const _ann = fetchAnnouncementsMod();
-        setAnnouncements(_ann.data);
+    const loadAnnouncements = async () => {
+        const _announcements = await fetchAnnouncementsMod();
+        setAnnouncements(_announcements.data);
+        console.log(_announcements.data);
         setLoading(false);
+    }
+
+    useEffect(() => {
+        console.log("Loading announcements");
+        loadAnnouncements();
     }, []);
 
-    const handleAction = async (id, approved) => {
-        if (approved) {
-            await AdminService.approveAnnouncement(id);
-            Toast.success("Announcement approved");
-        } else {
-            await AdminService.rejectAnnouncement(id);
-            Toast.success("Announcement rejected");
-        }
-        setAnnouncements(prev => prev.filter(a => a.id !== id));
-    };
+    // const handleAction = async (id, approved) => {
+    //     if (approved) {
+    //         await AdminService.approveAnnouncement(id);
+    //         Toast.success("Announcement approved");
+    //     } else {
+    //         await AdminService.rejectAnnouncement(id);
+    //         Toast.success("Announcement rejected");
+    //     }
+    //     setAnnouncements(prev => prev.filter(a => a.id !== id));
+    // };
 
     if (loading) return <Spinner />;
 
@@ -31,35 +37,35 @@ export const AnnouncementsModerationPage = () => {
 
             <table className="w-full bg-white shadow rounded">
                 <thead>
-                <tr>
-                    <th>Title</th>
-                    <th>Author</th>
-                    <th>Date</th>
-                    <th>Actions</th>
-                </tr>
+                    <tr>
+                        <th>Title</th>
+                        <th>Author</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </tr>
                 </thead>
                 <tbody>
-                {announcements.map((a) => (
-                    <tr key={a.id} className="border-t">
-                        <td>{a.title}</td>
-                        <td>{a.author}</td>
-                        <td>{new Date(a.date).toLocaleDateString()}</td>
-                        <td>
-                            <button
-                                onClick={() => handleAction(a.id, true)}
-                                className="text-green-600 mr-2"
-                            >
-                                Approve
-                            </button>
-                            <button
-                                onClick={() => handleAction(a.id, false)}
-                                className="text-red-600"
-                            >
-                                Reject
-                            </button>
-                        </td>
-                    </tr>
-                ))}
+                    {announcements.map((a) => (
+                        <tr key={a.id} className="border-t">
+                            <td>{a.title}</td>
+                            <td>{a.author}</td>
+                            <td>{new Date(a.date).toLocaleDateString()}</td>
+                            {/* <td>
+                                <button
+                                    onClick={() => handleAction(a.id, true)}
+                                    className="text-green-600 mr-2"
+                                >
+                                    Approve
+                                </button>
+                                <button
+                                    onClick={() => handleAction(a.id, false)}
+                                    className="text-red-600"
+                                >
+                                    Reject
+                                </button>
+                            </td> */}
+                        </tr>
+                    ))}
                 </tbody>
             </table>
         </div>

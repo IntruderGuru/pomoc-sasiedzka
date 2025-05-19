@@ -237,7 +237,7 @@ app.get('/api/categories', async (_req, res) => {
 });
 
 // announcements moderation
-// app.get('/api/admin/announcements', AnnouncementModerationController.get);
+app.get('/api/admin/announcements', AnnouncementModerationController.get);
 // app.put('/api/admin/announcements/:id/status', AnnouncementModerationController.updateStatus);
 
 // comments moderation

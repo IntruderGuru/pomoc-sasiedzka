@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import {createCategory, fetchCategories, removeCategory, updateCategory} from "../services/AdminService";
+import { createCategory, fetchCategories, removeCategory, updateCategory } from "../services/AdminService";
 import { useForm } from "react-hook-form";
-import {Toast} from "../components/Toast.tsx";
-import {Spinner} from "../components/Spinner.tsx";
-import {ConfirmModal} from "../components/ConfirmModal.tsx";
+import { Toast } from "../components/Toast.tsx";
+import { Spinner } from "../components/Spinner.tsx";
+import { ConfirmModal } from "../components/ConfirmModal.tsx";
 
 export const CategoriesPage = () => {
     const [categories, setCategories] = useState([]);
@@ -81,9 +81,9 @@ export const CategoriesPage = () => {
                         key={cat.id}
                         className="bg-white p-3 flex justify-between items-center rounded shadow"
                     >
-                        <span>{cat.name}</span>
+                        <span>{cat.category}</span>
                         <div className="space-x-2">
-                            <button onClick={() => { setEditing(cat); reset({ name: cat.name }); }}>
+                            <button onClick={() => { setEditing(cat); reset({ name: cat.category }); }}>
                                 Edit
                             </button>
                             <button
@@ -103,7 +103,7 @@ export const CategoriesPage = () => {
                     onConfirm={handleDelete}
                     onCancel={() => setShowConfirm(false)}
                 >
-                    Are you sure you want to delete "{editing.name}"?
+                    Are you sure you want to delete "{editing.category}"?
                 </ConfirmModal>
             )}
         </div>
