@@ -35,6 +35,7 @@ export function checkAuth(req: AuthRequest, res: Response, next: NextFunction) {
         // Authorization header must be present
         if (!authHeader) {
             return res.status(401).json({ message: 'No token provided' });
+
         }
         // Token is expected to follow the "Bearer <token>" format
         const token = authHeader.split(' ')[1];
@@ -43,6 +44,7 @@ export function checkAuth(req: AuthRequest, res: Response, next: NextFunction) {
         }
 
         // Validate the token using the secret. If invalid, an exception will be thrown.
+        console.log(token,JWT_SECRET);
         const decoded = jwt.verify(token, JWT_SECRET) as AuthRequest['user'];
 
         // Store the decoded token data (userId, role, etc.) on the request object for later use
@@ -52,6 +54,7 @@ export function checkAuth(req: AuthRequest, res: Response, next: NextFunction) {
         next();
     } catch (error) {
         // Token verification failed or was malformed
+        console.log(error);
         return res.status(401).json({ message: 'Unauthorized' });
     }
 }

@@ -8,7 +8,7 @@ import { UserRepository } from '../repositories/user/UserRepository';
 dotenv.config();
 
 // Fallback used if JWT_SECRET is not provided in .env (should be overridden in production)
-const JWT_SECRET = process.env.JWT_SECRET || 'defaultSecret';
+const JWT_SECRET = process.env.JWT_SECRET || 'jakisSekretnyKlucz';
 
 // Repository instance for handling user persistence
 const userRepo = new UserRepository(db);

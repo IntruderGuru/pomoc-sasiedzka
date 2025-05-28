@@ -16,11 +16,18 @@ export class MessageRepository {
             .selectFrom('messages')
             .selectAll()
             .where(eb =>
-                eb('user_id', '=', userId).and(
-                    'receiver_id',
-                    '=',
-                    receiverId
-                )
+                eb.or([
+                    eb('user_id', '=', userId).and(
+                        'receiver_id',
+                        '=',
+                        receiverId
+                    ),
+                    eb('user_id', '=', receiverId).and(
+                        'receiver_id',
+                        '=',
+                        userId
+                    )
+                ])
             )
             .orderBy('sent_at', 'desc')
             .execute();
