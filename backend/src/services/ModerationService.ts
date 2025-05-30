@@ -11,7 +11,7 @@ export class ModerationService {
     ) { }
 
     getAnnouncements() {
-        return this.ann.getAllAnnouncements;
+        return this.ann.getAllAnnouncements();
     }
 
     // async approve(adminId: UUID, id: UUID) {
