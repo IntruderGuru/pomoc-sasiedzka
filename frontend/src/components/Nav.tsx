@@ -1,4 +1,4 @@
-import {useNavigate} from "react-router";
+import { useNavigate } from "react-router";
 
 export default function Nav() {
     const navigate = useNavigate();
@@ -13,6 +13,7 @@ export default function Nav() {
                 <button onClick={() => navigate("/announcements/create")}>Dodaj post</button>
                 <button onClick={() => navigate("/announcements/my")}>Moje ogłoszenia</button>
                 <button onClick={() => navigate("/messages")}>Wiadomości</button>
+
             </div>
         </div>
     );

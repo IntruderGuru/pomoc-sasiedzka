@@ -5,6 +5,7 @@ import Nav from "../components/Nav.tsx";
 export const RegisterPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [username, setUsername] = useState('');
   const [error, setError] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -21,7 +22,7 @@ export const RegisterPage = () => {
     }
 
     try {
-      await registerUser({ email, password });
+      await registerUser({ email, password, username });
       alert('Rejestracja udana');
     } catch {
       setError('Błąd rejestracji');
@@ -29,24 +30,29 @@ export const RegisterPage = () => {
   };
 
   return (
-      <>
-        <Nav />
-    <form onSubmit={handleSubmit}>
-      <input
-        value={email}
-        onChange={e => setEmail(e.target.value)}
-        placeholder='Email'
-      />
-      <input
-        type='password'
-        value={password}
-        onChange={e => setPassword(e.target.value)}
-        placeholder='Hasło'
-      />
-      <button type='submit'>Zarejestruj</button>
-      {error && <p>{error}</p>}
-    </form>
-      </>
+    <>
+      <Nav />
+      <form onSubmit={handleSubmit}>
+        <input
+          value={email}
+          onChange={e => setEmail(e.target.value)}
+          placeholder='Email'
+        />
+        <input
+          type='password'
+          value={password}
+          onChange={e => setPassword(e.target.value)}
+          placeholder='Hasło'
+        />
+        <input
+          value={username}
+          onChange={e => setUsername(e.target.value)}
+          placeholder='Nazwa użytkownika'
+        />
+        <button type='submit'>Zarejestruj</button>
+        {error && <p>{error}</p>}
+      </form>
+    </>
   );
 };
 

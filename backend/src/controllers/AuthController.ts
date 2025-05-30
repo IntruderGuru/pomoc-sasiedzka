@@ -15,17 +15,17 @@ export class AuthController {
      */
     static async register(req: Request, res: Response) {
         try {
-            const { email, password } = req.body;
+            const { email, password, username } = req.body;
 
             // Basic input validation
-            if (!email || !password) {
+            if (!email || !password || !username) {
                 return res
                     .status(400)
-                    .json({ message: 'Email and password are required' });
+                    .json({ message: 'Email, password and username are required' });
             }
 
             // Calls service method that hashes the password and inserts the new user
-            const user = await AuthService.registerUser(email, password);
+            const user = await AuthService.registerUser(email, password, username);
 
             // Respond with 201 Created and user data (id + email)
             return res.status(201).json(user);

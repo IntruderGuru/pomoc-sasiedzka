@@ -14,6 +14,7 @@ export async function up(db: Kysely<Database>): Promise<void> {
         .addColumn('role', 'varchar(5)', column =>
             column.notNull().check(sql`role IN ('user', 'admin')`)
         )
+        .addColumn('username', 'varchar(255)', col => col.notNull().unique())
         .execute();
 
     await db.schema
@@ -158,7 +159,8 @@ export async function up(db: Kysely<Database>): Promise<void> {
             id: randomUUID(),
             email: 'yakui@example.com',
             password: await bcrypt.hash('themaid', 10),
-            role: 'admin'
+            role: 'admin',
+            username: 'yakuuuuui',
         })
         .execute();
 }

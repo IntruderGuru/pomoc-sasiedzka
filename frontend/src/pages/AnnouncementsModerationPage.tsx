@@ -9,12 +9,10 @@ export const AnnouncementsModerationPage = () => {
     const loadAnnouncements = async () => {
         const _announcements = await fetchAnnouncementsMod();
         setAnnouncements(_announcements.data);
-        console.log(_announcements.data);
         setLoading(false);
     }
 
     useEffect(() => {
-        console.log("Loading announcements");
         loadAnnouncements();
     }, []);
 

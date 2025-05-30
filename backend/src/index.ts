@@ -11,6 +11,7 @@ import { checkOwnerOrAdmin } from './middlewares/checkOwnerOrAdmin';
 import { MessageController } from './controllers/MessageController';
 import { CommentController } from './controllers/CommentController';
 import { ReactionController } from './controllers/ReactionController';
+import { UserPublicController } from './controllers/UserPublicController';
 import { logger } from './utils/logger';
 import { AdminCategoryController } from './controllers/AdminCategoryController';
 import { AdminUserController } from './controllers/AdminUserController';
@@ -107,10 +108,11 @@ app.get(
 );
 
 /**
- * GET /api/me
- * Returns data about the current authenticated user from the JWT.
+ * GET /api/users/:id/username
+ * Returns data about user
  */
-app.get('/api/me', checkAuth, AnnouncementController.getMe);
+
+app.get('/api/users/:id/username', UserPublicController.getUsernameById);
 
 /**
  * POST /api/announcements

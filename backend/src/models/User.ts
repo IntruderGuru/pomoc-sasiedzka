@@ -19,8 +19,11 @@ export class User {
         private password: string,
 
         /** Role-based access control flag — determines user privileges */
-        private role: 'user' | 'admin'
-    ) {}
+        private role: 'user' | 'admin',
+
+        /** Username for display purposes */
+        private username: string,
+    ) { }
 
     // Getter for the email address (used in token payloads, profile views, etc.)
     getEmail(): string {
@@ -35,5 +38,9 @@ export class User {
     // Getter for the role (used in middleware and admin-level checks)
     getRole(): 'user' | 'admin' {
         return this.role;
+    }
+
+    getUsername(): string | undefined {
+        return this.username;
     }
 }

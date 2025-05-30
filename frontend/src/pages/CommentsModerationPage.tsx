@@ -13,7 +13,6 @@ export const CommentsModerationPage = () => {
     async function loadComments() {
         const _comments = await fetchCommentsMod();
         setComments(_comments.data);
-        console.log(_comments.data);
         setLoading(false);
     }
 

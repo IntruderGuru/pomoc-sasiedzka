@@ -1,6 +1,7 @@
-import { useState } from 'react';
-import { loginUser, setToken, setuserId } from '../services/api';
+import { use, useState } from 'react';
+import { loginUser, setToken, setuserId, setUsername } from '../services/api';
 import Nav from "../components/Nav.tsx";
+import { get } from 'axios';
 
 export const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -14,7 +15,9 @@ export const LoginPage = () => {
       const res = await loginUser({ email, password });
       setToken(res.data.token);
       setuserId(res.data.user.id);
-      alert('Zalogowano!');
+      setUsername(res.data.user.username ?? res.data.user.email.split('@')[0]);
+      alert('Zalogowano jako ' + res.data.user.username);
+
     } catch {
       setError('Błędne dane logowania');
     }

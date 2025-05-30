@@ -24,9 +24,10 @@ export class UserRepository {
     async addUser(
         email: string,
         password: string,
-        role: 'user' | 'admin'
+        role: 'user' | 'admin',
+        username: string
     ): Promise<User> {
-        const newUser = new User(randomUUID(), email, password, role);
+        const newUser = new User(randomUUID(), email, password, role, username);
 
         await this.db
             .insertInto('users')
@@ -34,7 +35,8 @@ export class UserRepository {
                 id: newUser.id,
                 email: newUser.getEmail(),
                 password: newUser.getPassword(),
-                role: newUser.getRole()
+                role: newUser.getRole(),
+                username: newUser.getUsername() ?? '',
             })
             .execute();
 
@@ -59,9 +61,9 @@ export class UserRepository {
             return null;
         }
 
-        const { id, password, role } = result[0];
+        const { id, password, role, username } = result[0];
 
-        return new User(id as UUID, email, password, role);
+        return new User(id as UUID, email, password, role, username);
     }
 
     async getAllUsers(): Promise<User[]> {
@@ -71,7 +73,7 @@ export class UserRepository {
             .execute()
             .then((result) =>
                 result.map(
-                    (r) => new User(r.id as UUID, r.email, r.password, r.role)
+                    (r) => new User(r.id as UUID, r.email, r.password, r.role, r.username)
                 )
             );
     }
@@ -84,11 +86,23 @@ export class UserRepository {
             .execute();
     }
 
-    // async deactivateUser(userId: UUID): Promise<void> {
-    //     await this.db
-    //         .updateTable('users')
-    //         .set({ is_active: false })
-    //         .where('id', '=', userId)
-    //         .execute();
-    // }
+
+
+    async getUserById(userId: UUID): Promise<User | null> {
+        const result = await this.db
+            .selectFrom('users')
+            .selectAll()
+            .where('id', '=', userId)
+            .executeTakeFirst();
+
+        return result
+            ? new User(
+                result.id as UUID,
+                result.email,
+                result.password,
+                result.role,
+                result.username
+            )
+            : null;
+    }
 }

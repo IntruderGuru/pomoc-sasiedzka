@@ -1,0 +1,3199 @@
+=== ŚCIEŻKA ===
+.env
+=== ZAWARTOŚĆ ===
+DB_HOST=localhost
+DB_PORT=5434
+DB_USER=postgres
+DB_PASSWORD=''root''
+DB_NAME=somsiad
+JWT_SECRET=jakisSekretnyKlucz
+JWT_EXPIRES_IN=1h
+
+=== ŚCIEŻKA ===
+package.json
+=== ZAWARTOŚĆ ===
+{
+    "name": "backend",
+    "version": "1.0.0",
+    "main": "index.js",
+    "scripts": {
+        "dev": "nodemon -L src/index.ts",
+        "build": "tsc",
+        "start": "node dist/index.js",
+        "postgres:setup": "docker pull postgres && docker rm -f somsiad-db && docker run -d --name somsiad-db -p 5434:5432 -e POSTGRES_DB=somsiad -e POSTGRES_PASSWORD='root' postgres",
+        "postgres:migrate": "tsx src/database/migrate.ts",
+        "postgres:psql": "docker exec -it somsiad-db psql -U postgres",
+        "postgres:dump": "docker exec -it somsiad-db pg_dump -U postgres -h localhost -p 5432 somsiad > src/database/sql_dumps/dump-somsiad.sql",
+        "test": "vitest",
+        "lint": "eslint src && tsc --noEmit",
+        "lint:fix": "eslint --fix src && tsc --noEmit",
+        "format": "prettier -w src"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "description": "",
+    "dependencies": {
+        "bcrypt": "^5.1.0",
+        "cors": "^2.8.5",
+        "dotenv": "^16.4.7",
+        "express": "^4.21.2",
+        "jsonwebtoken": "^9.0.2",
+        "kysely": "^0.27.6",
+        "morgan": "^1.10.0",
+        "pg": "^8.14.1",
+        "winston": "^3.17.0"
+    },
+    "devDependencies": {
+        "@eslint/js": "^9.25.1",
+        "@types/bcrypt": "^5.0.0",
+        "@types/cors": "^2.8.17",
+        "@types/express": "^4.17.21",
+        "@types/jsonwebtoken": "^8.5.9",
+        "@types/morgan": "^1.9.9",
+        "@types/node": "^22.13.14",
+        "@types/pg": "^8.11.11",
+        "eslint": "^9.25.1",
+        "eslint-config-prettier": "^10.1.2",
+        "eslint-plugin-prettier": "^5.2.6",
+        "eslint-plugin-simple-import-sort": "^12.1.1",
+        "globals": "^16.0.0",
+        "kysely-migration-cli": "^0.4.2",
+        "nodemon": "^3.1.9",
+        "prettier": "^3.5.3",
+        "ts-node": "^10.9.2",
+        "tsx": "^4.19.3",
+        "typescript": "^5.8.2",
+        "typescript-eslint": "^8.31.0",
+        "vitest": "^3.1.2"
+    }
+}
+
+
+=== ŚCIEŻKA ===
+tsconfig.json
+=== ZAWARTOŚĆ ===
+{
+    "compilerOptions": {
+        "target": "ES2019",
+        "module": "commonjs",
+        "rootDir": "src",
+        "outDir": "dist",
+        "strict": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "typeRoots": [
+            "node_modules/@types"
+        ]
+    }
+}
+
+=== ŚCIEŻKA ===
+src/index.ts
+=== ZAWARTOŚĆ ===
+import cors from 'cors';
+import dotenv from 'dotenv';
+import express, { Request, Response } from 'express';
+import morgan from 'morgan';
+
+import { AnnouncementController } from './controllers/AnnouncementController';
+import { AuthController } from './controllers/AuthController';
+import { AuthRequest, checkAuth } from './middlewares/authMiddleware';
+import { checkAdmin } from './middlewares/checkAdmin';
+import { checkOwnerOrAdmin } from './middlewares/checkOwnerOrAdmin';
+import { MessageController } from './controllers/MessageController';
+import { CommentController } from './controllers/CommentController';
+import { ReactionController } from './controllers/ReactionController';
+import { logger } from './utils/logger';
+import { AdminCategoryController } from './controllers/AdminCategoryController';
+import { AdminUserController } from './controllers/AdminUserController';
+import { AnnouncementModerationController } from './controllers/AnnouncementModerationController';
+import { AdminCommentController } from './controllers/AdminCommentController';
+import { getDashboard } from './controllers/AdminDashboardController';
+import { db } from './database/connection';
+
+// ---------------- ENVIRONMENT SETUP ----------------
+
+// Load environment variables from .env file into process.env
+dotenv.config();
+
+// ---------------- EXPRESS APP INITIALIZATION ----------------
+
+// Create Express application instance
+const app = express();
+
+// ---------------- GLOBAL MIDDLEWARE ----------------
+
+app.use(cors()); // Enable CORS (Cross-Origin Resource Sharing)
+app.use(express.json()); // Automatically parse incoming JSON payloads
+app.use(morgan('dev')); // Log HTTP requests in developer-friendly format
+
+// ---------------- HEALTHCHECK ENDPOINT ----------------
+
+/**
+ * Basic endpoint to verify if the API is up and running.
+ * Used in deployment/monitoring pipelines (e.g., Docker, CI/CD).
+ */
+app.get('/api/healthcheck', (req: Request, res: Response) => {
+    res.json({ status: 'OK', message: 'Backend powered by Vite now!' });
+});
+
+// ---------------- AUTH ROUTES ----------------
+
+/**
+ * POST /api/auth/register
+ * Registers a new user with email and password.
+ */
+app.post('/api/auth/register', AuthController.register);
+
+/**
+ * POST /api/auth/login
+ * Logs in a user and returns a JWT on success.
+ */
+app.post('/api/auth/login', AuthController.login);
+
+/**
+ * GET /api/profile
+ * Returns the decoded JWT payload of the current authenticated user.
+ */
+app.get('/api/profile', checkAuth, (req: Request, res: Response) => {
+    const authReq = req as AuthRequest;
+    res.json({
+        message: 'Dane użytkownika',
+        userDecoded: authReq.user
+    });
+});
+
+// ---------------- ANNOUNCEMENT ROUTES ----------------
+
+/**
+ * GET /api/announcements
+ * Public endpoint to list announcements, optionally filtered.
+ */
+app.get('/api/announcements', AnnouncementController.getAll);
+
+/**
+ * GET /api/categories
+ * Returns all unique announcement categories (used in filters).
+ */
+app.get('/api/categories', AnnouncementController.getCategories);
+
+/**
+ * GET /api/users/:id/announcements
+ * Lists all announcements created by a specific user.
+ */
+app.get(
+    '/api/users/:id/announcements',
+    checkAuth,
+    AnnouncementController.getByUser
+);
+
+/**
+ * GET /api/admin/announcements
+ * Admin-only: returns all announcements with author metadata.
+ */
+app.get(
+    '/api/admin/announcements',
+    checkAuth,
+    checkAdmin,
+    AnnouncementController.getAllForAdmin
+);
+
+/**
+ * GET /api/me
+ * Returns data about the current authenticated user from the JWT.
+ */
+
+
+
+/**
+ * POST /api/announcements
+ * Creates a new announcement (requires login).
+ */
+app.post('/api/announcements', checkAuth, AnnouncementController.create);
+
+/**
+ * PUT /api/announcements/:id
+ * Updates an existing announcement (owner or admin only).
+ */
+app.put(
+    '/api/announcements/:id',
+    checkAuth,
+    checkOwnerOrAdmin,
+    AnnouncementController.update
+);
+
+/**
+ * GET /api/announcements/:id
+ * Retrieves a single announcement by ID.
+ */
+app.get(
+    '/api/announcements/:id',
+    checkAuth,
+    AnnouncementController.findById
+);
+
+/**
+ * DELETE /api/announcements/:id
+ * Deletes an announcement (owner or admin only).
+ */
+app.delete(
+    '/api/announcements/:id',
+    checkAuth,
+    checkOwnerOrAdmin,
+    AnnouncementController.delete
+);
+
+// ---------------- MESSAGING ROUTES ----------------
+
+/**
+ * POST /api/messages
+ * Sends a private message to another user.
+ */
+app.post('/api/messages', checkAuth, MessageController.sendMessage);
+
+/**
+ * GET /api/messages/conversations
+ * Retrieves the most recent message from each conversation the user is part of.
+ */
+app.get('/api/messages/conversations', checkAuth, MessageController.getConversations);
+
+/**
+ * GET /api/messages/:withuserId
+ * Fetches the full message thread with a specific user.
+ */
+app.get('/api/messages/:withuserId', checkAuth, MessageController.getThread);
+
+// ---------------- COMMENT ROUTES ----------------
+
+/**
+ * POST /api/announcements/:id/comments
+ * Adds a comment to a specific announcement.
+ */
+app.post('/api/announcements/:id/comments', checkAuth, CommentController.addComment);
+
+/**
+ * GET /api/announcements/:id/comments
+ * Retrieves all comments under a specific announcement.
+ */
+app.get('/api/announcements/:id/comments', checkAuth, CommentController.getComments);
+
+/**
+ * DELETE /api/comments/:id
+ * Deletes a comment (if owner or admin).
+ */
+app.delete('/api/comments/:id', checkAuth, CommentController.deleteComment);
+
+// ---------------- REACTION ROUTES ----------------
+
+/**
+ * POST /api/announcements/:id/reactions
+ * Adds a like/dislike reaction to an announcement.
+ */
+app.post('/api/announcements/:id/reactions', checkAuth, ReactionController.addToAnnouncement);
+
+/**
+ * DELETE /api/announcements/:id/reactions
+ * Removes user's reaction from an announcement.
+ */
+app.delete('/api/announcements/:id/reactions', checkAuth, ReactionController.removeFromAnnouncement);
+
+/**
+ * POST /api/comments/:id/reactions
+ * Adds a reaction to a comment.
+ */
+app.post('/api/comments/:id/reactions', checkAuth, ReactionController.addToComment);
+
+/**
+ * DELETE /api/comments/:id/reactions
+ * Removes user's reaction from a comment.
+ */
+app.delete('/api/comments/:id/reactions', checkAuth, ReactionController.removeFromComment);
+
+// ---------- ADMIN  ----------
+app.use('/api/admin/*', checkAuth, checkAdmin);
+
+// users
+app.get('/api/admin/users', AdminUserController.getAll);
+app.put('/api/admin/users/:id/role', AdminUserController.updateRole);
+// app.put('/api/admin/users/:id/deactivate', AdminUserController.deactivate);
+
+// ----- ADMIN: categories -----
+app.get('/api/admin/categories', checkAuth, checkAdmin, AdminCategoryController.getAll);
+app.post('/api/admin/categories', checkAuth, checkAdmin, AdminCategoryController.create);
+app.put('/api/admin/categories/:id', checkAuth, checkAdmin, AdminCategoryController.update);
+app.delete('/api/admin/categories/:id', checkAuth, checkAdmin, AdminCategoryController.delete);
+
+// ----- PUBLIC: filtering -----
+app.get('/api/categories', async (_req, res) => {
+    const repo = new (await import('./repositories/category/CategoryRepository')).CategoryRepository(db);
+    res.json(await repo.getAllCategories());
+});
+
+// announcements moderation
+app.get('/api/admin/announcements', AnnouncementModerationController.get);
+// app.put('/api/admin/announcements/:id/status', AnnouncementModerationController.updateStatus);
+
+// comments moderation
+app.get('/api/admin/comments', AdminCommentController.getAll);
+app.delete('/api/admin/comments/:id', AdminCommentController.delete);
+
+// dashboard
+app.get('/api/admin/dashboard', getDashboard);
+
+
+// ---------------- GLOBAL ERROR HANDLING ----------------
+
+/**
+ * Centralized error-handling middleware.
+ * Logs errors and returns standardized error responses.
+ */
+app.use((err: any, _req: Request, res: Response, _next: Function) => {
+    logger.error(err);
+    const status = err.status ?? 500;
+    res.status(status).json({ error: err.message ?? 'Internal server error' });
+});
+
+// ---------------- START SERVER ----------------
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
+});
+
+
+=== ŚCIEŻKA ===
+src/controllers/AdminCategoryController.ts
+=== ZAWARTOŚĆ ===
+import { Request, Response } from 'express';
+import { db } from '../database/connection';
+import { CategoryRepository } from '../repositories/category/CategoryRepository';
+import { AuditLogRepository } from '../repositories/audit/AuditLogRepository';
+import { CategoryService } from '../services/CategoryService';
+import { AuthRequest } from '../middlewares/authMiddleware';
+import { UUID } from 'crypto';
+
+const service = new CategoryService(
+    new CategoryRepository(db),
+    new AuditLogRepository()
+);
+
+export class AdminCategoryController {
+    static getAll(_req: Request, res: Response) {
+        service.getAll().then(res.json.bind(res));
+    }
+
+    static async create(req: AuthRequest, res: Response) {
+        const cat = await service.create(req.user!.userId as UUID, req.body.name);
+        res.status(201).json(cat);
+    }
+
+    static async update(req: AuthRequest, res: Response) {
+        const cat = await service.update(
+            req.user!.userId as UUID,
+            req.params.id as UUID,
+            req.body.name
+        );
+        res.json(cat);
+    }
+
+    static async delete(req: AuthRequest, res: Response) {
+        await service.delete(req.user!.userId as UUID, req.params.id as UUID);
+        res.status(204).send();
+    }
+}
+
+
+=== ŚCIEŻKA ===
+src/controllers/AdminCommentController.ts
+=== ZAWARTOŚĆ ===
+import { Response } from 'express';
+import { AuthRequest } from '../middlewares/authMiddleware';
+import { service } from './_sharedModerationService';
+import { UUID } from 'crypto';
+
+export class AdminCommentController {
+    static async getAll(_req: AuthRequest, res: Response) {
+        res.json(await service.getAllComments());
+    }
+    static async delete(req: AuthRequest, res: Response) {
+        await service.deleteComment(
+            req.user!.userId as UUID,
+            req.params.id as UUID
+        );
+        res.status(204).send();
+    }
+}
+
+
+=== ŚCIEŻKA ===
+src/controllers/AdminDashboardController.ts
+=== ZAWARTOŚĆ ===
+import { db } from '../database/connection';
+import { Request, Response } from 'express';
+
+export async function getDashboard(_req: Request, res: Response) {
+    const [users] = await db.selectFrom('users').select(db.fn.countAll().as('c')).execute();
+    const [ann] = await db.selectFrom('announcements').select(db.fn.countAll().as('c')).execute();
+    // const [pend] = await db.selectFrom('announcements').select(db.fn.count('id').as('c'))
+    //     .where('status', '=', 'pending').execute();
+    const [categories] = await db.selectFrom('categories').select(db.fn.countAll().as('c')).execute();
+    const [comments] = await db.selectFrom('comments').select(db.fn.countAll().as('c')).execute();
+    res.json({
+        users: Number(users.c),
+        announcements: Number(ann.c),
+        // pending: Number(pend.c),
+        categories: Number(categories.c),
+        comments: Number(comments.c)
+    });
+}
+
+
+=== ŚCIEŻKA ===
+src/controllers/AdminUserController.ts
+=== ZAWARTOŚĆ ===
+import { Response } from 'express';
+import { AuthRequest } from '../middlewares/authMiddleware';
+import { db } from '../database/connection';
+import { UserRepository } from '../repositories/user/UserRepository';
+import { AuditLogRepository } from '../repositories/audit/AuditLogRepository';
+import { AdminUserService } from '../services/AdminUserService';
+import { UUID } from 'crypto';
+
+const service = new AdminUserService(
+    new UserRepository(db),
+    new AuditLogRepository()
+);
+
+export class AdminUserController {
+    static async getAll(_req: AuthRequest, res: Response) {
+        res.json(await service.getAllUsers());
+    }
+
+    static async updateRole(req: AuthRequest, res: Response) {
+        await service.updateRole(
+            req.user!.userId as UUID,
+            req.params.id as UUID,
+            req.body.role
+        );
+        res.status(204).send();
+    }
+
+    // static async deactivate(req: AuthRequest, res: Response) {
+    //     await service.deactivateUser(
+    //         req.user!.userId as UUID,
+    //         req.params.id as UUID
+    //     );
+    //     res.status(204).send();
+    // }
+}
+
+
+=== ŚCIEŻKA ===
+src/controllers/AnnouncementController.ts
+=== ZAWARTOŚĆ ===
+import { UUID } from 'crypto';
+import { Request, Response } from 'express';
+
+import { db } from '../database/connection';
+import { AuthRequest } from '../middlewares/authMiddleware';
+import { AnnouncementRepository } from '../repositories/announcement/AnnouncementRepository';
+import { AnnouncementService } from '../services/AnnouncementService';
+import { logger } from '../utils/logger';
+// Instantiate the service layer with the repository injected.
+// This allows controller logic to remain thin and offload business rules to the service.
+const service = new AnnouncementService(new AnnouncementRepository(db));
+
+/**
+ * Controller responsible for handling HTTP requests related to announcements.
+ * Delegates all core logic to AnnouncementService and communicates results to the client.
+ */
+export class AnnouncementController {
+    /**
+     * POST /api/announcements
+     * Creates a new announcement associated with the currently authenticated user.
+     */
+    static async create(req: AuthRequest, res: Response) {
+        try {
+            const { title, content, category, type } = req.body;
+
+            if (!req.user) {
+                // User must be authenticated
+                return res.status(401).json({ error: 'Unauthorized' });
+            }
+
+            // Pass input to the service layer for validation and persistence
+            const data = await service.create(
+                req.user.userId,
+                title,
+                content,
+                category,
+                type
+            );
+
+            return res.status(201).json(data);
+        } catch (e: any) {
+            logger.error(e);
+            return res.status(400).json({ error: e.message });
+        }
+    }
+
+    /**
+     * GET /api/announcements
+     * Retrieves all announcements, optionally filtered by category and type.
+     * No authentication required.
+     */
+    static async getAll(req: Request, res: Response) {
+        try {
+            const { category, type } = req.query as any;
+
+            const data = await service.getAll({ category, type });
+
+            return res.json(data);
+        } catch (e) {
+            logger.error(e);
+            return res.status(500).json({ message: 'Internal server error' });
+        }
+    }
+
+    /**
+     * GET /api/users/:id/announcements
+     * Fetches all announcements created by a specific user (ID provided as URL param).
+     * Requires authentication.
+     */
+    static async getByUser(req: Request, res: Response) {
+        try {
+            const data = await service.getByUser(req.params.id);
+            return res.json(data);
+        } catch (e) {
+            logger.error(e);
+            return res.status(500).json({ message: 'Internal server error' });
+        }
+    }
+
+    /**
+     * GET /api/admin/announcements
+     * Retrieves all announcements with author metadata (admin-only access).
+     * Requires valid JWT and admin role.
+     */
+    static async getAllForAdmin(req: AuthRequest, res: Response) {
+        try {
+            const data = await service.getAllForAdmin();
+            return res.json(data);
+        } catch (e) {
+            logger.error(e);
+            return res.status(500).json({ message: 'Internal server error' });
+        }
+    }
+
+    /**
+     * GET /api/categories
+     * Returns a distinct list of all used categories in announcements.
+     * No authentication required.
+     */
+    static async getCategories(_req: Request, res: Response) {
+        try {
+            const cats = await service.getCategories();
+            return res.json(cats);
+        } catch (e) {
+            logger.error(e);
+            return res.status(500).json({ message: 'Internal server error' });
+        }
+    }
+
+    /**
+     * PUT /api/announcements/:id
+     * Updates an existing announcement by ID. The request is allowed if:
+     *  - The user is the announcement's owner
+     *  - OR the user has admin privileges
+     * Authorization logic is handled by middleware.
+     */
+    static async update(req: AuthRequest, res: Response) {
+        const { id } = req.params;
+        const { title, content, category, type } = req.body;
+        try {
+            console.log(
+                `Updating announcement ${id} with title "${title}", content "${content}", category "${category}", type "${type}"`);
+            const updated = await service.update(
+                id as UUID,
+                title,
+                content,
+                category,
+                type,
+            );
+            console.log('Updated announcement:', updated);
+            return res.status(200).json(updated);
+        } catch (e) {
+            const errorMessage = (e as Error).message;
+
+            // Map domain errors to HTTP status codes
+            const status =
+                errorMessage === 'Not found'
+                    ? 404
+                    : errorMessage === 'Forbidden'
+                        ? 403
+                        : 400;
+
+            return res
+                .status(status)
+                .json({ error: errorMessage || 'An unknown error occurred' });
+        }
+    }
+
+    static async findById(req: Request, res: Response) {
+        const { id } = req.params;
+
+        try {
+            const announcement = await service.findById(id as UUID);
+            if (!announcement) {
+                return res
+                    .status(404)
+                    .json({ error: 'Announcement not found' });
+            }
+            return res.json(announcement);
+        } catch (e) {
+            logger.error(e);
+            return res.status(500).json({ message: 'Internal server error' });
+        }
+    }
+
+    /**
+     * DELETE /api/announcements/:id
+     * Deletes an announcement by ID. Permission logic is delegated to middleware:
+     * Only owners or admins can delete.
+     */
+    static async delete(req: AuthRequest, res: Response) {
+        const { id } = req.params;
+
+        try {
+            await service.delete(id as UUID);
+            res.status(204).send(); // No content response
+        } catch (e: any) {
+            logger.error(e);
+            return res.status(403).json({ error: e.message });
+        }
+    }
+
+    /**
+     * GET /api/me
+     * Returns the decoded JWT payload of the currently authenticated user.
+     * Used primarily for checking current session state on the frontend.
+     */
+    static async getMe(req: AuthRequest, res: Response) {
+        return res.json({ user: req.user });
+    }
+}
+
+
+=== ŚCIEŻKA ===
+src/controllers/AnnouncementModerationController.ts
+=== ZAWARTOŚĆ ===
+import { Response } from 'express';
+import { AuthRequest } from '../middlewares/authMiddleware';
+import { service } from './_sharedModerationService';
+import { UUID } from 'crypto';
+
+export class AnnouncementModerationController {
+    static async get(req: AuthRequest, res: Response) {
+        res.json(await service.getAnnouncements());
+    }
+
+    // static async updateStatus(req: AuthRequest, res: Response) {
+    //     const { status } = req.body;
+    //     const id = req.params.id as UUID;
+
+    //     if (status === 'approved') {
+    //         await service.approve(req.user!.userId as UUID, id);
+    //     } else if (status === 'rejected') {
+    //         await service.reject(req.user!.userId as UUID, id);
+    //     } else {
+    //         return res.status(400).json({ message: 'Invalid status' });
+    //     }
+    //     res.status(204).send();
+    // }
+}
+
+
+=== ŚCIEŻKA ===
+src/controllers/AuthController.ts
+=== ZAWARTOŚĆ ===
+import { Request, Response } from 'express';
+
+import { AuthService } from '../services/AuthService';
+
+/**
+ * Controller responsible for handling authentication-related routes.
+ * Delegates all business logic to the AuthService.
+ */
+export class AuthController {
+    /**
+     * POST /api/auth/register
+     * Handles user registration.
+     * Expects a JSON body with `email` and `password`.
+     * Validates the input and delegates to the AuthService.
+     */
+    static async register(req: Request, res: Response) {
+        try {
+            const { email, password, username } = req.body;
+
+            // Basic input validation
+            if (!email || !password || !username) {
+                return res
+                    .status(400)
+                    .json({ message: 'Email, password and username are required' });
+            }
+
+            // Calls service method that hashes the password and inserts the new user
+            const user = await AuthService.registerUser(email, password, username);
+
+            // Respond with 201 Created and user data (id + email)
+            return res.status(201).json(user);
+        } catch (error: any) {
+            // Specific error if the user already exists
+            if (error.message === 'User already exists') {
+                return res.status(409).json({ message: 'User already exists' });
+            }
+
+            // Generic fallback error
+            console.error(error);
+            return res.status(500).json({ message: 'Internal server error' });
+        }
+    }
+
+    /**
+     * POST /api/auth/login
+     * Handles user login.
+     * Verifies email/password and returns a JWT if credentials are valid.
+     */
+    static async login(req: Request, res: Response) {
+        try {
+            const { email, password } = req.body;
+
+            // Basic input validation
+            if (!email || !password) {
+                return res
+                    .status(400)
+                    .json({ message: 'Email and password are required' });
+            }
+
+            // Calls service method that checks credentials and returns JWT + user info
+            const result = await AuthService.loginUser(email, password);
+
+            return res.status(200).json(result);
+        } catch (error: any) {
+            // Invalid credentials are treated as a 401 Unauthorized
+
+            if (error.message === 'Invalid credentials') {
+                return res
+                    .status(401)
+                    .json({ message: 'Invalid email or password' });
+            }
+
+            // Fallback for unexpected issues
+            console.error(error);
+            return res.status(500).json({ message: 'Internal server error' });
+        }
+    }
+}
+
+
+=== ŚCIEŻKA ===
+src/controllers/CommentController.ts
+=== ZAWARTOŚĆ ===
+import { Response } from 'express';
+import { AuthRequest } from '../middlewares/authMiddleware';
+import { CommentService } from '../services/CommentService';
+import { CommentRepository } from '../repositories/comment/CommentRepository';
+import { db } from '../database/connection';
+
+// Instantiate the CommentService with the CommentRepository.
+// This separates business logic from controller logic.
+const service = new CommentService(new CommentRepository(db));
+
+/**
+ * Controller responsible for handling HTTP requests related to comments.
+ * Delegates business rules and validation to CommentService.
+ */
+export class CommentController {
+
+    /**
+     * POST /api/announcements/:id/comments
+     * Adds a new comment to the specified announcement.
+     * Requires authentication (AuthRequest).
+     *
+     * @param req - Authenticated request containing `content` and announcement `id` in params
+     * @param res - HTTP response object
+     * @param next - Express error handling middleware
+     */
+    static async addComment(req: AuthRequest, res: Response, next: Function) {
+        try {
+            const { content } = req.body;
+            const comment = await service.addComment(req.user!.userId, req.params.id, content);
+            res.status(201).json(comment); // Respond with created comment
+        } catch (e) {
+            next(e);
+        }
+    }
+
+    /**
+     * GET /api/announcements/:id/comments
+     * Fetches all comments for a specific announcement.
+     * Requires authentication to prevent abuse.
+     *
+     * @param req - Authenticated request with announcement ID in URL params
+     * @param res - HTTP response object
+     * @param next - Express error handler
+     */
+    static async getComments(req: AuthRequest, res: Response, next: Function) {
+        try {
+            const list = await service.getComments(req.params.id);
+            res.json(list); // Return array of comment objects
+        } catch (e) {
+            next(e);
+        }
+    }
+
+    /**
+     * DELETE /api/comments/:id
+     * Deletes a comment by ID.
+     * Only the comment's author or an admin can delete.
+     *
+     * @param req - Authenticated request with comment ID in params
+     * @param res - HTTP response object
+     * @param next - Express error handler
+     */
+    static async deleteComment(req: AuthRequest, res: Response, next: Function) {
+        try {
+            await service.deleteComment(req.params.id, req.user!.userId, req.user!.role);
+            res.status(204).send(); // No content on success
+        } catch (e) {
+            next(e);
+        }
+    }
+}
+
+
+=== ŚCIEŻKA ===
+src/controllers/MessageController.ts
+=== ZAWARTOŚĆ ===
+import { Request, Response } from 'express';
+import { AuthRequest } from '../middlewares/authMiddleware';
+import { MessageService } from '../services/MessageService';
+import { MessageRepository } from '../repositories/message/MessageRepository';
+import { db } from '../database/connection';
+
+// Instantiate the MessageService with a connected MessageRepository.
+// Separates transport logic (controllers) from business logic (service).
+const service = new MessageService(new MessageRepository(db));
+
+/**
+ * Controller responsible for handling private message functionality.
+ * Endpoints include sending messages and fetching conversation threads.
+ */
+export class MessageController {
+
+    /**
+     * POST /api/messages
+     * Sends a private message from the currently authenticated user to a recipient.
+     * 
+     * @param req - Authenticated request containing `receiverId` and `content`
+     * @param res - HTTP response
+     * @param next - Express error handler
+     */
+    static async sendMessage(req: AuthRequest, res: Response, next: Function) {
+        try {
+            const { receiverId, content } = req.body;
+
+            if (!receiverId) {
+                return res.status(400).json({ message: 'receiverId required' });
+            }
+
+            const msg = await service.sendMessage(req.user!.userId, receiverId, content);
+            res.status(201).json(msg);
+        } catch (e) {
+            next(e);
+        }
+    }
+
+    /**
+     * GET /api/messages/conversations
+     * Returns the most recent message per unique conversation for the authenticated user.
+     * 
+     * @param req - Authenticated request
+     * @param res - HTTP response
+     * @param next - Express error handler
+     */
+    static async getConversations(req: AuthRequest, res: Response, next: Function) {
+        try {
+            const data = await service.getConversations(req.user!.userId);
+            res.json(data);
+        } catch (e) {
+            next(e);
+        }
+    }
+
+    /**
+     * GET /api/messages/:withuserId
+     * Retrieves the full message thread between the authenticated user and another user.
+     * Messages are returned in chronological order.
+     * 
+     * @param req - Authenticated request with `withuserId` in URL params
+     * @param res - HTTP response
+     * @param next - Express error handler
+     */
+    static async getThread(req: AuthRequest, res: Response, next: Function) {
+        try {
+            const other = req.params.withuserId;
+            const data = await service.getThread(req.user!.userId, other);
+
+            res.json(data);
+        } catch (e) {
+            next(e);
+        }
+    }
+
+
+}
+
+
+=== ŚCIEŻKA ===
+src/controllers/ReactionController.ts
+=== ZAWARTOŚĆ ===
+import { Response } from 'express';
+import { AuthRequest } from '../middlewares/authMiddleware';
+import { ReactionService } from '../services/ReactionService';
+import { ReactionRepository } from '../repositories/reaction/ReactionRepository';
+import { db } from '../database/connection';
+import { UUID } from 'crypto';
+
+// Instantiate the service layer with an injected ReactionRepository instance.
+// This maintains separation of concerns between transport and domain logic.
+const service = new ReactionService(new ReactionRepository(db));
+
+/**
+ * Controller responsible for managing user reactions (like/dislike)
+ * on announcements and comments.
+ * All endpoints require authentication.
+ */
+export class ReactionController {
+
+    /**
+     * POST /api/announcements/:id/reactions
+     * Adds a like or dislike reaction to a specific announcement.
+     * 
+     * @param req - Authenticated request with `type` in the body
+     * @param res - HTTP response
+     * @param next - Express error handler
+     */
+    static addToAnnouncement = async (req: AuthRequest, res: Response, next: Function) => {
+        try {
+            const { type } = req.body;
+            const r = await service.addToAnnouncement(req.user!.userId as UUID, req.params.id, type);
+            res.status(201).json(r); // Return newly added reaction
+        } catch (e) {
+            next(e);
+        }
+    };
+
+    /**
+     * DELETE /api/announcements/:id/reactions
+     * Removes a user's reaction from a specific announcement.
+     * 
+     * @param req - Authenticated request with announcement ID
+     * @param res - HTTP response
+     * @param next - Express error handler
+     */
+    static removeFromAnnouncement = async (req: AuthRequest, res: Response, next: Function) => {
+        try {
+            await service.removeFromAnnouncement(req.user!.userId as UUID, req.params.id);
+            res.status(204).send(); // No content on successful delete
+        } catch (e) {
+            next(e);
+        }
+    };
+
+    /**
+     * POST /api/comments/:id/reactions
+     * Adds a reaction to a specific comment (like/dislike).
+     * 
+     * @param req - Authenticated request with `type` in the body
+     * @param res - HTTP response
+     * @param next - Express error handler
+     */
+    static addToComment = async (req: AuthRequest, res: Response, next: Function) => {
+        try {
+            const { type } = req.body;
+            const r = await service.addToComment(req.user!.userId as UUID, req.params.id, type);
+            res.status(201).json(r);
+        } catch (e) {
+            next(e);
+        }
+    };
+
+    /**
+     * DELETE /api/comments/:id/reactions
+     * Removes a user's reaction from a specific comment.
+     * 
+     * @param req - Authenticated request with comment ID
+     * @param res - HTTP response
+     * @param next - Express error handler
+     */
+    static removeFromComment = async (req: AuthRequest, res: Response, next: Function) => {
+        try {
+            await service.removeFromComment(req.user!.userId as UUID, req.params.id);
+            res.status(204).send();
+        } catch (e) {
+            next(e);
+        }
+    };
+}
+
+
+=== ŚCIEŻKA ===
+src/controllers/_sharedModerationService.ts
+=== ZAWARTOŚĆ ===
+import { db } from '../database/connection';
+import { AnnouncementRepository } from '../repositories/announcement/AnnouncementRepository';
+import { CommentRepository } from '../repositories/comment/CommentRepository';
+import { AuditLogRepository } from '../repositories/audit/AuditLogRepository';
+import { ModerationService } from '../services/ModerationService';
+
+export const service = new ModerationService(
+    new AnnouncementRepository(db),
+    new CommentRepository(db),
+    new AuditLogRepository()
+);
+
+
+=== ŚCIEŻKA ===
+src/database/connection.ts
+=== ZAWARTOŚĆ ===
+import dotenv from 'dotenv';
+import { ColumnType, Generated, Kysely, PostgresDialect } from 'kysely';
+import { Pool } from 'pg';
+
+// Load environment variables from .env file
+dotenv.config();
+
+export interface Database {
+    users: UsersTable;
+    announcements: AnnouncementsTable;
+    messages: MessagesTable;
+    comments: CommentsTable;
+    reactions: ReactionsTable;
+    categories: CategoriesTable;
+    audit_logs: AuditLogsRepository;
+}
+
+export interface UsersTable {
+    id: string;
+    email: string;
+    password: string;
+    role: 'user' | 'admin';
+    username: string;
+}
+
+export interface AnnouncementsTable {
+    id: string;
+    user_id: string;
+    title: string;
+    content: string;
+    category: string;
+    type: string;
+    status: Generated<'pending' | 'approved' | 'rejected'>;
+    created_at: Generated<Date>;
+}
+
+export interface MessagesTable {
+    id: string;
+    user_id: string;
+    receiver_id: string;
+    content: string;
+    sent_at: Generated<Date>;
+}
+
+export interface CommentsTable {
+    id: string;
+    announcement_id: string;
+    user_id: string;
+    content: string;
+    sent_at: Generated<Date>;
+}
+
+export interface ReactionsTable {
+    id: string;
+    user_id: string;
+    announcement_id: ColumnType<string | null>;
+    comment_id: ColumnType<string | null>;
+    type: 'like' | 'dislike';
+}
+
+export interface CategoriesTable {
+    id: string;
+    name: string;
+    created_at: Generated<Date>;
+}
+
+export interface AuditLogsRepository {
+    id: string;
+    user_id: string;
+    action: string;
+    announcement_id: ColumnType<string | null>;
+    comment_id: ColumnType<string | null>;
+    created_at: Generated<Date>;
+}
+
+export const db = new Kysely<Database>({
+    dialect: new PostgresDialect({
+        pool: new Pool({
+            host: process.env.DB_HOST || 'localhost',
+            port: Number(process.env.DB_PORT) || 5434,
+            user: process.env.DB_USER || 'postgres',
+            password: process.env.DB_PASSWORD || 'root',
+            database: process.env.DB_NAME || 'somsiad'
+        })
+    })
+});
+
+
+=== ŚCIEŻKA ===
+src/database/migrate.ts
+=== ZAWARTOŚĆ ===
+import { promises as fs } from 'fs';
+import { FileMigrationProvider, Migrator } from 'kysely';
+import { run } from 'kysely-migration-cli';
+import * as path from 'path';
+
+import { db } from './connection';
+
+const migrationFolder = path.join(__dirname, 'migrations');
+
+const migrator = new Migrator({
+    db,
+    provider: new FileMigrationProvider({
+        fs,
+        path,
+        migrationFolder
+    })
+});
+
+run(db, migrator, migrationFolder);
+
+
+=== ŚCIEŻKA ===
+src/database/migrations/initial.ts
+=== ZAWARTOŚĆ ===
+import bcrypt from 'bcrypt';
+// For dev
+import { randomUUID } from 'crypto';
+import { Kysely, sql } from 'kysely';
+
+import { Database } from '../connection';
+
+export async function up(db: Kysely<Database>): Promise<void> {
+    await db.schema
+        .createTable('users')
+        .addColumn('id', 'varchar(36)', column => column.primaryKey())
+        .addColumn('email', 'varchar(256)', column => column.notNull())
+        .addColumn('password', 'varchar(60)', column => column.notNull())
+        .addColumn('role', 'varchar(5)', column =>
+            column.notNull().check(sql`role IN ('user', 'admin')`)
+        )
+        .addColumn('username', 'varchar(255)', col => col.notNull().unique())
+        .execute();
+
+    await db.schema
+        .createTable('announcements')
+        .addColumn('id', 'varchar(36)', column => column.primaryKey())
+        .addColumn('user_id', 'varchar(36)', column =>
+            column
+                .notNull()
+                .references('users.id')
+                .onUpdate('cascade')
+                .onDelete('cascade')
+        )
+        .addColumn('title', 'varchar(256)', column => column.notNull())
+        .addColumn('content', 'varchar(256)', column => column.notNull())
+        .addColumn('category', 'varchar(256)', column => column.notNull())
+        .addColumn('type', 'varchar(256)', column => column.notNull())
+        .addColumn('status', 'varchar(8)', column =>
+            column
+                .notNull()
+                .check(sql`status IN ('pending', 'approved', 'rejected')`)
+                .defaultTo('pending')
+        )
+        .addColumn('created_at', 'timestamptz', column =>
+            column.notNull().defaultTo(sql`NOW()`)
+        )
+        .execute();
+
+    await db.schema
+        .createTable('messages')
+        .addColumn('id', 'varchar(36)', column => column.primaryKey())
+        .addColumn('user_id', 'varchar(36)', column =>
+            column
+                .notNull()
+                .references('users.id')
+                .onUpdate('cascade')
+                .onDelete('cascade')
+        )
+        .addColumn('receiver_id', 'varchar(36)', column =>
+            column
+                .notNull()
+                .references('users.id')
+                .onUpdate('cascade')
+                .onDelete('cascade')
+        )
+        .addColumn('content', 'varchar(256)', column => column.notNull())
+        .addColumn('sent_at', 'timestamptz', column =>
+            column.notNull().defaultTo(sql`NOW()`)
+        )
+        .execute();
+
+    await db.schema
+        .createTable('comments')
+        .addColumn('id', 'varchar(36)', column => column.primaryKey())
+        .addColumn('announcement_id', 'varchar(36)', column =>
+            column
+                .notNull()
+                .references('announcements.id')
+                .onUpdate('cascade')
+                .onDelete('cascade')
+        )
+        .addColumn('user_id', 'varchar(36)', column =>
+            column
+                .notNull()
+                .references('users.id')
+                .onUpdate('cascade')
+                .onDelete('cascade')
+        )
+        .addColumn('content', 'varchar(256)', column => column.notNull())
+        .addColumn('sent_at', 'timestamptz', column =>
+            column.notNull().defaultTo(sql`NOW()`)
+        )
+        .execute();
+
+    await db.schema
+        .createTable('reactions')
+        .addColumn('id', 'varchar(36)', column => column.primaryKey())
+        .addColumn('user_id', 'varchar(36)', column =>
+            column
+                .notNull()
+                .references('users.id')
+                .onUpdate('cascade')
+                .onDelete('cascade')
+        )
+        .addColumn('announcement_id', 'varchar(36)', column =>
+            column
+                .references('announcements.id')
+                .onUpdate('cascade')
+                .onDelete('cascade')
+        )
+        .addColumn('comment_id', 'varchar(36)', column =>
+            column
+                .references('comments.id')
+                .onUpdate('cascade')
+                .onDelete('cascade')
+        )
+        .addColumn('type', 'varchar(7)', column =>
+            column.notNull().check(sql`type IN ('like', 'dislike')`)
+        )
+        .execute();
+
+    await db.schema
+        .createTable('categories')
+        .addColumn('id', 'varchar(36)', column => column.primaryKey())
+        .addColumn('name', 'varchar(256)', column => column.notNull().unique())
+        .addColumn('created_at', 'timestamptz', column =>
+            column.notNull().defaultTo(sql`NOW()`)
+        )
+        .execute();
+
+    await db.schema
+        .createTable('audit_logs')
+        .addColumn('id', 'varchar(36)', column => column.primaryKey())
+        .addColumn('user_id', 'varchar(36)', column =>
+            column
+                .notNull()
+                .references('users.id')
+                .onUpdate('cascade')
+                .onDelete('cascade')
+        )
+        .addColumn('action', 'varchar(256)', column => column.notNull())
+        .addColumn('announcement_id', 'varchar(36)', column =>
+            column
+                .references('announcements.id')
+                .onUpdate('cascade')
+                .onDelete('cascade')
+        )
+        .addColumn('comment_id', 'varchar(36)', column =>
+            column
+                .references('comments.id')
+                .onUpdate('cascade')
+                .onDelete('cascade')
+        )
+        .addColumn('created_at', 'timestamptz', column =>
+            column.notNull().defaultTo(sql`NOW()`)
+        )
+        .execute();
+
+    // For dev
+    await db
+        .insertInto('users')
+        .values({
+            id: randomUUID(),
+            email: 'yakui@example.com',
+            password: await bcrypt.hash('themaid', 10),
+            role: 'admin',
+            username: 'yakuuuuui',
+        })
+        .execute();
+}
+
+export async function down(db: Kysely<Database>): Promise<void> {
+    await db.schema.dropTable('messages').execute();
+    await db.schema.dropTable('reactions').execute();
+    await db.schema.dropTable('audit_logs').execute();
+    await db.schema.dropTable('comments').execute();
+    await db.schema.dropTable('announcements').execute();
+    await db.schema.dropTable('users').execute();
+    await db.schema.dropTable('categories').execute();
+}
+
+
+=== ŚCIEŻKA ===
+src/middlewares/authMiddleware.ts
+=== ZAWARTOŚĆ ===
+import dotenv from 'dotenv';
+import { NextFunction, Request, Response } from 'express';
+import jwt from 'jsonwebtoken';
+
+// Load environment variables from .env file into process.env
+dotenv.config();
+
+// Fallback to a default value if JWT_SECRET is not defined (recommended to override in production)
+const JWT_SECRET = process.env.JWT_SECRET || 'jakisSekretnyKlucz';
+
+/**
+ * Extended Request interface to include a `user` property.
+ * This is populated during JWT verification and consumed by downstream middleware/controllers.
+ */
+export interface AuthRequest extends Request {
+    user?: {
+        userId: string;
+        role: 'user' | 'admin';
+        iat: number; // Issued At timestamp (from JWT)
+        exp: number; // Expiration timestamp (from JWT)
+    };
+}
+
+/**
+ * Middleware to validate JWT token from the Authorization header.
+ * Ensures that only authenticated users can access protected routes.
+ *
+ * Expected header format:
+ *   Authorization: Bearer <token>
+ */
+export function checkAuth(req: AuthRequest, res: Response, next: NextFunction) {
+    try {
+        const authHeader = req.headers.authorization;
+
+        // Authorization header must be present
+        if (!authHeader) {
+            return res.status(401).json({ message: 'No token provided' });
+
+        }
+        // Token is expected to follow the "Bearer <token>" format
+        const token = authHeader.split(' ')[1];
+        if (!token) {
+            return res.status(401).json({ message: 'Invalid token format' });
+        }
+
+        // Validate the token using the secret. If invalid, an exception will be thrown.
+        const decoded = jwt.verify(token, JWT_SECRET) as AuthRequest['user'];
+
+        // Store the decoded token data (userId, role, etc.) on the request object for later use
+        req.user = decoded;
+
+        // Pass control to the next middleware or route handler
+        next();
+    } catch (error) {
+        // Token verification failed or was malformed
+        return res.status(401).json({ message: 'Unauthorized' });
+    }
+}
+
+
+=== ŚCIEŻKA ===
+src/middlewares/checkAdmin.ts
+=== ZAWARTOŚĆ ===
+import { NextFunction, Response } from 'express';
+
+import { AuthRequest } from './authMiddleware';
+
+/**
+ * Middleware to restrict access to administrator-only routes.
+ * Requires that `checkAuth` has already run, and `req.user` is populated.
+ *
+ * This is typically used after authentication middleware in route chains, e.g.:
+ *   app.get('/admin/dashboard', checkAuth, checkAdmin, handler);
+ */
+export function checkAdmin(
+    req: AuthRequest,
+    res: Response,
+    next: NextFunction
+) {
+    // Check if the authenticated user has the 'admin' role
+    if (req.user?.role !== 'admin') {
+        // Respond with 403 Forbidden if the user is not an admin
+        return res.status(403).json({ message: 'Forbidden' });
+    }
+
+    // Proceed to the next middleware or route handler
+    next();
+}
+
+
+=== ŚCIEŻKA ===
+src/middlewares/checkConversationParticipant.ts
+=== ZAWARTOŚĆ ===
+import { NextFunction, Response } from 'express';
+import { AuthRequest } from './authMiddleware';
+
+/**
+ * Middleware to ensure that a user is not attempting to fetch a message thread with themselves.
+ * This prevents edge-case abuse of the `/api/messages/:withuserId` endpoint.
+ * 
+ * Assumes `checkAuth` has already populated `req.user`.
+ * 
+ * - If `withuserId` equals the current user's ID → continue (redundant but harmless)
+ * - If `withuserId` is different → allow (valid conversation)
+ * - If no user is present → reject with 401 Unauthorized
+ *
+ * @param req - Authenticated request object
+ * @param res - Express response object
+ * @param next - Next middleware in the stack
+ */
+export function checkConversationParticipant(
+    req: AuthRequest,
+    res: Response,
+    next: NextFunction
+) {
+    const withUser = req.params.withuserId;
+
+    if (!req.user) {
+        return res.status(401).json({ message: 'Unauthorized' });
+    }
+
+    // Prevent access if someone tries to message themselves (optional logic)
+    if (withUser !== req.user.userId) {
+        return next();
+    }
+
+    next(); // Still allow if it's a self-message for now
+}
+
+
+=== ŚCIEŻKA ===
+src/middlewares/checkOwnerOrAdmin.ts
+=== ZAWARTOŚĆ ===
+import { NextFunction, Response } from 'express';
+import { AuthRequest } from './authMiddleware';
+import { logger } from '../utils/logger';
+
+import { AnnouncementRepository } from '../repositories/announcement/AnnouncementRepository';
+import { CommentRepository } from '../repositories/comment/CommentRepository';
+import { ReactionRepository } from '../repositories/reaction/ReactionRepository';
+import { db } from '../database/connection';
+import { UUID } from 'crypto';
+
+// Instantiate repositories (expandable for future ownership checks on other models)
+const announcementRepo = new AnnouncementRepository(db);
+const commentRepo = new CommentRepository(db);
+const reactionRepo = new ReactionRepository(db);
+
+/**
+ * Middleware to restrict access to users who are either:
+ *   - the owner of the resource (announcement),
+ *   - or an admin.
+ * 
+ * Assumes that `checkAuth` middleware has already validated the user
+ * and attached `req.user` to the request object.
+ * 
+ * Currently used for validating permissions on announcement modification/deletion.
+ *
+ * @param req - Authenticated request containing `user` and route param `id`
+ * @param res - Express response object
+ * @param next - Function to pass control to the next middleware
+ */
+export async function checkOwnerOrAdmin(
+    req: AuthRequest,
+    res: Response,
+    next: NextFunction
+) {
+    // Reject if no authenticated user (should not happen if checkAuth ran)
+    if (!req.user) {
+        return res.status(401).json({ message: 'Unauthorized: missing user' });
+    }
+
+    const { userId, role } = req.user;
+
+    // Extract the resource ID from route params
+    const announcementId = req.params.id;
+    if (!announcementId) {
+        return res.status(400).json({ message: 'Missing announcement ID' });
+    }
+
+    // Attempt to fetch the announcement by ID
+    let announcement;
+    try {
+        announcement = await announcementRepo.getById(announcementId as UUID);
+    } catch (err) {
+        logger.error(err);
+        return res.status(500).json({ message: 'Internal server error' });
+    }
+
+
+    // Respond with 404 if the announcement does not exist
+    if (!announcement) {
+        return res.status(404).json({ message: 'Announcement not found' });
+    }
+
+    // Allow if the user is the owner or has admin privileges
+    if (announcement.userId !== userId && role !== 'admin') {
+        logger.error(
+            `Forbidden: ${userId} tried to access ${announcement.userId}`
+        );
+        return res.status(403).json({ message: 'Forbidden' });
+    }
+
+    // Authorization passed — continue to the next middleware
+    next();
+}
+
+
+=== ŚCIEŻKA ===
+src/models/Announcement.ts
+=== ZAWARTOŚĆ ===
+import { UUID } from 'crypto';
+
+/**
+ * Domain model representing an announcement (post/ad).
+ * Encapsulates the internal state of an announcement and provides accessors for controlled read access.
+ *
+ * This class serves as a plain domain object (not tied to persistence logic),
+ * and is typically instantiated in the repository and returned to service/controller layers.
+ */
+export class Announcement {
+    constructor(
+        /** Unique identifier of the announcement (UUID v4) */
+        readonly id: UUID,
+
+        /** UUID of the user who created the announcement */
+        readonly userId: UUID,
+
+        /** Title of the announcement (e.g., "Bike for sale") */
+        private title: string,
+
+        /** Main content/body of the announcement */
+        private content: string,
+
+        /** Category label (e.g., "electronics", "services", "misc") */
+        private category: string,
+
+        /** Type label (e.g., "offer", "request") */
+        private type: string,
+
+        private status: 'pending' | 'approved' | 'rejected',
+
+        /** Creation timestamp (set when announcement is created) */
+        readonly createdAt: Date
+    ) {}
+
+    // Accessor methods to expose private fields in a controlled manner
+
+    getTitle(): string {
+        return this.title;
+    }
+
+    getContent(): string {
+        return this.content;
+    }
+
+    getCategory(): string {
+        return this.category;
+    }
+
+    getType(): string {
+        return this.type;
+    }
+
+    getStatus(): 'pending' | 'approved' | 'rejected' {
+        return this.status;
+    }
+
+    setStatus(newStatus: 'pending' | 'approved' | 'rejected') {
+        this.status = newStatus;
+    }
+}
+
+
+=== ŚCIEŻKA ===
+src/models/AuditLog.ts
+=== ZAWARTOŚĆ ===
+import { UUID } from 'crypto';
+
+export class AuditLog {
+    constructor(
+        readonly id: UUID,
+        readonly user_id: UUID,
+        readonly action: string,
+        readonly announcement_id: UUID,
+        readonly comment_id: UUID,
+        readonly created_at: Date
+    ) {}
+}
+
+
+=== ŚCIEŻKA ===
+src/models/Category.ts
+=== ZAWARTOŚĆ ===
+import { UUID } from 'crypto';
+
+export class Category {
+    constructor(
+        readonly id: UUID,
+        readonly category: string,
+        readonly created_at: Date
+    ) {}
+}
+
+
+=== ŚCIEŻKA ===
+src/models/Comment.ts
+=== ZAWARTOŚĆ ===
+import { UUID } from 'crypto';
+
+export class Comment {
+    constructor(
+        readonly id: UUID,
+        readonly announcementId: UUID,
+        readonly userId: UUID,
+        private content: string,
+        readonly sent_at: Date
+    ) { }
+
+    getContent(): string {
+        return this.content;
+    }
+}
+
+
+=== ŚCIEŻKA ===
+src/models/Message.ts
+=== ZAWARTOŚĆ ===
+import { UUID } from 'crypto';
+
+export class Message {
+    constructor(
+        readonly id: UUID,
+        readonly userId: UUID,
+        readonly receiverId: UUID,
+        private content: string,
+        readonly sent_at: Date
+    ) { }
+
+    getContent(): string {
+        return this.content;
+    }
+}
+
+
+=== ŚCIEŻKA ===
+src/models/Reaction.ts
+=== ZAWARTOŚĆ ===
+import { UUID } from 'crypto';
+
+export class Reaction {
+    constructor(
+        readonly id: UUID,
+        readonly announcementId: UUID | null,
+        readonly commentId: UUID | null,
+        readonly userId: UUID,
+        private type: string
+    ) {}
+
+    getContent(): string {
+        return this.type;
+    }
+}
+
+
+=== ŚCIEŻKA ===
+src/models/User.ts
+=== ZAWARTOŚĆ ===
+import { UUID } from 'crypto';
+
+/**
+ * Domain model representing an application user.
+ * Encapsulates the core properties and accessors related to authentication and authorization.
+ *
+ * This class is a plain domain object — not directly coupled to any framework or persistence logic.
+ * It is used across repositories, services, and sometimes controllers for typed business logic.
+ */
+export class User {
+    constructor(
+        /** Unique identifier of the user (UUID v4) */
+        readonly id: UUID,
+
+        /** Email address used for authentication and communication */
+        private email: string,
+
+        /** Hashed password (never stored or returned in raw form) */
+        private password: string,
+
+        /** Role-based access control flag — determines user privileges */
+        private role: 'user' | 'admin',
+
+        /** Username for display purposes */
+        private username: string,
+    ) { }
+
+    // Getter for the email address (used in token payloads, profile views, etc.)
+    getEmail(): string {
+        return this.email;
+    }
+
+    // Getter for the hashed password (used for credential comparison during login)
+    getPassword(): string {
+        return this.password;
+    }
+
+    // Getter for the role (used in middleware and admin-level checks)
+    getRole(): 'user' | 'admin' {
+        return this.role;
+    }
+
+    getUsername(): string | undefined {
+        return this.username;
+    }
+}
+
+
+=== ŚCIEŻKA ===
+src/repositories/announcement/AnnouncementRepository.ts
+=== ZAWARTOŚĆ ===
+import { randomUUID, UUID } from 'crypto';
+import { Kysely } from 'kysely';
+import { sql } from 'kysely';
+
+import { Database } from '../../database/connection';
+import { Announcement } from '../../models/Announcement';
+
+/**
+ * Repository responsible for CRUD operations on the `announcements` table.
+ */
+export class AnnouncementRepository {
+    constructor(private db: Kysely<Database>) { }
+
+    /**
+     * Finds a single announcement by its ID.
+     * @param id - UUID of the announcement to retrieve
+     * @returns An Announcement instance if found; otherwise, null
+     */
+    async getById(id: UUID): Promise<Announcement | null> {
+        const result = await this.db
+            .selectFrom('announcements')
+            .selectAll()
+            .where('id', '=', id)
+            .execute();
+
+        if (result.length <= 0) {
+            return null;
+        }
+
+        const { user_id, title, content, category, type, status, created_at } =
+            result[0];
+
+        return new Announcement(
+            id,
+            user_id as UUID,
+            title,
+            content,
+            category,
+            type,
+            status,
+            created_at
+        );
+    }
+
+    /**
+     * Returns all announcements in the system without filtering.
+     * Used mostly for testing or internal/admin use.
+     */
+    async getAllAnnouncements(): Promise<Announcement[]> {
+        const result = await this.db
+            .selectFrom('announcements')
+            .selectAll()
+            .execute();
+
+        return result.map(
+            r =>
+                new Announcement(
+                    r.id as UUID,
+                    r.user_id as UUID,
+                    r.title,
+                    r.content,
+                    r.category,
+                    r.type,
+                    r.status,
+                    r.created_at
+                )
+        );
+    }
+
+    /**
+     * Returns all announcements created by a specific user.
+     * @param userId - UUID of the user
+     */
+    async getAnnouncementsByUserId(userId: UUID): Promise<Announcement[]> {
+        const result = await this.db
+            .selectFrom('announcements')
+            .selectAll()
+            .where('user_id', '=', userId)
+            .execute();
+
+        return result.map(
+            r =>
+                new Announcement(
+                    r.id as UUID,
+                    r.user_id as UUID,
+                    r.title,
+                    r.content,
+                    r.category,
+                    r.type,
+                    r.status,
+                    r.created_at
+                )
+        );
+    }
+
+    /**
+     * Inserts a new announcement into the database.
+     * Generates a new UUID and sets creation timestamp.
+     */
+    async addAnnouncement(
+        userId: UUID,
+        title: string,
+        content: string,
+        category: string,
+        type: string
+    ): Promise<Announcement> {
+        const result = await this.db
+            .insertInto('announcements')
+            .values({
+                id: randomUUID(),
+                user_id: userId,
+                title: title,
+                content: content,
+                category: category,
+                type: type
+            })
+            .returning(['id', 'status', 'created_at'])
+            .executeTakeFirstOrThrow();
+
+        return new Announcement(
+            result.id as UUID,
+            userId,
+            title,
+            content,
+            category,
+            type,
+            result.status,
+            result.created_at
+        );
+    }
+
+    /**
+     * Updates an existing announcement.
+     * @returns The updated Announcement, or null if not found.
+     */
+    async updateAnnouncement(
+        id: UUID,
+        title: string,
+        content: string,
+        category: string,
+        type: string
+    ): Promise<Announcement | null> {
+        console.log(
+            `Updating announcement ${id} with title "${title}", content "${content}", category "${category}", type "${type}"`);
+        const result = await this.db
+            .updateTable('announcements')
+            .set({ title, content, category, type })
+            .where('id', '=', id)
+            .returningAll()
+            .executeTakeFirstOrThrow();
+
+        if (!result) {
+            return null;
+        }
+
+        console.log('Updated announcement:', result);
+
+        return new Announcement(
+            result.id as UUID,
+            result.user_id as UUID,
+            result.title,
+            result.content,
+            result.category,
+            result.type,
+            result.status,
+            result.created_at
+        );
+    }
+
+    /**
+     * Deletes an announcement by its ID.
+     */
+    async deleteAnnouncement(id: UUID): Promise<void> {
+        await this.db
+            .deleteFrom('announcements')
+            .where('id', '=', id)
+            .execute();
+    }
+
+    /**
+     * Returns announcements filtered by optional category and/or type.
+     */
+    async getFiltered(
+        category?: string,
+        type?: string
+    ): Promise<Announcement[]> {
+        let qb = this.db.selectFrom('announcements').selectAll();
+        if (category) qb = qb.where('category', '=', category);
+        if (type) qb = qb.where('type', '=', type);
+
+        const result = await qb.execute();
+        return result.map(
+            r =>
+                new Announcement(
+                    r.id as UUID,
+                    r.user_id as UUID,
+                    r.title,
+                    r.content,
+                    r.category,
+                    r.type,
+                    r.status,
+                    r.created_at
+                )
+        );
+    }
+
+    /**
+     * Returns all announcements joined with author email.
+     * Used for admin views.
+     */
+    async getAllWithAuthors() {
+        const rows = await this.db
+            .selectFrom('announcements as a')
+            .innerJoin('users as u', 'a.user_id', 'u.id')
+            .select([
+                'a.id',
+                'a.user_id',
+                'a.title',
+                'a.content',
+                'a.category',
+                'a.type',
+                'a.status',
+                'a.created_at',
+                'u.email'
+            ])
+            .execute();
+
+        return rows.map(r => ({
+            id: r.id,
+            title: r.title,
+            content: r.content,
+            category: r.category,
+            type: r.type,
+            status: r.status,
+            createdAt: r.created_at,
+            userId: r.user_id,
+            authorEmail: r.email
+        }));
+    }
+
+    /**
+     * Returns a list of distinct categories currently used.
+     */
+    async getDistinctCategories(): Promise<string[]> {
+        const rows = await this.db
+            .selectFrom('announcements')
+            .select(sql`distinct category`.as('category'))
+            .execute();
+
+        return rows.map(r => r.category as string);
+    }
+}
+
+
+=== ŚCIEŻKA ===
+src/repositories/audit/AuditLogRepository.ts
+=== ZAWARTOŚĆ ===
+import { randomUUID, UUID } from 'crypto';
+import { Kysely } from 'kysely';
+import { Database } from '../../database/connection';
+
+export class AuditLogRepository { }
+
+=== ŚCIEŻKA ===
+src/repositories/audit_log/AuditLogRepository.ts
+=== ZAWARTOŚĆ ===
+import { UUID } from 'crypto';
+import { Kysely } from 'kysely';
+
+import { Database } from '../../database/connection';
+import { AuditLog } from '../../models/AuditLog';
+
+export class AuditLogRepository {
+    constructor(private db: Kysely<Database>) { }
+
+    async getAuditLogs(
+        announcementId?: UUID,
+        commentId?: UUID
+    ): Promise<AuditLog[]> {
+        let qb = await this.db.selectFrom('audit_logs').selectAll();
+
+        if (announcementId)
+            qb = qb.where('announcement_id', '=', announcementId);
+        if (commentId) qb = qb.where('comment_id', '=', commentId);
+
+        const result = await qb.execute();
+
+        return result.map(
+            r =>
+                new AuditLog(
+                    r.id as UUID,
+                    r.user_id as UUID,
+                    r.action,
+                    r.announcement_id as UUID,
+                    r.comment_id as UUID,
+                    r.created_at
+                )
+        );
+    }
+
+    async addAuditLog(
+        userId: UUID,
+        action: string,
+        announcementId?: UUID,
+        commentId?: UUID
+    ): Promise<AuditLog> {
+        const result = await this.db
+            .insertInto('audit_logs')
+            .values({
+                id: crypto.randomUUID(),
+                user_id: userId,
+                action: action,
+                announcement_id: announcementId,
+                comment_id: commentId
+            })
+            .returning(['id', 'created_at'])
+            .executeTakeFirstOrThrow();
+
+        return new AuditLog(
+            result.id as UUID,
+            userId as UUID,
+            action,
+            announcementId as UUID,
+            commentId as UUID,
+            result.created_at
+        );
+    }
+
+    async removeAuditLog(
+        userId: UUID,
+        announcementId?: UUID,
+        commentId?: UUID
+    ): Promise<void> {
+        let qb = this.db.deleteFrom('audit_logs').where('user_id', '=', userId);
+
+        if (announcementId)
+            qb = qb.where('announcement_id', '=', announcementId);
+        if (commentId) qb = qb.where('comment_id', '=', commentId);
+
+        await qb.execute();
+    }
+}
+
+
+=== ŚCIEŻKA ===
+src/repositories/category/CategoryRepository.ts
+=== ZAWARTOŚĆ ===
+import { randomUUID, UUID } from 'crypto';
+import { Kysely } from 'kysely';
+import { Database } from '../../database/connection';
+import { Category } from '../../models/Category';
+
+export class CategoryRepository {
+
+    constructor(private db: Kysely<Database>) { }
+
+    async getAllCategories(): Promise<Category[]> {
+        const result = await this.db
+            .selectFrom('categories')
+            .selectAll()
+            .execute();
+
+        return result.map(
+            r => new Category(r.id as UUID, r.name, r.created_at)
+        );
+    }
+
+    async addCategory(name: string): Promise<Category> {
+        const result = await this.db
+            .insertInto('categories')
+            .values({ id: crypto.randomUUID(), name: name })
+            .returning(['id', 'created_at'])
+            .executeTakeFirstOrThrow();
+
+        return new Category(result.id as UUID, name, result.created_at);
+    }
+
+    async updateCategory(id: UUID, name: string): Promise<Category | null> {
+        const result = await this.db
+            .updateTable('categories')
+            .set({ name: name })
+            .where('id', '=', id)
+            .returningAll()
+            .executeTakeFirstOrThrow();
+
+        if (!result) {
+            return null;
+        }
+
+        return new Category(id, name, result.created_at);
+    }
+    async deleteCategory(id: UUID): Promise<void> {
+        await this.db.deleteFrom('categories').where('id', '=', id).execute();
+    }
+}
+
+=== ŚCIEŻKA ===
+src/repositories/comment/CommentRepository.ts
+=== ZAWARTOŚĆ ===
+import { UUID } from 'crypto';
+import { Kysely } from 'kysely';
+
+import { Database } from '../../database/connection';
+import { Comment } from '../../models/Comment';
+import { exec } from 'child_process';
+
+export class CommentRepository {
+    constructor(private db: Kysely<Database>) { }
+
+    async getComments(announcementId: UUID): Promise<Comment[]> {
+        const result = await this.db
+            .selectFrom('comments')
+            .selectAll()
+            .where('announcement_id', '=', announcementId)
+            .orderBy('sent_at', 'desc')
+            .execute();
+
+        return result.map(
+            r =>
+                new Comment(
+                    r.id as UUID,
+                    r.user_id as UUID,
+                    r.announcement_id as UUID,
+                    r.content,
+                    r.sent_at
+                )
+        );
+    }
+
+    async addComment(
+        announcementId: UUID,
+        userId: UUID,
+        content: string
+    ): Promise<Comment> {
+
+        const result = await this.db
+            .insertInto('comments')
+            .values({
+                id: crypto.randomUUID(),
+                announcement_id: announcementId,
+                user_id: userId,
+                content: content
+            })
+            .returning(['id', 'sent_at'])
+            .executeTakeFirstOrThrow();
+
+        return new Comment(
+            result.id as UUID,
+            announcementId,
+            userId,
+            content,
+            result.sent_at
+        );
+    }
+
+    async deleteComment(id: UUID): Promise<void> {
+        await this.db.deleteFrom('comments').where('id', '=', id).execute();
+    }
+
+    async getCommentById(id: UUID): Promise<Comment | null> {
+        const result = await this.db
+            .selectFrom('comments')
+            .selectAll()
+            .where('id', '=', id)
+            .executeTakeFirst();
+
+        if (!result) {
+            return null;
+        }
+
+        return new Comment(
+            result.id as UUID,
+            result.user_id as UUID,
+            result.announcement_id as UUID,
+            result.content,
+            result.sent_at
+        );
+    }
+
+    getAllComments(): Promise<Comment[]> {
+        return this.db
+            .selectFrom('comments')
+            .selectAll()
+            .execute()
+            .then((result) =>
+                result.map(
+                    (r) =>
+                        new Comment(
+                            r.id as UUID,
+                            r.user_id as UUID,
+                            r.announcement_id as UUID,
+                            r.content,
+                            r.sent_at
+                        )
+                )
+            );
+    }
+
+}
+
+
+=== ŚCIEŻKA ===
+src/repositories/message/MessageRepository.ts
+=== ZAWARTOŚĆ ===
+import { UUID } from 'crypto';
+import { Kysely } from 'kysely';
+
+import { Database } from '../../database/connection';
+import { Message } from '../../models/Message';
+
+export class MessageRepository {
+    constructor(private db: Kysely<Database>) { }
+
+    async getThread(
+        userId: UUID,
+        receiverId: UUID
+    ): Promise<Message[]> {
+
+        const result = await this.db
+            .selectFrom('messages')
+            .selectAll()
+            .where(eb =>
+                eb.or([
+                    eb('user_id', '=', userId).and(
+                        'receiver_id',
+                        '=',
+                        receiverId
+                    ),
+                    eb('user_id', '=', receiverId).and(
+                        'receiver_id',
+                        '=',
+                        userId
+                    )
+                ])
+            )
+            .orderBy('sent_at', 'desc')
+            .execute();
+        return result.map(
+            r =>
+                new Message(
+                    r.id as UUID,
+                    r.user_id as UUID,
+                    r.receiver_id as UUID,
+                    r.content,
+                    r.sent_at
+                )
+        );
+    }
+
+    async getConversations(userId: UUID): Promise<Message[]> {
+        const result = await this.db
+            .selectFrom('messages')
+            .selectAll()
+            .where(eb =>
+                eb.or([
+                    eb('user_id', '=', userId),
+                    eb('receiver_id', '=', userId)
+                ])
+            )
+            .orderBy('sent_at', 'desc')
+            .execute();
+
+        const seen = new Set<string>();
+        const conversations: Message[] = [];
+
+        for (const r of result) {
+            const partnerId = r.user_id === userId ? r.receiver_id : r.user_id;
+            if (!seen.has(partnerId)) {
+                seen.add(partnerId);
+                conversations.push(
+                    new Message(
+                        r.id as UUID,
+                        r.user_id as UUID,
+                        r.receiver_id as UUID,
+                        r.content,
+                        r.sent_at
+                    )
+                );
+            }
+        }
+
+        return conversations;
+    }
+
+
+    // async getConversations(userId: UUID): Promise<Message[]> {
+    //     const result = await this.db
+    //         .selectFrom('messages')
+    //         .selectAll()
+    //         .where('user_id', '=', userId)
+    //         // .groupBy('receiver_id')
+    //         .orderBy('sent_at', 'desc')
+    //         .execute();
+    //     return result.map(
+    //         r =>
+    //             new Message(
+    //                 r.id as UUID,
+    //                 r.user_id as UUID,
+    //                 r.receiver_id as UUID,
+    //                 r.content,
+    //                 r.sent_at
+    //             )
+    //     );
+
+    // }
+
+    async addMessage(
+        userId: UUID,
+        receiverId: UUID,
+        content: string
+    ): Promise<Message> {
+        const result = await this.db
+            .insertInto('messages')
+            .values({
+                id: crypto.randomUUID(),
+                user_id: userId,
+                receiver_id: receiverId,
+                content: content
+            })
+            .returning(['id', 'sent_at'])
+            .executeTakeFirstOrThrow();
+
+        return new Message(
+            result.id as UUID,
+            userId,
+            receiverId,
+            content,
+            result.sent_at
+        );
+    }
+}
+
+
+=== ŚCIEŻKA ===
+src/repositories/reaction/ReactionRepository.ts
+=== ZAWARTOŚĆ ===
+import { UUID } from 'crypto';
+import { Kysely } from 'kysely';
+
+import { Database } from '../../database/connection';
+import { Reaction } from '../../models/Reaction';
+
+export class ReactionRepository {
+    constructor(private db: Kysely<Database>) {}
+
+    async getReactions(
+        announcementId?: UUID,
+        commentId?: UUID
+    ): Promise<Reaction[]> {
+        let qb = await this.db.selectFrom('reactions').selectAll();
+
+        if (announcementId)
+            qb = qb.where('announcement_id', '=', announcementId);
+        if (commentId) qb = qb.where('comment_id', '=', commentId);
+
+        const result = await qb.execute();
+
+        return result.map(
+            r =>
+                new Reaction(
+                    r.id as UUID,
+                    r.user_id as UUID,
+                    r.announcement_id as UUID,
+                    r.comment_id as UUID,
+                    r.type
+                )
+        );
+    }
+
+    async addReaction(
+        userId: UUID,
+        type: 'like' | 'dislike',
+        announcementId?: UUID,
+        commentId?: UUID
+    ): Promise<Reaction> {
+        const result = await this.db
+            .insertInto('reactions')
+            .values({
+                id: crypto.randomUUID(),
+                user_id: userId,
+                announcement_id: announcementId,
+                comment_id: commentId,
+                type: type
+            })
+            .returning(['id'])
+            .executeTakeFirstOrThrow();
+
+        return new Reaction(
+            result.id as UUID,
+            userId as UUID,
+            announcementId as UUID,
+            commentId as UUID,
+            type
+        );
+    }
+
+    async removeReaction(
+        userId: UUID,
+        announcementId?: UUID,
+        commentId?: UUID
+    ): Promise<void> {
+        let qb = this.db.deleteFrom('reactions').where('user_id', '=', userId);
+
+        if (announcementId)
+            qb = qb.where('announcement_id', '=', announcementId);
+        if (commentId) qb = qb.where('comment_id', '=', commentId);
+
+        await qb.execute();
+    }
+}
+
+
+=== ŚCIEŻKA ===
+src/repositories/user/UserRepository.ts
+=== ZAWARTOŚĆ ===
+import { randomUUID, UUID } from 'crypto';
+import { Kysely } from 'kysely';
+
+import { Database } from '../../database/connection';
+import { User } from '../../models/User';
+
+/**
+ * Repository class responsible for direct interaction with the `users` table.
+ * Encapsulates all SQL-related logic for creating and retrieving user data.
+ * Returns domain objects (User instances) rather than raw query results.
+ */
+export class UserRepository {
+    constructor(private db: Kysely<Database>) { }
+
+    /**
+     * Adds a new user to the database.
+     * Generates a UUID server-side and accepts a hashed password.
+     *
+     * @param email - The user’s email address
+     * @param password - Hashed password (never raw text)
+     * @param role - The role assigned to the user ('user' or 'admin')
+     * @returns A User domain model instance representing the newly created user
+     */
+    async addUser(
+        email: string,
+        password: string,
+        role: 'user' | 'admin',
+        username: string
+    ): Promise<User> {
+        const newUser = new User(randomUUID(), email, password, role, username);
+
+        await this.db
+            .insertInto('users')
+            .values({
+                id: newUser.id,
+                email: newUser.getEmail(),
+                password: newUser.getPassword(),
+                role: newUser.getRole(),
+                username: newUser.getUsername() ?? '',
+            })
+            .execute();
+
+        return newUser;
+    }
+
+    /**
+     * Fetches a user by their email address.
+     * This is used during login to retrieve the hashed password and verify credentials.
+     *
+     * @param email - The email to search for
+     * @returns A User instance if found, or `null` if no user exists with that email
+     */
+    async getUserByEmail(email: string): Promise<User | null> {
+        const result = await this.db
+            .selectFrom('users')
+            .selectAll()
+            .where('email', '=', email)
+            .execute();
+
+        if (result.length <= 0) {
+            return null;
+        }
+
+        const { id, password, role, username } = result[0];
+
+        return new User(id as UUID, email, password, role, username);
+    }
+
+    async getAllUsers(): Promise<User[]> {
+        return await this.db
+            .selectFrom('users')
+            .selectAll()
+            .execute()
+            .then((result) =>
+                result.map(
+                    (r) => new User(r.id as UUID, r.email, r.password, r.role, r.username)
+                )
+            );
+    }
+
+    async updateUserRole(userId: UUID, role: 'user' | 'admin'): Promise<void> {
+        await this.db
+            .updateTable('users')
+            .set({ role: role })
+            .where('id', '=', userId)
+            .execute();
+    }
+
+
+
+    async getUserById(userId: UUID): Promise<User | null> {
+        const result = await this.db
+            .selectFrom('users')
+            .selectAll()
+            .where('id', '=', userId)
+            .executeTakeFirst();
+
+        return result
+            ? new User(
+                result.id as UUID,
+                result.email,
+                result.password,
+                result.role,
+                result.username
+            )
+            : null;
+    }
+}
+
+=== ŚCIEŻKA ===
+src/services/AdminUserService.ts
+=== ZAWARTOŚĆ ===
+import { UUID } from 'crypto';
+import { UserRepository } from '../repositories/user/UserRepository';
+import { AuditLogRepository } from '../repositories/audit/AuditLogRepository';
+
+export class AdminUserService {
+    constructor(
+        private users: UserRepository,
+        private audit: AuditLogRepository
+    ) { }
+
+    getAllUsers() {
+        return this.users.getAllUsers();   // metoda do dodania w repo
+    }
+
+    async updateRole(adminId: UUID, userId: UUID, role: 'user' | 'admin') {
+        await this.users.updateUserRole(userId, role);
+        // await this.audit.add(adminId, 'update-role', 'user', userId, { role });
+    }
+
+    // async deactivateUser(adminId: UUID, userId: UUID) {
+    //     await this.users.deactivateUser(userId);     // metoda do dodania
+    //     // await this.audit.add(adminId, 'deactivate', 'user', userId, null);
+    // }
+}
+
+
+=== ŚCIEŻKA ===
+src/services/AnnouncementService.ts
+=== ZAWARTOŚĆ ===
+import { UUID } from 'crypto';
+
+import { AnnouncementRepository } from '../repositories/announcement/AnnouncementRepository';
+
+/**
+ * Service layer responsible for business logic related to announcements.
+ * It mediates between the controller layer (HTTP) and the repository (database access).
+ *
+ * This class contains validation, fallback logic, and coordinates complex operations.
+ */
+export class AnnouncementService {
+    constructor(private repo: AnnouncementRepository) { }
+
+    /**
+     * Creates a new announcement after validating required fields.
+     *
+     * @param userId - UUID of the user creating the announcement
+     * @param title - Announcement title (required)
+     * @param content - Main body of the announcement (required)
+     * @param category - Category label (required)
+     * @param type - Type label (required)
+     * @throws Error if any field is missing
+     * @returns The created Announcement instance
+     */
+    async create(
+        userId: string,
+        title: string,
+        content: string,
+        category: string,
+        type: string
+    ) {
+        if (!title || !content || !category || !type) {
+            throw new Error('All fields are required');
+        }
+
+        return this.repo.addAnnouncement(
+            userId as UUID,
+            title,
+            content,
+            category,
+            type
+        );
+    }
+
+    /**
+     * Retrieves all announcements, optionally filtered by category and/or type.
+     *
+     * @param filters - Optional category and type filters
+     * @returns List of matching Announcement instances
+     */
+    async getAll(filters: { category?: string; type?: string }) {
+        return this.repo.getFiltered(filters.category, filters.type);
+    }
+
+    /**
+     * Retrieves all announcements created by a specific user.
+     *
+     * @param userId - UUID of the user
+     * @returns List of that user's announcements
+     */
+    async getByUser(userId: string) {
+        return this.repo.getAnnouncementsByUserId(userId as UUID);
+    }
+
+    /**
+     * Retrieves all announcements along with author email metadata.
+     * Intended for administrative views only.
+     */
+    async getAllForAdmin() {
+        return this.repo.getAllWithAuthors();
+    }
+
+    /**
+     * Retrieves all unique announcement categories.
+     * Used to populate dropdown filters on the frontend.
+     */
+    async getCategories() {
+        return this.repo.getDistinctCategories();
+    }
+
+    /**
+     * Updates an existing announcement.
+     *
+     * @param id - ID of the announcement to update
+     * @param title - New title
+     * @param content - New content
+     * @param category - New category
+     * @param type - New type
+     * @throws Error if no announcement was found for the given ID
+     * @returns The updated Announcement
+     */
+    async update(
+        id: UUID,
+        title: string,
+        content: string,
+        category: string,
+        type: string,
+    ) {
+
+        const updated = await this.repo.updateAnnouncement(
+            id,
+            title,
+            content,
+            category,
+            type,
+        );
+        if (!updated) {
+            throw new Error('Not found');
+        }
+        return updated;
+    }
+
+    async findById(id: UUID) {
+        const announcement = await this.repo.getById(id);
+        if (!announcement) {
+            throw new Error('Not found');
+        }
+        return announcement;
+    }
+
+    /**
+     * Deletes an announcement by ID.
+     *
+     * @param id - UUID of the announcement
+     * @returns Promise that resolves when deletion is complete
+     */
+    delete(id: UUID) {
+        return this.repo.deleteAnnouncement(id);
+    }
+}
+
+
+=== ŚCIEŻKA ===
+src/services/AuthService.ts
+=== ZAWARTOŚĆ ===
+import bcrypt from 'bcrypt';
+import dotenv from 'dotenv';
+import jwt from 'jsonwebtoken';
+
+import { db } from '../database/connection';
+import { UserRepository } from '../repositories/user/UserRepository';
+
+dotenv.config();
+
+// Fallback used if JWT_SECRET is not provided in .env (should be overridden in production)
+const JWT_SECRET = process.env.JWT_SECRET || 'jakisSekretnyKlucz';
+
+// Repository instance for handling user persistence
+const userRepo = new UserRepository(db);
+
+/**
+ * Service layer responsible for authentication logic:
+ * - Account creation (registration)
+ * - Credential validation (login)
+ * - Password hashing
+ * - Token generation (JWT)
+ */
+export class AuthService {
+    /**
+     * Registers a new user account after validating email uniqueness and hashing the password.
+     *
+     * @param email - The user’s email address
+     * @param plainPassword - The raw password input from the user
+     * @param username - The username for the new account
+     * @throws Error if the email is already in use
+     * @returns A lightweight object with the new user's ID and email
+     */
+    static async registerUser(email: string, plainPassword: string, username: string) {
+        // Prevent duplicate registration
+        const existingUser = await userRepo.getUserByEmail(email);
+        if (existingUser) {
+            throw new Error('User already exists');
+        }
+
+        // Hash the password with bcrypt
+        const saltRounds = 10;
+        const hashedPassword = await bcrypt.hash(plainPassword, saltRounds);
+
+        // Create a new user with default 'user' role
+        const newUser = await userRepo.addUser(email, hashedPassword, 'user', username);
+
+        // Return minimal public-safe data
+        return { id: newUser.id, email: newUser.getEmail() };
+    }
+
+    /**
+     * Validates credentials and issues a signed JWT if valid.
+     *
+     * @param email - Email address entered during login
+     * @param plainPassword - Raw password entered by the user
+     * @throws Error if the credentials are invalid
+     * @returns An object containing a JWT and user information
+     */
+    static async loginUser(email: string, plainPassword: string) {
+        const user = await userRepo.getUserByEmail(email);
+        if (!user) {
+            throw new Error('Invalid credentials');
+        }
+
+        // Compare provided password with stored hash
+        const isMatch = await bcrypt.compare(plainPassword, user.getPassword());
+        if (!isMatch) {
+            throw new Error('Invalid credentials');
+        }
+
+        // Generate JWT with user ID and role as payload
+        const token = jwt.sign(
+            {
+                userId: user.id,
+                role: user.getRole()
+            },
+            JWT_SECRET,
+            { expiresIn: process.env.JWT_EXPIRES_IN || '1h' }
+        );
+
+        // Return token and limited user data
+        return {
+            token,
+            user: {
+                id: user.id,
+                email: user.getEmail(),
+                role: user.getRole(),
+                username: user.getUsername(),
+            }
+        };
+    }
+}
+
+
+=== ŚCIEŻKA ===
+src/services/CategoryService.ts
+=== ZAWARTOŚĆ ===
+import { UUID } from 'crypto';
+import { CategoryRepository } from '../repositories/category/CategoryRepository';
+import { AuditLogRepository } from '../repositories/audit/AuditLogRepository';
+
+export class CategoryService {
+    constructor(
+        private repo: CategoryRepository,
+        private audit: AuditLogRepository
+    ) { }
+
+    getAll() {
+        return this.repo.getAllCategories();
+    }
+
+    async create(adminId: UUID, name: string) {
+        if (!name?.trim()) throw new Error('Name required');
+        const cat = await this.repo.addCategory(name.trim());
+        // await this.audit.add(adminId, 'create', '', cat.id, { name });
+        return cat;
+    }
+
+    async update(adminId: UUID, id: UUID, name: string) {
+        if (!name?.trim()) throw new Error('Name required');
+        const cat = await this.repo.updateCategory(id, name.trim());
+        if (!cat) throw new Error('Not found');
+        // await this.audit.add(adminId, 'update', 'category', id, { name });
+        return cat;
+    }
+
+    async delete(adminId: UUID, id: UUID) {
+        await this.repo.deleteCategory(id);
+        // await this.audit.add(adminId, 'delete', 'category', id, null);
+    }
+}
+
+
+=== ŚCIEŻKA ===
+src/services/CommentService.ts
+=== ZAWARTOŚĆ ===
+import { CommentRepository } from '../repositories/comment/CommentRepository';
+import { UUID } from 'crypto';
+/**
+ * Service layer responsible for business logic related to user comments.
+ * Handles input validation, ownership checks, and delegates data access to the repository.
+ */
+export class CommentService {
+    constructor(private repo: CommentRepository) { }
+
+    /**
+     * Validates and adds a new comment to an announcement.
+     * Throws an error if the content is empty or blank.
+     *
+     * @param userId - ID of the user posting the comment
+     * @param announcementId - ID of the announcement being commented on
+     * @param content - Text content of the comment
+     * @returns The newly inserted comment row
+     */
+    addComment(userId: string, announcementId: string, content: string) {
+
+        if (!content?.trim()) {
+            throw { status: 400, message: 'Content cannot be empty' };
+        }
+
+        return this.repo.addComment(announcementId as UUID, userId as UUID, content);
+    }
+
+    /**
+     * Retrieves all comments for a given announcement.
+     * 
+     * @param announcementId - ID of the announcement
+     * @returns Array of comment rows
+     */
+    getComments(announcementId: string) {
+        return this.repo.getComments(announcementId as UUID);
+    }
+
+    /**
+     * Deletes a comment if the user is its owner or has admin privileges.
+     * Performs existence and authorization checks before deletion.
+     * 
+     * @param commentId - ID of the comment to delete
+     * @param userId - ID of the current user
+     * @param role - Role of the current user ('user' or 'admin')
+     */
+    async deleteComment(
+        commentId: string,
+        userId: string,
+        role: 'user' | 'admin'
+    ) {
+        const comment = await this.repo.getCommentById(commentId as UUID);
+
+        if (!comment) {
+            throw { status: 404, message: 'Not found' };
+        }
+
+        const isOwner = comment.userId === userId;
+        const isAdmin = role === 'admin';
+
+        if (!isOwner && !isAdmin) {
+            throw { status: 403, message: 'Forbidden' };
+        }
+
+        await this.repo.deleteComment(commentId as UUID);
+    }
+}
+
+
+=== ŚCIEŻKA ===
+src/services/MessageService.ts
+=== ZAWARTOŚĆ ===
+import { MessageRepository } from '../repositories/message/MessageRepository';
+import { UUID } from 'crypto'
+/**
+ * Service layer responsible for business logic related to private messaging.
+ * Performs input validation and delegates database access to the repository.
+ */
+export class MessageService {
+    constructor(private repo: MessageRepository) { }
+
+    /**
+     * Sends a private message from sender to receiver after validating input.
+     * Rejects empty or whitespace-only messages.
+     * 
+     * @param sender - ID of the user sending the message
+     * @param receiver - ID of the user receiving the message
+     * @param content - Text content of the message
+     * @returns The inserted message row
+     * @throws { status: 400, message: 'Content cannot be empty' } if content is invalid
+     */
+    sendMessage(sender: string, receiver: string, content: string) {
+        if (!content?.trim()) {
+            throw { status: 400, message: 'Content cannot be empty' };
+        }
+
+        return this.repo.addMessage(sender as UUID, receiver as UUID, content);
+    }
+
+    /**
+     * Retrieves the latest message per unique conversation for a given user.
+     * Each result represents one chat with another user.
+     * 
+     * @param userId - ID of the user whose conversations to fetch
+     * @returns Array of latest messages from each conversation
+     */
+    getConversations(userId: string) {
+        return this.repo.getConversations(userId as UUID);
+    }
+
+    /**
+     * Retrieves the full chronological message thread between two users.
+     * 
+     * @param a - First user ID
+     * @param b - Second user ID
+     * @returns Array of all messages exchanged between the two users
+     */
+    getThread(a: string, b: string) {
+        return this.repo.getThread(a as UUID, b as UUID);
+    }
+}
+
+
+=== ŚCIEŻKA ===
+src/services/ModerationService.ts
+=== ZAWARTOŚĆ ===
+import { UUID } from 'crypto';
+import { AnnouncementRepository } from '../repositories/announcement/AnnouncementRepository';
+import { CommentRepository } from '../repositories/comment/CommentRepository';
+import { AuditLogRepository } from '../repositories/audit/AuditLogRepository';
+
+export class ModerationService {
+    constructor(
+        private ann: AnnouncementRepository,
+        private com: CommentRepository,
+        private audit: AuditLogRepository
+    ) { }
+
+    getAnnouncements() {
+        return this.ann.getAllAnnouncements();
+    }
+
+    // async approve(adminId: UUID, id: UUID) {
+    //     await this.ann.updateStatus(id, 'approved');
+    //     // await this.audit.add(adminId, 'approve', 'announcement', id, null);
+    // }
+    // async reject(adminId: UUID, id: UUID) {
+    //     await this.ann.updateStatus(id, 'rejected');
+    //     // await this.audit.add(adminId, 'reject', 'announcement', id, null);
+    // }
+
+    getAllComments() {
+        return this.com.getAllComments();
+    }
+    async deleteComment(adminId: UUID, id: UUID) {
+        await this.com.deleteComment(id);
+        // await this.audit.add(adminId, 'delete', 'comment', id, null);
+    }
+}
+
+
+=== ŚCIEŻKA ===
+src/services/ReactionService.ts
+=== ZAWARTOŚĆ ===
+import { ReactionRepository } from '../repositories/reaction/ReactionRepository';
+import { UUID } from 'crypto';
+/**
+ * Service layer responsible for handling business logic related to reactions (like/dislike).
+ * Validates reaction types and delegates persistence to the repository.
+ */
+export class ReactionService {
+    constructor(private repo: ReactionRepository) {}
+
+    /**
+     * Validates that the reaction type is either 'like' or 'dislike'.
+     *
+     * @param type - Reaction type string
+     * @throws { status: 400, message: 'Invalid type' } if invalid
+     */
+    private validateType(type: string) {
+        if (!['like', 'dislike'].includes(type)) {
+            throw { status: 400, message: 'Invalid type' };
+        }
+    }
+
+    /**
+     * Adds a like/dislike reaction to an announcement after validation.
+     *
+     * @param userId - ID of the user reacting
+     * @param announcementId - ID of the announcement being reacted to
+     * @param type - Reaction type ('like' or 'dislike')
+     * @returns The inserted reaction row
+     */
+    addToAnnouncement(
+        userId: UUID,
+        announcementId: string,
+        type: 'like' | 'dislike'
+    ) {
+        this.validateType(type);
+        return this.repo.addReaction(
+            userId,
+            type,
+            announcementId as UUID,
+            undefined
+        );
+    }
+
+    /**
+     * Removes a user's reaction from a specific announcement.
+     *
+     * @param userId - ID of the user
+     * @param announcementId - ID of the announcement
+     * @returns Promise resolving when the reaction is removed
+     */
+    removeFromAnnouncement(userId: UUID, announcementId: string) {
+        return this.repo.removeReaction(
+            userId,
+            announcementId as UUID,
+            undefined
+        );
+    }
+
+    /**
+     * Adds a like/dislike reaction to a comment after validation.
+     *
+     * @param userId - ID of the user reacting
+     * @param commentId - ID of the comment
+     * @param type - Reaction type ('like' or 'dislike')
+     * @returns The inserted reaction row
+     */
+    addToComment(userId: UUID, commentId: string, type: 'like' | 'dislike') {
+        this.validateType(type);
+        return this.repo.addReaction(
+            userId,
+            type,
+            undefined,
+            commentId as UUID
+        );
+    }
+
+    /**
+     * Removes a user's reaction from a specific comment.
+     *
+     * @param userId - ID of the user
+     * @param commentId - ID of the comment
+     * @returns Promise resolving when the reaction is removed
+     */
+    removeFromComment(userId: UUID, commentId: string) {
+        return this.repo.removeReaction(userId, undefined, commentId as UUID);
+    }
+}
+
+
+=== ŚCIEŻKA ===
+src/utils/logger.ts
+=== ZAWARTOŚĆ ===
+import path from 'path';
+import { createLogger, format, transports } from 'winston';
+
+/**
+ * Application-wide logger instance configured with Winston.
+ * Currently logs only errors to a file (`logs/error.log`) in timestamped, structured format.
+ *
+ * This logger can be extended with additional levels (info, warn, debug)
+ * and transports (e.g., console, external services) as the app evolves.
+ */
+export const logger = createLogger({
+    // Only messages with level 'error' or more severe will be logged
+    level: 'error',
+
+    // Define the output format
+    format: format.combine(
+        format.timestamp(), // Add ISO-formatted timestamp to each log entry
+        format.errors({ stack: true }), // Ensure full stack traces are included for error objects
+        format.printf(
+            ({ timestamp, level, message, stack }) =>
+                `${timestamp} ${level}: ${stack || message}` // Custom log message format
+        )
+    ),
+
+    // Define log destinations (transports)
+    transports: [
+        // Log error messages to 'logs/error.log' file
+        new transports.File({ filename: path.join('logs', 'error.log') })
+    ]
+});
+
+

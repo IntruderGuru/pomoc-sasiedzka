@@ -20,6 +20,7 @@ export interface UsersTable {
     email: string;
     password: string;
     role: 'user' | 'admin';
+    username: string;
 }
 
 export interface AnnouncementsTable {

@@ -26,10 +26,11 @@ export class AuthService {
      *
      * @param email - The user’s email address
      * @param plainPassword - The raw password input from the user
+     * @param username - The username for the new account
      * @throws Error if the email is already in use
      * @returns A lightweight object with the new user's ID and email
      */
-    static async registerUser(email: string, plainPassword: string) {
+    static async registerUser(email: string, plainPassword: string, username: string) {
         // Prevent duplicate registration
         const existingUser = await userRepo.getUserByEmail(email);
         if (existingUser) {
@@ -41,7 +42,7 @@ export class AuthService {
         const hashedPassword = await bcrypt.hash(plainPassword, saltRounds);
 
         // Create a new user with default 'user' role
-        const newUser = await userRepo.addUser(email, hashedPassword, 'user');
+        const newUser = await userRepo.addUser(email, hashedPassword, 'user', username);
 
         // Return minimal public-safe data
         return { id: newUser.id, email: newUser.getEmail() };
@@ -83,7 +84,8 @@ export class AuthService {
             user: {
                 id: user.id,
                 email: user.getEmail(),
-                role: user.getRole()
+                role: user.getRole(),
+                username: user.getUsername(),
             }
         };
     }

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { fetchAll, remove } from '../services/AnnouncementService';
 import Spinner from '../components/Spinner';
-import { getuserId } from "../services/api.ts";
+import { getuserId, getUsername } from "../services/api.ts";
 import { UUID } from 'crypto';
 import { useNavigate } from "react-router";
 import Nav from "../components/Nav.tsx";
@@ -19,6 +19,8 @@ export default function AnnouncementsPage() {
     const [announcements, setAnnouncements] = useState<Announcement[]>([]);
     const [loading, setLoading] = useState(true);
     const loggeduserId = getuserId();
+    const loggeduserUsername = getUsername();
+
 
     const getData = async () => {
         const announcements = await fetchAll();

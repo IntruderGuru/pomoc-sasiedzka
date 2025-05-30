@@ -24,7 +24,6 @@ export default function ConversationsPage() {
     const getData = async () => {
 
         const conversations = await fetchConversations();
-        console.log(conversations);
         setConversations(conversations.data as Conversation[]);
         setLoading(false);
 
