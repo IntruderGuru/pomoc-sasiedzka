@@ -11,7 +11,6 @@ export class ModerationService {
     ) { }
 
     getAnnouncements() {
-        console.log('getAnnouncements');
         return this.ann.getAllAnnouncements;
     }
 

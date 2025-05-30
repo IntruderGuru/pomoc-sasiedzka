@@ -95,15 +95,14 @@ export class AnnouncementService {
         content: string,
         category: string,
         type: string,
-        status: string
     ) {
+
         const updated = await this.repo.updateAnnouncement(
             id,
             title,
             content,
             category,
             type,
-            status
         );
         if (!updated) {
             throw new Error('Not found');

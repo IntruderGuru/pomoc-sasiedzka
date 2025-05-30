@@ -117,16 +117,17 @@ export class AnnouncementController {
     static async update(req: AuthRequest, res: Response) {
         const { id } = req.params;
         const { title, content, category, type } = req.body;
-
         try {
+            console.log(
+                `Updating announcement ${id} with title "${title}", content "${content}", category "${category}", type "${type}"`);
             const updated = await service.update(
                 id as UUID,
                 title,
                 content,
                 category,
                 type,
-                status
             );
+            console.log('Updated announcement:', updated);
             return res.status(200).json(updated);
         } catch (e) {
             const errorMessage = (e as Error).message;

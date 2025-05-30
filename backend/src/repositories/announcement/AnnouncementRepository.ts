@@ -9,7 +9,7 @@ import { Announcement } from '../../models/Announcement';
  * Repository responsible for CRUD operations on the `announcements` table.
  */
 export class AnnouncementRepository {
-    constructor(private db: Kysely<Database>) {}
+    constructor(private db: Kysely<Database>) { }
 
     /**
      * Finds a single announcement by its ID.
@@ -138,9 +138,10 @@ export class AnnouncementRepository {
         title: string,
         content: string,
         category: string,
-        status: string,
         type: string
     ): Promise<Announcement | null> {
+        console.log(
+            `Updating announcement ${id} with title "${title}", content "${content}", category "${category}", type "${type}"`);
         const result = await this.db
             .updateTable('announcements')
             .set({ title, content, category, type })
@@ -151,6 +152,8 @@ export class AnnouncementRepository {
         if (!result) {
             return null;
         }
+
+        console.log('Updated announcement:', result);
 
         return new Announcement(
             result.id as UUID,

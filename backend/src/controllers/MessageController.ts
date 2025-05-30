@@ -66,7 +66,6 @@ export class MessageController {
     static async getThread(req: AuthRequest, res: Response, next: Function) {
         try {
             const other = req.params.withuserId;
-            console.log('other', other);
             const data = await service.getThread(req.user!.userId, other);
 
             res.json(data);

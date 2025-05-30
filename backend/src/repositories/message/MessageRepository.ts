@@ -31,7 +31,6 @@ export class MessageRepository {
             )
             .orderBy('sent_at', 'desc')
             .execute();
-        console.log(result);
         return result.map(
             r =>
                 new Message(
