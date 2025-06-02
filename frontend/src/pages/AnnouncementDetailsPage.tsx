@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Spinner from '../components/Spinner';
-import { fetchById } from '../services/AnnouncementService.ts';
-import ReactionButton from './ReactionButton';
+import {fetchById, remove} from '../services/AnnouncementService.ts';
+
 import CommentList from './CommentList';
 import CommentForm from './CommentForm';
 import { UUID } from 'crypto'
+import AnnouncementCard from "./AnnouncementCard.tsx";
+import {useNavigate} from "react-router";
 
 export default function AnnouncementDetailsPage() {
     interface Announcement {
@@ -20,6 +22,7 @@ export default function AnnouncementDetailsPage() {
     const { id } = useParams();
     const [announcement, setAnnouncement] = useState<Announcement>();
     const [loading, setLoading] = useState(true);
+    const navigate = useNavigate();
 
     const getAnnouncement = async () => {
         const announcement = await fetchById(id);
@@ -31,24 +34,21 @@ export default function AnnouncementDetailsPage() {
         getAnnouncement();
     }, []);
 
+    const handleDelete = async (id: UUID) => {
+        await remove(id);
+        alert('Ogłoszenie usunięte');
+        navigate("/announcements");
+    };
+
     if (loading) return <Spinner />;
     if (!announcement) return <p>Nie znaleziono ogłoszenia.</p>;
 
     return (
-        <div className="p-4">
-            <h1 className="text-2xl font-bold">{announcement.title}</h1>
-            <p className="text-gray-700">{announcement.content}</p>
-            <p className="text-sm text-gray-500">
-                {announcement.category} • {announcement.type} •{' '}
-                {new Date(announcement.createdAt).toLocaleString()} • {announcement.userId}
-            </p>
-
-            <div className="my-2">
-                <ReactionButton targetType="announcement" targetId={id!} />
-            </div>
+        <div className="min-h-screen max-h-screen bg-gradient-to-br from-blueGradientStart to-blueGradientEnd flex flex-col items-center justify-center p-8">
+            <AnnouncementCard a={announcement} handleDelete={()=> handleDelete(announcement.id)}/>
 
             <CommentList announcementId={id!} />
-            <CommentForm announcementId={id!} />
+            <CommentForm announcementId={id!} onReload={() => window.location.reload()} />
         </div>
     );
 }

@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { fetchAll, remove } from '../services/AnnouncementService';
 import Spinner from '../components/Spinner';
-import { getuserId, getUsername } from "../services/api.ts";
 import { UUID } from 'crypto';
 import { useNavigate } from "react-router";
 import Nav from "../components/Nav.tsx";
+import AnnouncementCard from "./AnnouncementCard.tsx";
 
 export default function AnnouncementsPage() {
     interface Announcement {
@@ -18,8 +18,6 @@ export default function AnnouncementsPage() {
     const navigate = useNavigate();
     const [announcements, setAnnouncements] = useState<Announcement[]>([]);
     const [loading, setLoading] = useState(true);
-    const loggeduserId = getuserId();
-    const loggeduserUsername = getUsername();
 
 
     const getData = async () => {
@@ -41,24 +39,13 @@ export default function AnnouncementsPage() {
     if (loading) return <Spinner />;
 
     return (
-        <div>
+        <div className="min-h-screen bg-gradient-to-br from-blueGradientStart to-blueGradientEnd flex flex-col items-center justify-center p-8">
             <Nav />
-            <h1>Ogłoszenia</h1>
+            <h1 className="text-white">Ogłoszenia</h1>
             <ul>
-                {announcements.map((a) => (
+                {announcements.map(a => (
                     <li key={a.id} onClick={() => navigate(`/announcements/${a.id}/details`)}>
-                        <h3>{a.title}</h3>
-                        <p>{a.content}</p>
-                        <p>
-                            {/* <i>{a.category}</i> —  */}
-                            {a.userId} ({a.createdAt}) {loggeduserId}</p>
-
-                        {a.userId == loggeduserId && (
-                            <>
-                                <button onClick={() => handleDelete(a.id)}>Usuń</button>
-                                <button onClick={() => navigate(`/announcements/${a.id}`)}>Edytuj</button>
-                            </>
-                        )}
+                        <AnnouncementCard key={a.id} a={a} handleDelete={() => handleDelete(a.id)} />
                     </li>
                 ))}
             </ul>

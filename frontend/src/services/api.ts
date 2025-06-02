@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { set } from 'react-hook-form';
+import {UUID} from 'crypto'
 
 const api = axios.create({
   baseURL: 'http://localhost:3000/api'
@@ -22,6 +22,8 @@ export const setuserId = (userId: string) => {
 export const setUsername = (username: string) => {
   localStorage.setItem('username', username);
 }
+
+export const fetchUsername = (id: UUID) => api.get(`/users/${id}/username`);
 
 export const getToken = () => localStorage.getItem('token');
 export const getuserId = () => localStorage.getItem('userId');

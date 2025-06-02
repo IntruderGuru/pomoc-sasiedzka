@@ -26,10 +26,10 @@ export default function CommentList({ announcementId }) {
     };
 
     if (loading) return <Spinner />;
-    if (comments.length === 0) return <p>Brak komentarzy.</p>;
+    if (comments.length === 0) return <p className="text-white">Brak komentarzy.</p>;
 
     return (
-        <div className="space-y-2 my-4">
+        <div className="overflow-auto min-w-3/12">
             {comments.map(comment => (
                 <CommentItem
                     key={comment.id}
