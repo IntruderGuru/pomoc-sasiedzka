@@ -25,11 +25,12 @@ export class AdminUserController {
         res.status(204).send();
     }
 
-    // static async deactivate(req: AuthRequest, res: Response) {
-    //     await service.deactivateUser(
-    //         req.user!.userId as UUID,
-    //         req.params.id as UUID
-    //     );
-    //     res.status(204).send();
-    // }
+    static async deactivate(req: AuthRequest, res: Response) {
+        console.log('Deactivating user:', req.params.id);
+        await service.deactivateUser(
+            req.user!.userId as UUID,
+            req.params.id as UUID
+        );
+        res.status(204).send();
+    }
 }

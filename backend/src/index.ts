@@ -224,7 +224,7 @@ app.use('/api/admin/*', checkAuth, checkAdmin);
 // users
 app.get('/api/admin/users', AdminUserController.getAll);
 app.put('/api/admin/users/:id/role', AdminUserController.updateRole);
-// app.put('/api/admin/users/:id/deactivate', AdminUserController.deactivate);
+app.put('/api/admin/users/:id/deactivate', AdminUserController.deactivate);
 
 // ----- ADMIN: categories -----
 app.get('/api/admin/categories', checkAuth, checkAdmin, AdminCategoryController.getAll);

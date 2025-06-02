@@ -105,4 +105,31 @@ export class UserRepository {
             )
             : null;
     }
+
+    // Deactivates user by deleting their record from the database. And everything related to them, annaouncements, comments, messages, etc.
+    async deactivateUser(userId: UUID): Promise<void> {
+        await this.db
+            .deleteFrom('users')
+            .where('id', '=', userId)
+            .execute();
+        await this.db
+            .deleteFrom('announcements')
+            .where('user_id', '=', userId)
+            .execute();
+        await this.db
+            .deleteFrom('comments')
+            .where('user_id', '=', userId)
+            .execute();
+        await this.db
+            .deleteFrom('messages')
+            .where((eb) =>
+                eb('user_id', '=', userId).or('receiver_id', '=', userId)
+            )
+            .execute();
+        await this.db
+            .deleteFrom('reactions')
+            .where('user_id', '=', userId)
+            .execute();
+
+    }
 }

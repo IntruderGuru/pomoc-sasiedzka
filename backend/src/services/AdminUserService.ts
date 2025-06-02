@@ -17,8 +17,8 @@ export class AdminUserService {
         // await this.audit.add(adminId, 'update-role', 'user', userId, { role });
     }
 
-    // async deactivateUser(adminId: UUID, userId: UUID) {
-    //     await this.users.deactivateUser(userId);     // metoda do dodania
-    //     // await this.audit.add(adminId, 'deactivate', 'user', userId, null);
-    // }
+    async deactivateUser(adminId: UUID, userId: UUID) {
+        await this.users.deactivateUser(userId);     // metoda do dodania
+        // await this.audit.add(adminId, 'deactivate', 'user', userId, null);
+    }
 }

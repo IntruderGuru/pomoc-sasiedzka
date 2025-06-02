@@ -19,7 +19,7 @@ export const fetchUsers = () => api.get('/admin/users');
 
 export const updateRole = (id: UUID, data: { role: string }) => api.put(`/admin/users/${id}/role`, data);
 
-export const deactivateUser = (id: UUID) => api.get(`/admin/users/${id}/deactivate`);
+export const deactivateUser = (id: UUID) => api.put(`/admin/users/${id}/deactivate`);
 
 export const fetchCategories = () =>
     api.get(`/admin/categories`);
