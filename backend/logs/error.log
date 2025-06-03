@@ -3061,3 +3061,19 @@
     at async SelectQueryBuilderImpl.execute (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\node_modules\kysely\dist\cjs\query-builder\select-query-builder.js:317:24)
     at async AnnouncementRepository.getFiltered (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\repositories\announcement\AnnouncementRepository.ts:188:24)
     at async getAll (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\controllers\AnnouncementController.ts:56:26)
+2025-06-03T13:23:34.053Z error: Error: Not found
+    at AnnouncementService.findById (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\services\AnnouncementService.ts:116:19)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async findById (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\controllers\AnnouncementController.ts:153:34)
+2025-06-03T13:23:34.064Z error: Error: Not found
+    at AnnouncementService.findById (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\services\AnnouncementService.ts:116:19)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async findById (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\controllers\AnnouncementController.ts:153:34)
+2025-06-03T13:23:37.469Z error: Error: Not found
+    at AnnouncementService.findById (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\services\AnnouncementService.ts:116:19)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async findById (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\controllers\AnnouncementController.ts:153:34)
+2025-06-03T13:23:37.485Z error: Error: Not found
+    at AnnouncementService.findById (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\services\AnnouncementService.ts:116:19)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async findById (C:\Users\barte\OneDrive\Pulpit\Studia\ROK III\Semestr 2\pomoc-sasiedzka\backend\src\controllers\AnnouncementController.ts:153:34)
