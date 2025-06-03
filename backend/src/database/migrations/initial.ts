@@ -3,6 +3,22 @@ import bcrypt from 'bcrypt';
 import { randomUUID } from 'crypto';
 import { Kysely, sql } from 'kysely';
 
+function addMinutes(date: Date, minutes: number): Date {
+    return new Date(date.getTime() + minutes * 60000);
+}
+
+function createMessageTimer(start: Date, minGap = 1, maxGap = 10) {
+    let current = start;
+    return () => {
+        const result = current;
+        const gap = Math.floor(Math.random() * (maxGap - minGap + 1)) + minGap;
+        current = addMinutes(current, gap);
+        return result;
+    };
+}
+
+const nextMessageTime = createMessageTimer(new Date('2024-01-01T10:00:00Z'));
+
 import { Database } from '../connection';
 
 export async function up(db: Kysely<Database>): Promise<void> {
@@ -156,22 +172,15 @@ export async function up(db: Kysely<Database>): Promise<void> {
         .insertInto('users')
         .values({
             id: randomUUID(),
-            email: 'admin@somsiad.pl',
-            password: await bcrypt.hash('admin123', 10),
-            role: 'admin',
-            username: 'admin'
-        })
-        .execute();
-
-
-    const users = [
-        {
-            id: randomUUID(),
             email: 'yakui@example.com',
             username: 'yakui',
             role: 'admin' as const,
             password: await bcrypt.hash('themaid', 10)
-        },
+        },)
+        .execute();
+
+
+    const users = [
         {
             id: randomUUID(),
             email: 'ala.kowalska@somsiad.pl',
@@ -604,401 +613,78 @@ export async function up(db: Kysely<Database>): Promise<void> {
     await db.insertInto('announcements').values(announcements).execute();
 
     const messages = [
-
         {
             id: randomUUID(),
             user_id: users[0].id,
             receiver_id: users[1].id,
-            content: 'Cześć Marcin, widziałam Twoje ogłoszenie o monitorze ASUS. Czy jest jeszcze dostępny?',
-            sent_at: new Date()
+            content: 'Cześć Marcin! Jak się masz?',
+            sent_at: nextMessageTime()
         },
         {
             id: randomUUID(),
             user_id: users[1].id,
             receiver_id: users[0].id,
-            content: 'Hej Ala, tak, monitor jest dostępny. Możesz oglądać w sobotę po południu u mnie w mieszkaniu.',
-            sent_at: new Date()
+            content: 'Cześć Anna! Dobrze, dzięki. A Ty?',
+            sent_at: nextMessageTime()
         },
         {
             id: randomUUID(),
             user_id: users[0].id,
             receiver_id: users[1].id,
-            content: 'Super, to w sobotę o 14:00 pasuje? Gdzie dokładnie mieszkasz na Mokotowie?',
-            sent_at: new Date()
+            content: 'U mnie wszystko w porządku. Co słychać w pracy?',
+            sent_at: nextMessageTime()
         },
         {
             id: randomUUID(),
             user_id: users[1].id,
             receiver_id: users[0].id,
-            content: 'Pasuje. Mieszkam przy ul. Puławskiej 120/15. Do zobaczenia!',
-            sent_at: new Date()
-        },
-
-
-        {
-            id: randomUUID(),
-            user_id: users[2].id,
-            receiver_id: users[3].id,
-            content: 'Cześć Tomku, czy kocięta są nadal do wzięcia?',
-            sent_at: new Date()
+            content: 'Sporo się dzieje, ale daję radę. Mamy nowy projekt.',
+            sent_at: nextMessageTime()
         },
         {
             id: randomUUID(),
-            user_id: users[3].id,
-            receiver_id: users[2].id,
-            content: 'Cześć Ewa, tak, mamy dwa kocięta. Chcesz przyjść je zobaczyć w sobotę?',
-            sent_at: new Date()
-        },
-        {
-            id: randomUUID(),
-            user_id: users[2].id,
-            receiver_id: users[3].id,
-            content: 'Brzmi super. Czy jest możliwość zajęcia się nimi po pracy około 18:00?',
-            sent_at: new Date()
-        },
-        {
-            id: randomUUID(),
-            user_id: users[3].id,
-            receiver_id: users[2].id,
-            content: 'O 18:00 też będzie ok. Mieszkam przy ul. Długiej 5 w Warszawie.',
-            sent_at: new Date()
-        },
-
-        {
-            id: randomUUID(),
-            user_id: users[4].id,
-            receiver_id: users[5].id,
-            content: 'Cześć Piotr, czy nadal szukasz „Sto lat samotności”?',
-            sent_at: new Date()
-        },
-        {
-            id: randomUUID(),
-            user_id: users[5].id,
-            receiver_id: users[4].id,
-            content: 'Hej Beata, tak, nadal szukam. Masz takie w dobrym stanie?',
-            sent_at: new Date()
-        },
-        {
-            id: randomUUID(),
-            user_id: users[4].id,
-            receiver_id: users[5].id,
-            content: 'Mam egzemplarz z 2010 roku, lekko przyżółcone strony, ale całość w porządku. Chcesz za 25 zł?',
-            sent_at: new Date()
-        },
-        {
-            id: randomUUID(),
-            user_id: users[5].id,
-            receiver_id: users[4].id,
-            content: '25 zł brzmi ok. Możemy się spotkać w piątek w Centrum handlowym Blue City?',
-            sent_at: new Date()
-        },
-
-        {
-            id: randomUUID(),
-            user_id: users[6].id,
-            receiver_id: users[7].id,
-            content: 'Cześć Krzysztof, czy rower Giant Contend jest jeszcze na sprzedaż?',
-            sent_at: new Date()
-        },
-        {
-            id: randomUUID(),
-            user_id: users[7].id,
-            receiver_id: users[6].id,
-            content: 'Hej Monika, tak, jest dostępny. Jak chcesz się umówić?',
-            sent_at: new Date()
-        },
-        {
-            id: randomUUID(),
-            user_id: users[6].id,
-            receiver_id: users[7].id,
-            content: 'Mogę przyjechać w sobotę rano do Gdańska. Pasuje Ci ok. 10:00?',
-            sent_at: new Date()
-        },
-        {
-            id: randomUUID(),
-            user_id: users[7].id,
-            receiver_id: users[6].id,
-            content: '10:00 w porządku. Będę na parkingu przy hali Olivia.',
-            sent_at: new Date()
-        },
-
-
-        {
-            id: randomUUID(),
-            user_id: users[8].id,
-            receiver_id: users[9].id,
-            content: 'Cześć Jakub, czy masz to wydanie „Zbrodni i kary”?',
-            sent_at: new Date()
-        },
-        {
-            id: randomUUID(),
-            user_id: users[9].id,
-            receiver_id: users[8].id,
-            content: 'Tak, mam. Jest w stanie bardzo dobrym. Możemy się spotkać wieczorem w porcie gdańskim?',
-            sent_at: new Date()
-        },
-        {
-            id: randomUUID(),
-            user_id: users[8].id,
-            receiver_id: users[9].id,
-            content: 'Wieczorem koło 19:00? Będę przy wejściu B.',
-            sent_at: new Date()
-        },
-        {
-            id: randomUUID(),
-            user_id: users[9].id,
-            receiver_id: users[8].id,
-            content: '19:00 ok. Do zobaczenia!',
-            sent_at: new Date()
-        },
-
-        {
-            id: randomUUID(),
-            user_id: users[10].id,
-            receiver_id: users[11].id,
-            content: 'Cześć Łukasz, widziałam, że oferujesz usługi ogrodnicze. Możesz przyjechać w przyszły weekend?',
-            sent_at: new Date()
-        },
-        {
-            id: randomUUID(),
-            user_id: users[11].id,
-            receiver_id: users[10].id,
-            content: 'Hej Anna, tak, mogę. Jaka wielkość działki i co dokładnie potrzebujesz?',
-            sent_at: new Date()
-        },
-        {
-            id: randomUUID(),
-            user_id: users[10].id,
-            receiver_id: users[11].id,
-            content: 'Działka ok. 500 m², potrzebuję koszenia i przycięcia żywopłotu. Lokalizacja Wrocław Psie Pole.',
-            sent_at: new Date()
-        },
-        {
-            id: randomUUID(),
-            user_id: users[11].id,
-            receiver_id: users[10].id,
-            content: 'W porządku. W sobotę będę od 9:00 na miejscu. Do zobaczenia.',
-            sent_at: new Date()
-        },
-
-        {
-            id: randomUUID(),
-            user_id: users[12].id,
-            receiver_id: users[13].id,
-            content: 'Cześć Paweł, czy znalazłeś już kurs hiszpańskiego?',
-            sent_at: new Date()
-        },
-        {
-            id: randomUUID(),
-            user_id: users[13].id,
-            receiver_id: users[12].id,
-            content: 'Nie, jeszcze nie. Szukam dobrego i w miarę taniego. A Ty?',
-            sent_at: new Date()
-        },
-        {
-            id: randomUUID(),
-            user_id: users[12].id,
-            receiver_id: users[13].id,
-            content: 'Znalazłam ofertę online za 180 zł, lekcje dwa razy w tygodniu. Chcesz link?',
-            sent_at: new Date()
-        },
-        {
-            id: randomUUID(),
-            user_id: users[13].id,
-            receiver_id: users[12].id,
-            content: 'Tak, proszę. Wyślę popołudniu.',
-            sent_at: new Date()
-        },
-
-        {
-            id: randomUUID(),
-            user_id: users[14].id,
+            user_id: users[0].id,
             receiver_id: users[1].id,
-            content: 'Cześć Marek, oglądałem Twoje ogłoszenie o PS4. Ile minimalnie możesz zejść z ceny?',
-            sent_at: new Date()
+            content: 'Brzmi ciekawie! Opowiedz więcej.',
+            sent_at: nextMessageTime()
         },
         {
             id: randomUUID(),
             user_id: users[1].id,
-            receiver_id: users[14].id,
-            content: 'Hej Kasia, mogę zejść do 550 zł, ale wtedy bez dodatkowego pada.',
-            sent_at: new Date()
+            receiver_id: users[0].id,
+            content: 'To aplikacja do zarządzania zadaniami, jeszcze w fazie planowania.',
+            sent_at: nextMessageTime()
         },
         {
             id: randomUUID(),
-            user_id: users[14].id,
+            user_id: users[0].id,
             receiver_id: users[1].id,
-            content: '550 bez pada w porządku. Spotkamy się w piątek w Katowicach?',
-            sent_at: new Date()
+            content: 'Chętnie pomogę, jeśli będziesz potrzebować wsparcia!',
+            sent_at: nextMessageTime()
         },
         {
             id: randomUUID(),
             user_id: users[1].id,
-            receiver_id: users[14].id,
-            content: 'Tak, piątek wieczorem może być. Daj znać godzinę dokładnie.',
-            sent_at: new Date()
-        },
-
-        {
-            id: randomUUID(),
-            user_id: users[2].id,
-            receiver_id: users[4].id,
-            content: 'Cześć Beata, czy możesz przekazać numer telefonu, by ustalić szczegóły odbioru klatki dla kota?',
-            sent_at: new Date()
+            receiver_id: users[0].id,
+            content: 'Dzięki! Na pewno się odezwę :)',
+            sent_at: nextMessageTime()
         },
         {
             id: randomUUID(),
-            user_id: users[4].id,
-            receiver_id: users[2].id,
-            content: 'Jasne, to 500-123-456. Zadzwoń, umówimy dokładnie termin.',
-            sent_at: new Date()
+            user_id: users[0].id,
+            receiver_id: users[1].id,
+            content: 'A jak weekend? Coś planujesz?',
+            sent_at: nextMessageTime()
         },
         {
             id: randomUUID(),
-            user_id: users[2].id,
-            receiver_id: users[4].id,
-            content: 'Dziękuję, dzwonię za chwilę. Do usłyszenia!',
-            sent_at: new Date()
-        },
-
-        {
-            id: randomUUID(),
-            user_id: users[5].id,
-            receiver_id: users[6].id,
-            content: 'Monika, ile lat ma Twój plecak Deuter? Zastanawiam się nad zakupem.',
-            sent_at: new Date()
-        },
-        {
-            id: randomUUID(),
-            user_id: users[6].id,
-            receiver_id: users[5].id,
-            content: 'Plecak ma 2 lata, używany podczas 3 wypraw. Nie ma uszkodzeń, stan bardzo dobry.',
-            sent_at: new Date()
-        },
-        {
-            id: randomUUID(),
-            user_id: users[5].id,
-            receiver_id: users[6].id,
-            content: 'Świetnie, mogę przyjechać w tę niedzielę do Gliwic?',
-            sent_at: new Date()
-        },
-        {
-            id: randomUUID(),
-            user_id: users[6].id,
-            receiver_id: users[5].id,
-            content: 'Niedziela ok. Będę w domu od 10:00. Do zobaczenia.',
-            sent_at: new Date()
-        },
-
-        {
-            id: randomUUID(),
-            user_id: users[7].id,
-            receiver_id: users[8].id,
-            content: 'Cześć Dorota, czy kanapa skórzana nadal jest dostępna?',
-            sent_at: new Date()
-        },
-        {
-            id: randomUUID(),
-            user_id: users[8].id,
-            receiver_id: users[7].id,
-            content: 'Tak, kanapa nadal jest. Możesz przyjechać w czwartek wieczorem do Katowic.',
-            sent_at: new Date()
-        },
-        {
-            id: randomUUID(),
-            user_id: users[7].id,
-            receiver_id: users[8].id,
-            content: 'Czwartek o 18:00 pasuje. Podaj proszę dokładny adres.',
-            sent_at: new Date()
-        },
-        {
-            id: randomUUID(),
-            user_id: users[8].id,
-            receiver_id: users[7].id,
-            content: 'Katowice, ul. Mickiewicza 22/5. Dzwonisz na domofon „Wolanska” i wchodzisz na III piętro.',
-            sent_at: new Date()
-        },
-
-        {
-            id: randomUUID(),
-            user_id: users[9].id,
-            receiver_id: users[10].id,
-            content: 'Cześć Anna, czy mogę zobaczyć Twój zestaw garnków Tefal w sobotę rano?',
-            sent_at: new Date()
-        },
-        {
-            id: randomUUID(),
-            user_id: users[10].id,
-            receiver_id: users[9].id,
-            content: 'Hej Dorota, tak, zapraszam od 9:00. Mieszkam przy ul. Słowackiego 10 we Wrocławiu.',
-            sent_at: new Date()
-        },
-        {
-            id: randomUUID(),
-            user_id: users[9].id,
-            receiver_id: users[10].id,
-            content: 'Dzięki, będę na miejscu. Do zobaczenia!',
-            sent_at: new Date()
-        },
-
-        {
-            id: randomUUID(),
-            user_id: users[11].id,
-            receiver_id: users[12].id,
-            content: 'Witaj Magdaleno, czy montaż mebli IKEA jest nadal aktualny?',
-            sent_at: new Date()
-        },
-        {
-            id: randomUUID(),
-            user_id: users[12].id,
-            receiver_id: users[11].id,
-            content: 'Tak, mogę pomóc w przyszłym tygodniu. Jaka ilość mebli i gdzie dokładnie?',
-            sent_at: new Date()
-        },
-        {
-            id: randomUUID(),
-            user_id: users[11].id,
-            receiver_id: users[12].id,
-            content: 'Potrzebuję zmontować szafę Pax i łóżko Santos w Lublinie. Termin elastyczny.',
-            sent_at: new Date()
-        },
-        {
-            id: randomUUID(),
-            user_id: users[12].id,
-            receiver_id: users[11].id,
-            content: 'OK, przyjadę w środę rano. Daj znać godzinę, a ja będę na miejscu.',
-            sent_at: new Date()
-        },
-
-        {
-            id: randomUUID(),
-            user_id: users[13].id,
-            receiver_id: users[14].id,
-            content: 'Cześć Pawle, oglądam Twój grill gazowy Broil King. Jest jeszcze dostępny?',
-            sent_at: new Date()
-        },
-        {
-            id: randomUUID(),
-            user_id: users[14].id,
-            receiver_id: users[13].id,
-            content: 'Tak, jest. Używany kilka razy, stan niemal jak nowy. Możemy się spotkać w sobotę rano w Rzeszowie.',
-            sent_at: new Date()
-        },
-        {
-            id: randomUUID(),
-            user_id: users[13].id,
-            receiver_id: users[14].id,
-            content: 'Sobota o 8:00 pasuje. Gdzie dokładnie w Rzeszowie?',
-            sent_at: new Date()
-        },
-        {
-            id: randomUUID(),
-            user_id: users[14].id,
-            receiver_id: users[13].id,
-            content: 'Rzeszów, ul. Piłsudskiego 50. Musisz zadzwonić do budynku i ktoś Ci otworzy.',
-            sent_at: new Date()
+            user_id: users[1].id,
+            receiver_id: users[0].id,
+            content: 'Jeszcze nie wiem, może jakiś spacer albo film. A Ty?',
+            sent_at: nextMessageTime()
         }
     ];
+
     await db.insertInto('messages').values(messages).execute();
 
     const comments = [
